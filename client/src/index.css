@@ -1,0 +1,397 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   CSS VARIABLES - Alanxa.ai Color Palette
+   ======================================== */
+:root {
+  /* Brand & Primary Colors */
+  --color-brand-primary: #6366F1;
+  /* Electric Indigo */
+  --color-brand-secondary: #4F46E5;
+  /* Deep Indigo */
+  --color-brand-gradient: #06B6D4;
+  /* Aqua Cyan */
+  --color-brand-cta: #0EA5E9;
+  /* Sky Electric Blue */
+
+  /* Background System */
+  --color-bg-light: #F1F5F9;
+  /* Soft White */
+  --color-bg-dark: #0F172A;
+  /* Navy Black */
+  --color-bg-card: #FFFFFF;
+  /* Pure White */
+  --color-border-light: #E2E8F0;
+  /* Card Borders */
+
+  /* Text Colors */
+  --color-text-primary: #1E293B;
+  /* Slate Black */
+  --color-text-secondary: #475569;
+  /* Muted Slate */
+  --color-text-light-main: #F8FAFC;
+  /* Main text on dark */
+  --color-text-light-muted: #CBD5E1;
+  /* Muted text on dark */
+
+  /* CTA Hover */
+  --color-cta-hover: #0891C9;
+  /* Darker CTA */
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+body {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-primary);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   BRAND GRADIENTS
+   ======================================== */
+
+/* Hero & Banner Gradient */
+.gradient-hero {
+  background: linear-gradient(135deg, #4F46E5 0%, #6366F1 40%, #06B6D4 100%);
+}
+
+/* Animated Brand Gradient */
+.animated-gradient {
+  background: linear-gradient(-45deg, #4F46E5, #6366F1, #06B6D4, #0EA5E9);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Radial Gradient for Cards/Highlights */
+.gradient-radial {
+  background: radial-gradient(circle, #6366F1 0%, #4F46E5 50%, #06B6D4 100%);
+}
+
+/* Text Gradient */
+.text-gradient {
+  background: linear-gradient(to right, #4F46E5, #6366F1, #06B6D4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+}
+
+.text-gradient-animated {
+  background: linear-gradient(90deg, #4F46E5, #6366F1, #06B6D4, #0EA5E9);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShine 3s linear infinite;
+}
+
+@keyframes textShine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* ========================================
+   GLASSMORPHISM
+   ======================================== */
+
+/* Glass Effect for Light Sections */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+/* Glass Effect for Dark Sections */
+.glass-dark {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
+}
+
+/* ========================================
+   BUTTON STYLES
+   ======================================== */
+
+/* Primary CTA Button */
+.btn-cta {
+  background-color: var(--color-brand-cta);
+  color: var(--color-text-light-main);
+  padding: 0.875rem 2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-cta:hover {
+  background: linear-gradient(135deg, #0EA5E9, #06B6D4);
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.45);
+  transform: translateY(-2px);
+}
+
+.btn-cta:active {
+  transform: translateY(0);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background-color: var(--color-brand-secondary);
+  color: var(--color-text-light-main);
+  padding: 0.875rem 2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-brand-primary);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Primary Brand Button */
+.btn-primary {
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-light-main);
+  padding: 0.875rem 2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-brand-secondary);
+  transform: translateY(-2px);
+}
+
+/* Outline Button */
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-brand-primary);
+  padding: 0.875rem 2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  border: 2px solid var(--color-brand-primary);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-light-main);
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   CARD STYLES
+   ======================================== */
+
+.card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+  transform: translateY(-4px);
+  border-color: var(--color-brand-primary);
+}
+
+.card-dark {
+  background: var(--color-bg-dark);
+  color: var(--color-text-light-main);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.card-dark:hover {
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+  transform: translateY(-4px);
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6366F1, #4F46E5);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #4F46E5, #06B6D4);
+}
+
+/* Firefox Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #6366F1 #F1F5F9;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Glow Effects */
+.glow-brand {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+}
+
+.glow-cta {
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
+}
+
+/* Focus States */
+.focus-brand:focus {
+  outline: none;
+  border-color: var(--color-brand-gradient);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+}
+
+/* Section Dividers */
+.section-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #6366F1, transparent);
+  margin: 3rem 0;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.8s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.8s ease-out;
+}
+
+/* Pulse Animation for CTAs */
+@keyframes pulse-brand {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
+  }
+
+  50% {
+    box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+  }
+}
+
+.pulse-brand {
+  animation: pulse-brand 2s infinite;
+}
+
+/* Marquee Animation for Clients */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

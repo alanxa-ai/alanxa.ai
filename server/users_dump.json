@@ -1,0 +1,35 @@
+[
+  {
+    "_id": "69330f2ed36f0b89be84e67a",
+    "name": "Mohd noman Qadri",
+    "email": "nomanqadri34@gmail.com",
+    "password": "$2a$10$z9u9n8eqp0MeZ8GMG/D5GeaLQT30jctGn0TM5AnKYdQqaZblBkfNm",
+    "role": "admin",
+    "isVerified": true,
+    "createdAt": "2025-12-05T16:58:22.219Z",
+    "updatedAt": "2025-12-05T17:38:54.324Z",
+    "__v": 0
+  },
+  {
+    "_id": "693546163f6f06b7b44a651d",
+    "name": "noman",
+    "email": "nomanqadri289@gmail.com",
+    "password": "$2a$10$lue90yI8zN6fnAaf/wmpKenhJY9GjR9SE4VNoU4TicHM1WjFmvsWe",
+    "role": "freelancer",
+    "isVerified": true,
+    "createdAt": "2025-12-07T09:17:10.275Z",
+    "updatedAt": "2025-12-07T09:17:10.275Z",
+    "__v": 0
+  },
+  {
+    "_id": "693546cb3f6f06b7b44a658c",
+    "name": "noman",
+    "email": "nomanqadri6392@gmail.com",
+    "password": "$2a$10$m03e1t3bQuQ0wzkI4ip/oenTjzHUUQxk4O/cGXFQeGBg0fg9DRe3y",
+    "role": "client",
+    "isVerified": true,
+    "createdAt": "2025-12-07T09:20:11.972Z",
+    "updatedAt": "2025-12-07T09:20:11.972Z",
+    "__v": 0
+  }
+]
