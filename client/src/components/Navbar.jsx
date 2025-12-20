@@ -7,6 +7,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState(null);
   const location = useLocation();
 
   // Handle scroll effect
@@ -51,12 +52,12 @@ const Navbar = () => {
       <nav 
         className={`fixed w-full top-0 z-50 transition-all duration-300 border-b ${
           showDarkNav 
-            ? 'bg-gray-900/95 backdrop-blur-md border-gray-800 py-3 shadow-lg' 
-            : 'bg-transparent border-transparent py-5'
+            ? 'bg-black/95 backdrop-blur-md border-gray-800 py-2 shadow-lg' 
+            : 'bg-transparent border-transparent py-3'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-12">
+          <div className="flex justify-between items-center h-10">
             
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center cursor-pointer">
@@ -65,7 +66,7 @@ const Navbar = () => {
                     src="/Alanxa.ai_Logo.png" 
                     alt="Alanxa AI" 
                     className={`transition-all duration-300 object-contain brightness-0 invert ${
-                      scrolled ? 'h-7' : 'h-8'
+                      scrolled ? 'h-4' : 'h-5'
                     }`}
                  />
               </Link>
@@ -125,10 +126,10 @@ const Navbar = () => {
               ))}
               
               <div className="pl-6 border-l border-gray-700 mx-2">
-                <Link to="/login" className={`px-5 py-2 rounded-full font-semibold text-xs border transition-all hover:scale-105 backdrop-blur-sm ${
+                <Link to="/login" className={`px-6 py-2 rounded-full font-bold text-xs transition-all hover:scale-105 shadow-lg shadow-indigo-500/20 ${
                     showDarkNav 
-                      ? 'border-gray-700 text-white bg-white/10 hover:bg-white/20' 
-                      : 'border-white/20 text-white bg-white/5 hover:bg-white/10'
+                      ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
+                      : 'bg-indigo-600/90 backdrop-blur-sm text-white hover:bg-indigo-600'
                 }`}>
                   Login
                 </Link>
@@ -167,14 +168,14 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-              className="fixed top-0 right-0 h-full w-[80%] max-w-sm bg-gray-900 border-l border-gray-800 shadow-2xl z-50 overflow-y-auto"
+              className="fixed top-0 right-0 h-full w-[80%] max-w-sm bg-black border-l border-gray-800 shadow-2xl z-50 overflow-y-auto"
             >
               <div className="p-6 h-full flex flex-col">
                 <div className="flex justify-between items-center mb-10">
                   <img 
                     src="/Alanxa.ai_Logo.png" 
                     alt="Alanxa AI" 
-                    className="h-7 w-auto brightness-0 invert"
+                    className="h-4 w-auto brightness-0 invert"
                   />
                   <button 
                     onClick={() => setIsOpen(false)}
@@ -189,32 +190,45 @@ const Navbar = () => {
                     <div key={item.name} className="border-b border-gray-800/50 last:border-0">
                       {item.dropdown ? (
                         <div className="py-2">
-                           <div className="px-4 py-3 text-white font-semibold text-base flex justify-between items-center">
+                           <button 
+                             onClick={() => setMobileSubmenuOpen(mobileSubmenuOpen === item.name ? null : item.name)}
+                             className="w-full px-4 py-3 text-white font-semibold text-base flex justify-between items-center hover:bg-white/5 transition-colors rounded-lg"
+                           >
                              {item.name}
-                             <ChevronDown className="w-4 h-4 text-gray-500" />
-                           </div>
-                           <div className="pl-4 space-y-1 bg-white/5 rounded-lg mx-2 mb-2">
-                             {item.dropdown.map(subItem => (
-                               <Link
-                                 key={subItem.name}
-                                 to={subItem.path}
-                                 className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 transition-all text-sm rounded-md"
-                                 onClick={() => setIsOpen(false)}
+                             <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${mobileSubmenuOpen === item.name ? 'rotate-180' : ''}`} />
+                           </button>
+                           <AnimatePresence>
+                             {mobileSubmenuOpen === item.name && (
+                               <motion.div
+                                 initial={{ height: 0, opacity: 0 }}
+                                 animate={{ height: "auto", opacity: 1 }}
+                                 exit={{ height: 0, opacity: 0 }}
+                                 className="overflow-hidden"
                                >
-                                 <span className="w-1.5 h-1.5 bg-gray-600 rounded-full"></span>
-                                 {subItem.name}
-                               </Link>
-                             ))}
-                           </div>
+                                 <div className="pl-4 space-y-1 bg-white/5 rounded-lg mx-2 mb-2 pt-1 pb-2 border-l-2 border-indigo-500/30">
+                                   {item.dropdown.map(subItem => (
+                                     <Link
+                                       key={subItem.name}
+                                       to={subItem.path}
+                                       className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 transition-all text-sm rounded-md"
+                                       onClick={() => setIsOpen(false)}
+                                     >
+                                       <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full"></span>
+                                       {subItem.name}
+                                     </Link>
+                                   ))}
+                                 </div>
+                               </motion.div>
+                             )}
+                           </AnimatePresence>
                         </div>
                       ) : (
                         <Link
                           to={item.path}
-                          className="flex items-center justify-between px-4 py-4 text-gray-300 font-medium hover:bg-white/5 hover:text-white transition-all rounded-lg"
+                          className="block px-4 py-4 text-gray-300 font-medium hover:bg-white/5 hover:text-white transition-all rounded-lg"
                           onClick={() => setIsOpen(false)}
                         >
                           {item.name}
-                          <ChevronRight className="w-4 h-4 text-gray-600" />
                         </Link>
                       )}
                     </div>
@@ -224,7 +238,7 @@ const Navbar = () => {
                 <div className="mt-8 pt-6 border-t border-gray-800">
                   <Link 
                     to="/login"
-                    className="block w-full py-3 rounded-lg bg-indigo-600 text-white font-bold text-center shadow-lg shadow-indigo-900/50 hover:bg-indigo-500 transition-all"
+                    className="block w-full py-3 rounded-lg bg-indigo-600 text-white font-bold text-center hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 transition-all"
                     onClick={() => setIsOpen(false)}
                   >
                     Login

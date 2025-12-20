@@ -8,6 +8,7 @@ const FreelancerApplicationSchema = new mongoose.Schema({
     experience: { type: String }, // Projects worked on
     resume: { type: String }, // URL or path
     interests: [{ type: String }], // Annotation, QA, etc.
+    position: { type: String },
     availability: { type: String },
     status: { type: String, default: 'Pending' },
     createdAt: { type: Date, default: Date.now }

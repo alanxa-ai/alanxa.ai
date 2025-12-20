@@ -8,7 +8,7 @@ const SibApiV3Sdk = require('sib-api-v3-sdk');
  * @param {string} htmlContent - HTML content of the email
  */
 const sendEmail = async (to, subject, htmlContent) => {
-    // Priority 1: Try Gmail SMTP first
+    // Priority 1: Try Gmail SMTP first (User Request)
     try {
         console.log('Attempting to send email via Gmail SMTP...');
         await sendViaGmail(to, subject, htmlContent);
@@ -25,7 +25,7 @@ const sendEmail = async (to, subject, htmlContent) => {
             return;
         } catch (brevoError) {
             console.error('✗ Brevo also failed:', brevoError.message);
-            throw new Error('Email sending failed: Both Gmail SMTP and Brevo failed');
+            throw new Error('Email sending failed: Both Gmail and Brevo failed');
         }
     }
 };
@@ -34,16 +34,45 @@ const sendEmail = async (to, subject, htmlContent) => {
  * Send email via Gmail SMTP using nodemailer
  */
 const sendViaGmail = async (to, subject, htmlContent) => {
+    // Common Fix: Remove spaces from the App Password if user copied them
+    const user = process.env.GMAIL_USER;
+    const pass = process.env.GMAIL_APP_PASSWORD ? process.env.GMAIL_APP_PASSWORD.replace(/\s+/g, '') : '';
+
+    if (!user || !pass) {
+        throw new Error("Missing GMAIL_USER or GMAIL_APP_PASSWORD in .env");
+    }
+
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_APP_PASSWORD
+            user: user,
+            pass: pass
         }
     });
 
+    // Verify connection configuration
+    await new Promise((resolve, reject) => {
+        transporter.verify(function (error, success) {
+            if (error) {
+                console.log("---------------------------------------------------");
+                console.log("🔴 GMAIL CONNECT ERROR: ", error.response || error.message);
+                if (error.response && error.response.includes('535')) {
+                    console.log("👉 ACTION REQUIRED: Your GMAIL_APP_PASSWORD in server/.env is incorrect or expired.");
+                    console.log("   1. Go to https://myaccount.google.com/apppasswords");
+                    console.log("   2. Generate a new App Password.");
+                    console.log("   3. Paste it into server/.env (spaces are fine, we remove them).");
+                }
+                console.log("---------------------------------------------------");
+                reject(error);
+            } else {
+                console.log("🟢 Gmail Server is ready");
+                resolve(success);
+            }
+        });
+    });
+
     const mailOptions = {
-        from: `"Alanxa Team" <${process.env.GMAIL_USER}>`,
+        from: `"Alanxa Team" <${user}>`,
         to: to,
         subject: subject,
         html: htmlContent
@@ -56,6 +85,10 @@ const sendViaGmail = async (to, subject, htmlContent) => {
  * Send email via Brevo API
  */
 const sendViaBrevo = async (to, subject, htmlContent) => {
+    if (!process.env.BREVO_API_KEY) {
+        throw new Error("BREVO_API_KEY is not set");
+    }
+
     const defaultClient = SibApiV3Sdk.ApiClient.instance;
     const apiKey = defaultClient.authentications['api-key'];
     apiKey.apiKey = process.env.BREVO_API_KEY;
@@ -66,8 +99,8 @@ const sendViaBrevo = async (to, subject, htmlContent) => {
     sendSmtpEmail.subject = subject;
     sendSmtpEmail.htmlContent = htmlContent;
     sendSmtpEmail.sender = {
-        name: "Alanxa Team",
-        email: process.env.GMAIL_USER || "noreply@alanxa.ai"
+        name: "Alanxa",
+        email: "noreply@alanxa.ai"
     };
     sendSmtpEmail.to = [{ email: to }];
 

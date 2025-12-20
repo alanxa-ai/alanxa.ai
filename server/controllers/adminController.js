@@ -4,9 +4,11 @@ const FreelancerApplication = require('../models/FreelancerApplication');
 const User = require('../models/User');
 const Subscriber = require('../models/Subscriber');
 const sendEmail = require('../utils/sendEmail');
+const { getNewsletterTemplate, getCredentialsTemplate } = require('../utils/emailTemplates');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const Project = require('../models/Project');
+const { CLIENT_URL } = require('../config/constants');
 
 // ==================== BLOG MANAGEMENT ====================
 
@@ -34,26 +36,10 @@ exports.createBlog = async (req, res) => {
                 try {
                     const subscribers = await Subscriber.find({});
                     if (subscribers.length > 0) {
-                        const subject = `New Insight: ${blog.title}`;
                         // Simple HTML template for newsletter
-                        const htmlContent = `
-                            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
-                                <div style="text-align: center; margin-bottom: 20px;">
-                                     <h1 style="color: #4F46E5;">Alanxa</h1>
-                                </div>
-                                <h2 style="color: #333; margin-bottom: 15px;">${blog.title}</h2>
-                                <p style="color: #666; font-style: italic; margin-bottom: 20px;">${blog.excerpt}</p>
-                                
-                                <div style="text-align: center; margin: 30px 0;">
-                                    <a href="http://localhost:5173/blog/${blog._id}" style="background-color: #4F46E5; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">Read Full Article</a>
-                                </div>
-
-                                <div style="margin-top: 30px; text-align: center; font-size: 12px; color: #999;">
-                                    <p>&copy; ${new Date().getFullYear()} Alanxa AI. All rights reserved.</p>
-                                    <p>You received this email because you are subscribed to our newsletter.</p>
-                                </div>
-                            </div>
-                       `;
+                        const subject = `New Insight: ${blog.title}`;
+                        const linkUrl = `${CLIENT_URL}/blog/${blog._id}`;
+                        const htmlContent = getNewsletterTemplate(blog.title, blog.excerpt, linkUrl);
 
                         // Send in batches or simple loop (using loop for now as count is likely low)
                         for (const sub of subscribers) {
@@ -282,9 +268,9 @@ exports.exportFreelancerApplications = async (req, res) => {
             .sort({ createdAt: -1 });
 
         // CSV format
-        const csvHeader = 'ID,Full Name,Email,Phone,Country,Expertise,Languages,Experience,Status,Notes,Created At,Reviewed By\n';
+        const csvHeader = 'ID,Full Name,Email,Phone,Country,Expertise,Languages,Experience,Resume,Status,Notes,Created At,Reviewed By\n';
         const csvRows = applications.map(a =>
-            `"${a._id}","${a.fullName}","${a.email}","${a.phone || ''}","${a.country}","${a.expertise}","${a.languages?.join(', ') || ''}","${a.experience || ''}","${a.status}","${a.notes || ''}","${a.createdAt}","${a.reviewedBy?.name || 'Not Reviewed'}"`
+            `"${a._id}","${a.fullName || a.name}","${a.email}","${a.phone || ''}","${a.country || ''}","${a.expertise || ''}","${a.languages || ''}","${a.experience || ''}","${a.resume || ''}","${a.status}","${a.notes || ''}","${a.createdAt}","${a.reviewedBy?.name || 'Not Reviewed'}"`
         ).join('\n');
 
         const csv = csvHeader + csvRows;
@@ -325,17 +311,7 @@ exports.createUser = async (req, res) => {
 
         // Send Email with credentials
         const emailSubject = `Welcome to Alanxa - Your ${role} Account`;
-        const emailBody = `
-            <h3>Welcome to Alanxa AI</h3>
-            <p>An account has been created for you as a <b>${role}</b>.</p>
-            <p>Login Credentials:</p>
-            <ul>
-                <li>Email: ${email}</li>
-                <li>Temporary Password: <b>${tempPassword}</b></li>
-            </ul>
-            <p>Please login and change your password immediately.</p>
-            <a href="http://localhost:5173/login">Login Here</a>
-        `;
+        const emailBody = getCredentialsTemplate(name, email, tempPassword, role);
 
         await sendEmail(email, emailSubject, emailBody);
 

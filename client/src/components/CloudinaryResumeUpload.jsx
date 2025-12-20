@@ -104,20 +104,20 @@ const CloudinaryResumeUpload = ({ onUploadSuccess, folder = 'alanxa/resumes' }) 
   return (
     <div className="cloudinary-upload w-full">
       {!fileData ? (
-        <div className="border-2 border-dashed border-gray-300 bg-gray-50 rounded-xl p-6 text-center hover:border-purple-500 hover:bg-purple-50/50 transition-all duration-300 group">
+        <div className="border-2 border-dashed border-gray-800 bg-[#0A0F1C]/50 rounded-xl p-6 text-center hover:border-indigo-500 hover:bg-[#0A0F1C] transition-all duration-300 group">
           <label htmlFor="resume-upload" className="cursor-pointer block">
             <div className="flex flex-col items-center">
               {uploading ? (
                 <>
-                  <Loader className="w-10 h-10 text-purple-600 animate-spin mb-3" />
-                  <p className="text-gray-900 font-bold">Uploading...</p>
+                  <Loader className="w-10 h-10 text-indigo-500 animate-spin mb-3" />
+                  <p className="text-white font-bold">Uploading...</p>
                 </>
               ) : (
                 <>
-                  <div className="p-3 bg-white rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform">
-                      <Upload className="w-6 h-6 text-purple-600" />
+                  <div className="p-3 bg-indigo-900/20 rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform">
+                      <Upload className="w-6 h-6 text-indigo-500" />
                   </div>
-                  <p className="text-gray-900 font-bold mb-1">Upload Resume</p>
+                  <p className="text-white font-bold mb-1">Upload Resume</p>
                   <p className="text-gray-500 text-xs">PDF, DOC, DOCX (Max 10MB)</p>
                 </>
               )}
@@ -133,26 +133,26 @@ const CloudinaryResumeUpload = ({ onUploadSuccess, folder = 'alanxa/resumes' }) 
           />
         </div>
       ) : (
-        <div className="relative group rounded-xl border border-gray-200 bg-white p-4 flex items-center gap-4">
-          <div className="p-3 bg-purple-100 rounded-lg">
-             <FileText className="w-6 h-6 text-purple-600" />
+        <div className="relative group rounded-xl border border-gray-800 bg-[#0A0F1C] p-4 flex items-center gap-4">
+          <div className="p-3 bg-indigo-900/20 rounded-lg">
+             <FileText className="w-6 h-6 text-indigo-400" />
           </div>
           <div className="flex-1 min-w-0">
-             <p className="font-bold text-gray-900 truncate">{fileData.name}</p>
+             <p className="font-bold text-white truncate">{fileData.name}</p>
              <p className="text-xs text-gray-500">{fileData.size}</p>
           </div>
           
           {uploading ? (
-             <Loader className="w-5 h-5 text-purple-600 animate-spin" />
+             <Loader className="w-5 h-5 text-indigo-500 animate-spin" />
           ) : (
              <div className="flex items-center gap-2">
-                 <div className="text-green-600 flex items-center gap-1 text-xs font-bold bg-green-50 px-2 py-1 rounded-full">
+                 <div className="text-green-400 flex items-center gap-1 text-xs font-bold bg-green-900/20 px-2 py-1 rounded-full border border-green-900/30">
                      <CheckCircle className="w-3 h-3" /> Uploaded
                  </div>
                  <button
                     type="button"
                     onClick={clearFile}
-                    className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition"
+                    className="p-1 text-gray-400 hover:text-red-400 hover:bg-red-900/20 rounded-full transition"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -162,9 +162,9 @@ const CloudinaryResumeUpload = ({ onUploadSuccess, folder = 'alanxa/resumes' }) 
       )}
 
       {error && (
-        <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2 animate-in fade-in slide-in-from-top-1">
-          <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-          <div className="text-red-700 text-xs font-medium">{error}</div>
+        <div className="mt-3 p-3 bg-red-900/20 border border-red-900/50 rounded-lg flex items-start gap-2 animate-in fade-in slide-in-from-top-1">
+          <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+          <div className="text-red-300 text-xs font-medium">{error}</div>
         </div>
       )}
     </div>

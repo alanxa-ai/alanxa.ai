@@ -19,33 +19,37 @@
   /* Sky Electric Blue */
 
   /* Background System */
-  --color-bg-light: #F1F5F9;
-  /* Soft White */
-  --color-bg-dark: #0F172A;
-  /* Navy Black */
-  --color-bg-card: #FFFFFF;
-  /* Pure White */
-  --color-border-light: #E2E8F0;
-  /* Card Borders */
+  --color-bg-light: #000000;
+  /* Deep Black */
+  --color-bg-dark: #000000;
+  /* Pure Black */
+  --color-bg-card: #0A0F1C;
+  /* Dark Navy for Cards */
+  --color-border-light: #1E293B;
+  /* Dark Borders */
 
   /* Text Colors */
-  --color-text-primary: #1E293B;
-  /* Slate Black */
-  --color-text-secondary: #475569;
-  /* Muted Slate */
+  --color-text-primary: #F8FAFC;
+  /* White */
+  --color-text-secondary: #94A3B8;
+  /* Slate 400 */
   --color-text-light-main: #F8FAFC;
   /* Main text on dark */
   --color-text-light-muted: #CBD5E1;
   /* Muted text on dark */
 
   /* CTA Hover */
-  --color-cta-hover: #0891C9;
-  /* Darker CTA */
+  --color-cta-hover: #4338CA;
+  /* Darker Indigo */
 }
 
 /* ========================================
    BASE STYLES
    ======================================== */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: var(--color-bg-light);
   color: var(--color-text-primary);
@@ -55,6 +59,7 @@ body {
   padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 /* ========================================
@@ -394,4 +399,123 @@ body {
 
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+/* Image Zoom Animation */
+@keyframes slowZoom {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-slow-zoom {
+  animation: slowZoom 20s ease-in-out infinite alternate;
+}
+
+/* ========================================
+   REACT QUILL DARK THEME STYLES
+   ======================================== */
+
+/* Editor container */
+.ql-container.ql-snow {
+  border: none !important;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Editor content area */
+.ql-editor {
+  color: #F8FAFC !important;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 200px;
+}
+
+.ql-editor p {
+  color: #F8FAFC !important;
+}
+
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3 {
+  color: #FFFFFF !important;
+}
+
+.ql-editor strong {
+  color: #FFFFFF !important;
+}
+
+.ql-editor em {
+  color: #E2E8F0 !important;
+}
+
+.ql-editor a {
+  color: #6366F1 !important;
+}
+
+.ql-editor blockquote {
+  border-left: 4px solid #6366F1;
+  padding-left: 16px;
+  color: #CBD5E1 !important;
+}
+
+.ql-editor ul,
+.ql-editor ol {
+  color: #F8FAFC !important;
+}
+
+.ql-editor li {
+  color: #F8FAFC !important;
+}
+
+/* Toolbar styles */
+.ql-toolbar.ql-snow {
+  border: none !important;
+  border-bottom: 1px solid #374151 !important;
+  background-color: #111827 !important;
+  border-radius: 8px 8px 0 0;
+}
+
+.ql-toolbar .ql-stroke {
+  stroke: #9CA3AF !important;
+}
+
+.ql-toolbar .ql-fill {
+  fill: #9CA3AF !important;
+}
+
+.ql-toolbar .ql-picker {
+  color: #9CA3AF !important;
+}
+
+.ql-toolbar .ql-picker-options {
+  background-color: #1F2937 !important;
+  border: 1px solid #374151 !important;
+}
+
+.ql-toolbar .ql-picker-item {
+  color: #E5E7EB !important;
+}
+
+.ql-toolbar .ql-picker-item:hover {
+  color: #6366F1 !important;
+}
+
+.ql-toolbar button:hover .ql-stroke,
+.ql-toolbar button.ql-active .ql-stroke {
+  stroke: #6366F1 !important;
+}
+
+.ql-toolbar button:hover .ql-fill,
+.ql-toolbar button.ql-active .ql-fill {
+  fill: #6366F1 !important;
+}
+
+/* Placeholder text */
+.ql-editor.ql-blank::before {
+  color: #6B7280 !important;
+  font-style: italic;
 }

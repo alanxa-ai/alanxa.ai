@@ -41,7 +41,7 @@ const Services = () => {
       useCases: ['OCR & Document Understanding', 'Entity Extraction (NER)', 'Image Bounding Boxes', 'Video Object Tracking'],
       reliability: 'Millions of tasks completed with >99% acceptance rates for clients like Uber and Google.',
       color: 'bg-cyan-600',
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+      image: "https://res.cloudinary.com/dikppmyhp/image/upload/v1766045863/Data_Annotation_qtyr3h.jpg"
     },
     {
       id: 'transcription',
@@ -51,7 +51,7 @@ const Services = () => {
       useCases: ['Audio Transcription', 'Subtitle Creation', 'Cultural Adaptation', 'Machine Translation Post-Editing'],
       reliability: 'Native speakers in 20+ Indian & Global languages (Hindi, Marathi, Tamil, etc.).',
       color: 'bg-emerald-600',
-      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
+      image: "https://res.cloudinary.com/dikppmyhp/image/upload/v1766045858/0.15_Transcription_tallpr.jpg"
     },
     {
       id: 'audio-voice',
@@ -66,7 +66,7 @@ const Services = () => {
   ];
 
   return (
-    <div className="bg-white overflow-hidden font-sans">
+    <div className="bg-black overflow-hidden font-sans">
       <SEO 
         title="Our Services - AI Training & Annotation"
         description="Comprehensive AI services including RLHF, Data Annotation, Content Moderation, and Transcription. Providing high-quality training data for LLMs and Computer Vision."
@@ -75,14 +75,14 @@ const Services = () => {
       />
       
       {/* 1. Modern Hero Section */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center bg-gray-900 overflow-hidden pt-20">
+      <section className="relative flex items-center bg-black overflow-hidden pt-24 pb-12 lg:pt-32 lg:pb-24 lg:min-h-[70vh]">
         <div className="absolute inset-0">
           <img 
-            src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1920&h=1080&fit=crop&q=80" 
+            src="https://res.cloudinary.com/dikppmyhp/image/upload/v1766136646/ChatGPT_Image_Dec_19_2025_03_00_33_PM_sdpumk.png" 
             alt="Data Services" 
-            className="w-full h-full object-cover opacity-30 animate-slow-zoom"
+            className="w-full h-full object-cover object-center opacity-30 animate-slow-zoom"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/90 to-transparent"></div>
+
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -92,32 +92,32 @@ const Services = () => {
                transition={{ duration: 0.8 }}
                className="max-w-3xl"
             >
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 mb-6 backdrop-blur-sm">
-                    <SparklesIcon className="w-4 h-4" />
-                    <span className="text-xs font-bold uppercase tracking-wider">World-Class Execution</span>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 mb-4 lg:mb-6 backdrop-blur-sm">
+                    <SparklesIcon className="w-3 h-3 lg:w-4 lg:h-4" />
+                    <span className="text-xs lg:text-sm font-bold uppercase tracking-wider">World-Class Execution</span>
                 </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                <h1 className="text-3xl lg:text-5xl font-bold text-white mb-4 lg:mb-6 leading-tight">
                     Data Services That <br/>
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-sky-400">Power Intelligence</span>
                 </h1>
-                <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-lg mb-8">
+                <p className="text-sm lg:text-base text-gray-100 leading-relaxed max-w-lg mb-6 lg:mb-8 font-medium">
                     From RLHF to Audio Annotation, we deliver the human intelligence your AI needs to succeed. Scalable, secure, and precise.
                 </p>
-                <Link to="/contact" className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-indigo-500/40 inline-flex items-center gap-2 text-base">
-                    Get a Custom Quote <ArrowRightIcon className="w-5 h-5"/>
+                <Link to="/contact" className="px-6 py-2.5 lg:px-8 lg:py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-indigo-500/40 inline-flex items-center gap-2 text-sm lg:text-base">
+                    Get a Custom Quote <ArrowRightIcon className="w-4 h-4"/>
                 </Link>
             </motion.div>
         </div>
       </section>
 
       {/* 2. Alternating Services List */}
-      <div className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-              <span className="text-indigo-600 font-bold tracking-widest uppercase text-xs mb-2 block">Our Expertise</span>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Comprehensive Solutions</h2>
+      <div className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+              <span className="text-indigo-300 font-bold tracking-widest uppercase text-xs mb-2 block">Our Expertise</span>
+              <h2 className="text-2xl md:text-3xl font-bold text-white">Comprehensive Solutions</h2>
           </div>
 
-          <div className="space-y-24">
+          <div className="space-y-16">
             {serviceSections.map((service, index) => {
               const Icon = service.icon;
               const isEven = index % 2 === 0;
@@ -129,13 +129,13 @@ const Services = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.6 }}
-                  className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-10 lg:gap-16`}
+                  className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-8 lg:gap-12`}
                   id={service.id}
                 >
                   {/* Image Side */}
-                  <div className="w-full lg:w-1/2 relative group">
-                      <div className={`absolute -inset-4 ${service.color} opacity-20 blur-2xl rounded-[2rem] group-hover:opacity-30 transition-opacity duration-500`}></div>
-                      <div className="relative rounded-3xl overflow-hidden shadow-xl transform group-hover:scale-[1.01] transition-transform duration-500 h-[280px] lg:h-[320px]">
+                  <div className="w-full lg:w-5/12 relative group">
+                      <div className={`absolute -inset-4 ${service.color} opacity-20 blur-xl rounded-[1.5rem] group-hover:opacity-30 transition-opacity duration-500`}></div>
+                      <div className="relative rounded-2xl overflow-hidden shadow-lg transform group-hover:scale-[1.01] transition-transform duration-500 h-[220px] lg:h-[260px]">
                           <img 
                             src={service.image} 
                             alt={service.title} 
@@ -144,48 +144,48 @@ const Services = () => {
                           <div className={`absolute inset-0 ${service.color} mix-blend-overlay opacity-20`}></div>
                       </div>
                       
-                      {/* Floating Badge */}
+                      {/* Floating Badge - Smaller */}
                       <motion.div 
                         initial={{ scale: 0 }}
                         whileInView={{ scale: 1 }}
                         transition={{ delay: 0.3 }}
-                        className="absolute -bottom-4 -right-4 bg-white p-3 rounded-xl shadow-lg flex items-center gap-3 border border-gray-100 max-w-[180px]"
+                        className="absolute -bottom-3 -right-3 bg-[#0A0F1C] p-2 rounded-lg shadow-md flex items-center gap-2 border border-gray-800 max-w-[150px]"
                       >
-                          <div className={`p-2 rounded-lg ${service.color} bg-opacity-10`}>
-                              <Icon className={`w-5 h-5 text-gray-700`} />
+                          <div className={`p-1.5 rounded-md ${service.color} bg-opacity-20`}>
+                              <Icon className={`w-4 h-4 text-gray-700`} />
                           </div>
-                          <span className="text-xs font-bold text-gray-800">Expert Verified</span>
+                          <span className="text-xs font-bold text-gray-100">Expert Verified</span>
                       </motion.div>
                   </div>
 
                   {/* Text Side */}
-                  <div className="w-full lg:w-1/2">
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${service.color} bg-opacity-10 text-gray-800 font-bold text-xs mb-4`}>
+                  <div className="w-full lg:w-7/12">
+                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${service.color} bg-opacity-20 text-gray-100 font-bold text-xs mb-3`}>
                           <Icon className="w-3 h-3" />
                           {service.title}
                       </div>
                       
-                      <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                      <h3 className="text-xl md:text-2xl font-bold text-white mb-2 leading-tight">
                           {service.title.split('&')[0]} <br/>
-                          <span className={`${service.color.replace('bg-', 'text-')} bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600`}>
+                          <span className={`${service.color.replace('bg-', 'text-')} bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200`}>
                               & {service.title.split('&')[1] || 'More'}
                           </span>
                       </h3>
                       
-                      <p className="text-base text-gray-600 leading-relaxed mb-6">
+                      <p className="text-sm text-gray-200 leading-relaxed mb-4">
                           {service.desc}
                       </p>
 
-                      <div className="bg-gray-50 rounded-xl p-5 border border-gray-100 mb-6 hover:shadow-md transition-shadow">
-                          <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm">
-                              <LayersIcon className="w-4 h-4 text-indigo-500" /> Use Cases
+                      <div className="bg-[#0A0F1C] rounded-xl p-4 border border-gray-800 mb-4 hover:shadow-sm transition-shadow">
+                          <h4 className="font-bold text-white mb-2 flex items-center gap-2 text-xs">
+                              <LayersIcon className="w-3 h-3 text-indigo-300" /> Use Cases
                           </h4>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                               {service.useCases.map((useCase, i) => (
                                   <motion.div 
                                     whileHover={{ x: 5 }}
                                     key={i} 
-                                    className="flex items-center gap-2 text-gray-600 text-xs font-medium"
+                                    className="flex items-center gap-2 text-gray-200 text-xs font-medium"
                                   >
                                       <CheckCircleIcon className={`w-3 h-3 ${service.color.replace('bg-', 'text-')} shrink-0`} />
                                       {useCase}
@@ -194,15 +194,15 @@ const Services = () => {
                           </div>
                       </div>
 
-                      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between border-t border-gray-100 pt-5">
-                           <div className="text-xs text-gray-500 italic max-w-xs">
+                      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between border-t border-gray-800 pt-4">
+                           <div className="text-xs text-gray-300 italic max-w-xs">
                                "{service.reliability}"
                            </div>
                            <Link 
                              to="/contact" 
-                             className="text-white bg-gray-900 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-800 transition-colors flex items-center gap-2 text-sm"
+                             className="text-black bg-white px-4 py-2 rounded-lg font-bold hover:bg-gray-200 transition-colors flex items-center gap-2 text-sm"
                            >
-                               Book Demo <ArrowRightIcon className="w-4 h-4" />
+                               Book Demo <ArrowRightIcon className="w-3 h-3" />
                            </Link>
                       </div>
                   </div>
@@ -213,7 +213,7 @@ const Services = () => {
       </div>
 
       {/* 3. Process Section */}
-      <section className="bg-gray-900 py-16 lg:py-24 text-white overflow-hidden">
+      <section className="bg-black py-12 lg:py-16 text-white overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
               <motion.div 
                 animate={{ rotate: 360 }}
@@ -223,12 +223,12 @@ const Services = () => {
                   <CpuIcon className="w-80 h-80 text-indigo-500" />
               </motion.div>
               
-              <div className="text-center mb-16 relative z-10">
-                  <h2 className="text-3xl md:text-4xl font-bold mb-3">How We Deliver Excellence</h2>
-                  <p className="text-gray-400 text-sm md:text-base">Our battle-tested workflow for consistent quality.</p>
+              <div className="text-center mb-10 relative z-10">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2">How We Deliver Excellence</h2>
+                  <p className="text-gray-200 text-xs md:text-sm">Our battle-tested workflow for consistent quality.</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
                   {[
                       { step: "01", title: "Consult", desc: "We define guidelines and edge cases." },
                       { step: "02", title: "Pilot", desc: "Small batch execution to align quality." },
@@ -241,11 +241,11 @@ const Services = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1 }}
                         whileHover={{ y: -5 }}
-                        className="bg-gray-800/40 p-6 rounded-2xl border border-gray-700 hover:border-indigo-500/50 hover:bg-gray-800/80 transition-all cursor-pointer"
+                        className="bg-gray-800/40 p-5 rounded-xl border border-gray-700 hover:border-indigo-500/50 hover:bg-gray-800/80 transition-all cursor-pointer"
                       >
-                          <div className="text-4xl font-bold text-gray-700/50 mb-4">{item.step}</div>
-                          <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
-                          <p className="text-gray-400 text-xs leading-relaxed">{item.desc}</p>
+                          <div className="text-4xl font-bold text-gray-600/50 mb-3">{item.step}</div>
+                          <h3 className="text-lg font-bold text-white mb-1.5">{item.title}</h3>
+                          <p className="text-gray-200 text-xs leading-relaxed">{item.desc}</p>
                       </motion.div>
                   ))}
               </div>
@@ -253,36 +253,42 @@ const Services = () => {
       </section>
 
       {/* 4. Final CTA */}
-      <section className="py-16 md:py-24 bg-white overflow-hidden">
-          <div className="max-w-5xl mx-auto px-4">
+      <section className="py-12 bg-black overflow-hidden">
+          <div className="max-w-3xl mx-auto px-4">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="relative rounded-[2rem] p-10 md:p-16 text-center text-white shadow-2xl overflow-hidden group bg-indigo-600"
+                className="relative rounded-2xl p-8 md:p-10 text-center text-white shadow-xl overflow-hidden group border border-gray-800"
               >
-                  {/* Animated Background */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-sky-600 animate-gradient-xy"></div>
-                  <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white opacity-10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
+                  {/* Background Image & Overlay */}
+                  <div className="absolute inset-0">
+                      <img 
+                        src="https://res.cloudinary.com/dikppmyhp/image/upload/v1766164357/WhatsApp_Image_2025-12-19_at_10.25.43_PM_bkrjeh.jpg" 
+                        alt="CTA Background" 
+                        className="w-full h-full object-cover opacity-100"
+                      />
+                      <div className="absolute inset-0 bg-[#020617]/60"></div>
+                  </div>
                   
                   {/* Grid Pattern Overlay */}
-                  <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px]"></div>
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px]"></div>
 
-                  <div className="relative z-10 max-w-2xl mx-auto">
+                  <div className="relative z-10 max-w-xl mx-auto">
                       <motion.div 
                         initial={{ y: 20, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.2 }}
                       >
-                          <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-indigo-100 font-semibold text-xs mb-6 shadow-sm">
+                          <span className="inline-block px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-indigo-100 font-semibold text-xs md:text-sm mb-4 shadow-sm">
                              ✨ Start Your AI Journey
                           </span>
-                          <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">
+                          <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight">
                               Ready to build something <br/> extraordinary?
                           </h2>
-                          <p className="text-indigo-100 text-base md:text-lg mb-8 leading-relaxed">
+                          <p className="text-white text-sm mb-6 leading-relaxed">
                               Get access to our expert workforce and enterprise-grade platform. 
-                              <span className="block mt-2 opacity-80 text-sm">Custom pilot programs available for volume datasets.</span>
+                              <span className="block mt-1 opacity-80 text-xs">Custom pilot programs available for volume datasets.</span>
                           </p>
                       </motion.div>
 
@@ -290,24 +296,24 @@ const Services = () => {
                         initial={{ y: 20, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.4 }}
-                        className="flex flex-col sm:flex-row justify-center gap-4 mb-8"
+                        className="flex flex-col sm:flex-row justify-center gap-3 mb-6"
                       >
-                          <Link to="/contact" className="bg-white text-indigo-700 px-8 py-3.5 rounded-full font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center gap-2 text-base">
-                              Start Free Pilot <ArrowRightIcon className="w-5 h-5"/>
+                          <Link to="/contact" className="bg-white text-indigo-700 px-6 py-2.5 rounded-full font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-base">
+                              Start Free Pilot <ArrowRightIcon className="w-4 h-4"/>
                           </Link>
-                          <Link to="/clients" className="px-8 py-3.5 rounded-full font-bold text-white border border-white/30 bg-white/5 backdrop-blur-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2 hover:-translate-y-1">
+                          <Link to="/clients" className="px-6 py-2.5 rounded-full font-bold text-white border border-white/30 bg-white/5 backdrop-blur-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2 hover:-translate-y-0.5 text-base">
                               See Case Studies
                           </Link>
                       </motion.div>
 
-                      <div className="flex flex-wrap justify-center gap-4 md:gap-8 pt-6 border-t border-white/10">
+                      <div className="flex flex-wrap justify-center gap-4 pt-5 border-t border-white/10">
                           {[
                               { text: "NDA Protected", icon: LockIcon },
                               { text: "Free Consultation", icon: CheckCircleIcon },
                               { text: "Global Coverage", icon: GlobeIcon }
                           ].map((item, i) => (
-                              <div key={i} className="flex items-center gap-2 text-indigo-100/90 font-medium text-xs md:text-sm">
-                                  <item.icon className="w-4 h-4 text-sky-300" />
+                              <div key={i} className="flex items-center gap-1.5 text-indigo-100/90 font-medium text-xs md:text-sm">
+                                  <item.icon className="w-3.5 h-3.5 text-sky-300" />
                                   {item.text}
                               </div>
                           ))}

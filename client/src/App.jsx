@@ -1,8 +1,10 @@
-import React, { Suspense, lazy, useEffect } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LoadingSpinner from "./components/LoadingSpinner";
+import SplashScreen from "./components/SplashScreen";
 import CookieConsent from "./components/CookieConsent";
 import { Toaster } from 'react-hot-toast';
 
@@ -19,6 +21,7 @@ const Contact = lazy(() => import("./pages/Contact"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const AccessRestricted = lazy(() => import("./pages/AccessRestricted"));
 
 // Dashboard Pages
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -42,6 +45,7 @@ const ScrollToTop = () => {
 
 const Layout = ({ children }) => {
   const location = useLocation();
+
   // Hide Navbar/Footer for all dashboard routes
   const isDashboard = location.pathname.startsWith('/admin') || 
                       location.pathname.startsWith('/client-dashboard') || 
@@ -60,12 +64,26 @@ const Layout = ({ children }) => {
   );
 };
 
+
 const App = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Splash screen timer
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />
+      <AnimatePresence>
+        {isLoading && <SplashScreen key="splash" />}
+      </AnimatePresence>
       <Layout>
-        <Suspense fallback={<LoadingSpinner />}>
+        <Suspense fallback={null}>
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
@@ -93,6 +111,7 @@ const App = () => {
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="/access-restricted" element={<AccessRestricted />} />
           </Routes>
         </Suspense>
       </Layout>

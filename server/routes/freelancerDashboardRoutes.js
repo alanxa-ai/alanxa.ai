@@ -49,12 +49,25 @@ router.put('/projects/:id/progress', protect, async (req, res) => {
     }
 });
 
+const projectUpload = require('../middleware/projectUploadMiddleware');
+const { SERVER_URL } = require('../config/constants');
+
 // Submit Work
-router.post('/projects/:id/submit', protect, async (req, res) => {
+router.post('/projects/:id/submit', protect, projectUpload.single('file'), async (req, res) => {
     try {
         console.log('Submission received for project:', req.params.id, 'User:', req.user.id);
-        console.log('Body:', req.body);
-        const { description, fileUrl } = req.body;
+
+        let { description, fileUrl } = req.body;
+
+        // If file was uploaded, store relative path
+        if (req.file) {
+            fileUrl = `/uploads/submissions/${req.file.filename}`;
+        }
+
+        if (!fileUrl) {
+            return res.status(400).json({ message: 'Please provide a file or a link.' });
+        }
+
         const project = await Project.findOneAndUpdate(
             {
                 _id: req.params.id,
@@ -64,7 +77,7 @@ router.post('/projects/:id/submit', protect, async (req, res) => {
                 ]
             },
             {
-                $push: { submissions: { description, fileUrl } },
+                $push: { submissions: { description, fileUrl, submittedAt: new Date() } },
                 status: 'For Review' // Auto-update status
             },
             { new: true }
@@ -72,7 +85,8 @@ router.post('/projects/:id/submit', protect, async (req, res) => {
         if (!project) return res.status(404).json({ message: 'Project not found' });
         res.json(project);
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        console.error("Submission Error:", error);
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 });
 

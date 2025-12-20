@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');
 const { protect } = require('../middleware/authMiddleware');
+const clientController = require('../controllers/clientController');
+
+// Submit new client request (Public)
+router.post('/', clientController.createRequest);
 
 // Get projects for logged-in client
 router.get('/projects', protect, async (req, res) => {

@@ -1,4 +1,6 @@
 const FreelancerApplication = require('../models/FreelancerApplication');
+const sendEmail = require('../utils/sendEmail');
+const { SERVER_URL, CLIENT_URL } = require('../config/constants'); // Centralized Config
 
 // Create new application
 exports.createApplication = async (req, res) => {
@@ -7,8 +9,9 @@ exports.createApplication = async (req, res) => {
 
         let resumeUrl = '';
         if (req.file) {
-            // Convert backslashes to forward slashes for URL path
-            resumeUrl = `${req.protocol}://${req.get('host')}/uploads/resumes/${req.file.filename}`;
+            // Use centralized SERVER_URL
+            const baseUrl = SERVER_URL || `${req.protocol}://${req.get('host')}`;
+            resumeUrl = `${baseUrl}/uploads/resumes/${req.file.filename}`;
         }
 
         const newApplication = new FreelancerApplication({
@@ -23,6 +26,43 @@ exports.createApplication = async (req, res) => {
         });
 
         await newApplication.save();
+
+        // 1. Send Notification to Admin
+        try {
+            await sendEmail(
+                process.env.GMAIL_USER,
+                `New Freelancer Application: ${name}`,
+                `<h1>New Application Received</h1>
+                 <p><b>Name:</b> ${name}</p>
+                 <p><b>Email:</b> ${email}</p>
+                 <p><b>Phone:</b> ${phone}</p>
+                 <p><b>Role:</b> ${interests}</p>
+                 <p><b>Resume:</b> <a href="${resumeUrl}">${resumeUrl}</a></p>
+                 <br/><a href="${CLIENT_URL}/admin">Login to review</a>`
+            );
+        } catch (emailError) {
+            console.error("Failed to send admin notification", emailError);
+        }
+
+        // 2. Send Confirmation to Freelancer
+        try {
+            await sendEmail(
+                email,
+                'Application Received - Alanxa AI',
+                `<div style="font-family: Arial, sans-serif; color: #333;">
+                    <h2>Hi ${name},</h2>
+                    <p>Thanks for applying to join the Alanxa AI freelancer network.</p>
+                    <p>We have received your application and our team is currently reviewing your profile.</p>
+                    <p>If your skills match our current projects, we will be in touch shortly for an interview/test.</p>
+                    <br/>
+                    <p>Best Regards,</p>
+                    <p><b>The Alanxa Team</b></p>
+                 </div>`
+            );
+        } catch (emailError) {
+            console.error("Failed to send freelancer confirmation", emailError);
+        }
+
         res.status(201).json({ message: 'Application submitted successfully', result: newApplication });
     } catch (error) {
         res.status(500).json({ message: 'Server Error', error: error.message });

@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const sendEmail = require('../utils/sendEmail');
+const { getOtpTemplate, getConfirmationTemplate } = require('../utils/emailTemplates');
 const { OAuth2Client } = require('google-auth-library');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -42,7 +43,8 @@ exports.register = async (req, res) => {
             await user.save();
         }
 
-        await sendEmail(email, 'Your Verification Code', `<p>Your OTP is <b>${otp}</b>. It expires in 10 minutes.</p>`);
+        const emailContent = getOtpTemplate(otp);
+        await sendEmail(email, 'Your Verification Code', emailContent);
 
         res.status(201).json({ message: 'OTP sent to email' });
     } catch (error) {
@@ -67,6 +69,15 @@ exports.verifyOtp = async (req, res) => {
         user.otp = undefined;
         user.otpExpires = undefined;
         await user.save();
+
+        // Send confirmation/welcome email
+        try {
+            const confirmContent = getConfirmationTemplate(user.name, "account verification");
+            await sendEmail(user.email, "Welcome to Alanxa - Account Verified", confirmContent);
+        } catch (mailErr) {
+            console.error("Confirmation email failed", mailErr);
+            // Don't fail the request if just the confirmation email fails
+        }
 
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
@@ -141,7 +152,8 @@ exports.forgotPassword = async (req, res) => {
         user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
         await user.save();
 
-        await sendEmail(email, 'Password Reset OTP', `<p>Your Password Reset OTP is <b>${otp}</b></p>`);
+        const emailContent = getOtpTemplate(otp);
+        await sendEmail(email, 'Password Reset OTP', emailContent);
         res.status(200).json({ message: 'OTP sent to email' });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
