@@ -797,7 +797,7 @@ const ProjectsManagement = ({ projects, users, showForm, setShowForm, onCreatePr
                                          const url = p.submissions[p.submissions.length-1].fileUrl;
                                          if (!url) return '#';
                                          if (url.startsWith('http')) return url;
-                                         return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${url}`;
+                                         return `${import.meta.env.VITE_API_URL}${url}`;
                                      })()} target="_blank" rel="noopener noreferrer" className="underline truncate block mb-2 text-green-300 hover:text-green-200">
                                         View Submission
                                      </a>
