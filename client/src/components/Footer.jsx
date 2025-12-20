@@ -20,25 +20,29 @@ const Footer = () => {
                   src="/Alanxa.ai_Logo.png" 
                   alt="Alanxa" 
                   className="h-5 w-auto object-contain brightness-0 invert" 
+                  width="120"
+                  height="20"
+                  loading="lazy"
+                  decoding="async"
                 />
               </Link>
               <p className="text-gray-400 mb-6 leading-relaxed max-w-sm">
                 Professional AI Training & Data Annotation services powering the next generation of intelligent systems. Accurate, scalable, and human-verified.
               </p>
               <div className="flex space-x-4">
-                  <a href="https://www.linkedin.com/company/alanxa-ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-full hover:bg-blue-600 transition-colors text-gray-400 hover:text-white">
+                  <a href="https://www.linkedin.com/company/alanxa-ai" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="p-2 bg-gray-800 rounded-full hover:bg-blue-600 transition-colors text-gray-400 hover:text-white">
                       <LinkedinIcon className="w-5 h-5" />
                   </a>
-                  <a href="https://x.com/alanxa_ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-full hover:bg-black transition-colors text-gray-400 hover:text-white">
+                  <a href="https://x.com/alanxa_ai" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="p-2 bg-gray-800 rounded-full hover:bg-black transition-colors text-gray-400 hover:text-white">
                       <TwitterIcon className="w-5 h-5" />
                   </a>
-                  <a href="https://www.instagram.com/alanxa.ai/" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-full hover:bg-pink-600 transition-colors text-gray-400 hover:text-white">
+                  <a href="https://www.instagram.com/alanxa.ai/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="p-2 bg-gray-800 rounded-full hover:bg-pink-600 transition-colors text-gray-400 hover:text-white">
                       <InstagramIcon className="w-5 h-5" />
                   </a>
-                  <a href="https://www.facebook.com/alanxa07" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-full hover:bg-blue-700 transition-colors text-gray-400 hover:text-white">
+                  <a href="https://www.facebook.com/alanxa07" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-2 bg-gray-800 rounded-full hover:bg-blue-700 transition-colors text-gray-400 hover:text-white">
                       <FacebookIcon className="w-5 h-5" />
                   </a>
-                  <a href="https://www.threads.com/@alanxa.ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition-colors text-gray-400 hover:text-white">
+                  <a href="https://www.threads.com/@alanxa.ai" target="_blank" rel="noopener noreferrer" aria-label="Threads" className="p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition-colors text-gray-400 hover:text-white">
                       <ThreadsIcon className="w-5 h-5" />
                   </a>
               </div>

@@ -68,6 +68,10 @@ const Navbar = () => {
                     className={`transition-all duration-300 object-contain brightness-0 invert ${
                       scrolled ? 'h-4' : 'h-5'
                     }`}
+                    width="120"
+                    height="20"
+                    loading="eager"
+                    decoding="async"
                  />
               </Link>
             </div>
@@ -141,6 +145,7 @@ const Navbar = () => {
               <button 
                 onClick={() => setIsOpen(true)} 
                 className="text-white hover:text-gray-300 transition-colors focus:outline-none"
+                aria-label="Open main menu"
               >
                 <Menu className="h-6 w-6" strokeWidth={2} />
               </button>
@@ -180,6 +185,7 @@ const Navbar = () => {
                   <button 
                     onClick={() => setIsOpen(false)}
                     className="p-2 rounded-full hover:bg-white/10 transition-colors text-gray-400 hover:text-white"
+                    aria-label="Close menu"
                   >
                     <X className="h-5 w-5" />
                   </button>

@@ -69,22 +69,30 @@ const Blog = () => {
     <div className="bg-black min-h-screen font-sans">
       
       {/* 1. Compact Hero */}
-      <section className="relative pt-32 pb-12 bg-black text-white overflow-hidden">
+      {/* 1. Compact Hero */}
+      <section className="relative pt-32 pb-12 bg-black text-white overflow-hidden min-h-[50vh] flex items-center justify-center">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/90 to-slate-900/95 z-10"></div>
           <img 
-            src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1920&q=80" 
+            src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766045858/0.30_Alanxa_work_colture_image_4_x5jfxx.jpg" 
+            srcSet="
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_640/v1766045858/0.30_Alanxa_work_colture_image_4_x5jfxx.jpg 640w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1024/v1766045858/0.30_Alanxa_work_colture_image_4_x5jfxx.jpg 1024w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766045858/0.30_Alanxa_work_colture_image_4_x5jfxx.jpg 1920w
+            "
+            aria-hidden="true"
             alt="Background" 
             className="w-full h-full object-cover opacity-30"
+            width="1920"
+            height="1080"
+            fetchPriority="high"
+            decoding="async"
           />
         </div>
 
         <div className="relative z-20 max-w-5xl mx-auto px-4 text-center">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
+            {/* Removed motion.div for LCP */}
+            <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 backdrop-blur-md border border-indigo-500/30 mb-4">
                  <SparklesIcon className="w-3.5 h-3.5 text-indigo-300" />
                  <span className="text-xs font-bold tracking-wider uppercase text-indigo-100">Alanxa Intelligence Hub</span>
@@ -95,7 +103,7 @@ const Blog = () => {
               <p className="text-sm text-gray-300 max-w-xl mx-auto leading-relaxed">
                  Expert perspectives on data annotation, RLHF, and the future of human-in-the-loop AI.
               </p>
-            </motion.div>
+            </div>
         </div>
       </section>
 
@@ -150,9 +158,13 @@ const Blog = () => {
                  >
                     <div className="h-48 overflow-hidden relative">
                        <img 
-                          src={article.featuredImage || "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80"} 
+                          src={article.featuredImage || "https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_800/v1766045166/0.37_seconds_Careers_backround_ueh07k.jpg"} 
                           alt={article.title} 
                           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                          width="400"
+                          height="192"
+                          loading="lazy"
+                          decoding="async"
                        />
                        <div className="absolute top-3 left-3 bg-black/80 backdrop-blur px-2.5 py-1 rounded-md text-sm font-bold uppercase tracking-wider text-indigo-400 shadow-sm border border-gray-800">
                           {article.category || 'Technology'}

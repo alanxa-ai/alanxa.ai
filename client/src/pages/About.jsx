@@ -17,12 +17,8 @@ const About = () => {
       />
       
       {/* 1. Vision Header (Moved to Top, Soft White, Small Text) */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="max-w-4xl mx-auto text-center mb-10 pt-2"
-      >
+      {/* 1. Vision Header (Moved to Top, Soft White, Small Text) */}
+      <div className="max-w-4xl mx-auto text-center mb-10 pt-2">
           <div className="inline-block p-2 rounded-full bg-[#0A0F1C] border border-indigo-900/30 mb-4">
               <Sparkles className="w-4 h-4 text-indigo-500" />
           </div>
@@ -38,21 +34,18 @@ const About = () => {
           <p className="text-gray-300 text-sm">
               Where human intelligence teaches artificial intelligence to feel human.
           </p>
-      </motion.div>
+      </div>
 
       {/* 2. Founder's Profile (Circular Image) */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-4xl mx-auto mb-16 text-center"
-      >
+      <div className="max-w-4xl mx-auto mb-16 text-center">
           <div className="relative inline-block mb-4 group">
               <div className="absolute inset-0 bg-indigo-500 rounded-full blur-xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
               <img 
                   src="/founder.jpg" 
                   alt="Aman Shaikh" 
                   className="relative z-10 w-32 h-32 object-cover rounded-full shadow-lg border-2 border-white" 
+                  width="128"
+                  height="128"
               />
           </div>
           
@@ -67,7 +60,7 @@ const About = () => {
           <p className="text-sm text-gray-200 leading-relaxed font-light max-w-xl mx-auto">
               Alanxa.ai was created with the belief that artificial intelligence should feel human. True intelligence is not just about processing data but understanding people, cultures, emotions, and voices. Our work brings this belief to life.
           </p>
-      </motion.div>
+      </div>
 
       {/* 3. Strategic Pillars (Animated Grid) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4 max-w-7xl mx-auto mb-16">

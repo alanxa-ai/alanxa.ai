@@ -37,11 +37,152 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Optimized Font Loading (Non-Blocking) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"
+    media="print" onload="this.media='all'" />
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet" />
+  </noscript>
+
+  <!-- Preload Critical Assets -->
+  <link rel="preconnect" href="https://res.cloudinary.com" />
+  <link rel="preload" as="image"
+    href="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_640/v1766045166/0.37_seconds_Careers_backround_ueh07k.jpg"
+    fetchpriority="high" media="(max-width: 640px)" />
+  <link rel="preload" as="image"
+    href="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766045166/0.37_seconds_Careers_backround_ueh07k.jpg"
+    fetchpriority="high" media="(min-width: 641px)" />
+
+  <style>
+    /* Critical Inline CSS for App Shell */
+    body {
+      background-color: #000;
+      margin: 0;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .shell-nav {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 50;
+    }
+
+    .shell-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .shell-logo {
+      height: 20px;
+      width: 120px;
+      filter: invert(1) brightness(0);
+      object-fit: contain;
+    }
+
+    .shell-hero {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .shell-hero {
+        height: 85vh;
+      }
+    }
+
+    /* Instant Paint - No Animations for Shell to reduce Main Thread CPU usage */
+    .shell-text {
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      padding: 0 16px;
+    }
+
+    /* Match React Home Page Typography exactly */
+    .shell-text h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      line-height: 1.25;
+      color: #fff;
+    }
+
+    .shell-sub {
+      font-size: 0.625rem;
+      /* ~10px */
+      color: #d1d5db;
+      /* gray-300 */
+      max-width: 42rem;
+      margin: 0 auto;
+      font-weight: 300;
+    }
+
+    @media (min-width: 768px) {
+      .shell-text h1 {
+        font-size: 3.75rem;
+        line-height: 1;
+        margin-bottom: 1.25rem;
+      }
+
+      .shell-sub {
+        font-size: 1.125rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .shell-text h1 {
+        font-size: 4.5rem;
+      }
+
+      .shell-sub {
+        font-size: 1.25rem;
+      }
+    }
+
+    /* Gradient Background - Zero Bandwidth */
+    .shell-hero {
+      background: radial-gradient(circle at center, #1e1b4b 0%, #020617 100%);
+    }
+  </style>
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <!-- App Shell (Instantly Visible) -->
+    <nav class="shell-nav">
+      <div class="shell-container">
+        <img src="/Alanxa.ai_Logo.png" alt="Alanxa AI" class="shell-logo" width="120" height="20" />
+      </div>
+    </nav>
+    <section class="shell-hero">
+      <div class="shell-text">
+        <div
+          style="display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:9999px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);margin-bottom:8px;">
+          <span style="font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">Global AI Solutions
+            Provider</span>
+        </div>
+        <h1>Data That Makes <br /> AI Human-Like</h1>
+        <p class="shell-sub">Premium AI training, RLHF, and multilingual data annotation services trusted by pioneers
+          like Google, Meta, and Uber.</p>
+      </div>
+    </section>
+  </div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 

@@ -57,40 +57,16 @@ const Register = () => {
   return (
     <div className="min-h-screen relative flex items-center justify-center bg-black overflow-hidden selection:bg-indigo-500/30 selection:text-indigo-200">
       
-      {/* 1. Dynamic Background Elements (Deep Space) */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-          {/* Noise Texture */}
-          <div className="absolute inset-0 z-20 opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-          
-          {/* Moving Orbs */}
-          <motion.div 
-            animate={{ 
-               opacity: [0.3, 0.5, 0.3], 
-               scale: [1, 1.2, 1], 
-               rotate: [0, 90, 0] 
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-indigo-900/20 blur-[120px]"
-          />
-          <motion.div 
-            animate={{ 
-               opacity: [0.2, 0.4, 0.2], 
-               scale: [1, 1.1, 1], 
-               x: [0, 50, 0] 
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-purple-900/20 blur-[120px]"
-          />
+      {/* 1. Dynamic Background Elements (Deep Space - Optimized) */}
+      <div className="absolute inset-0 z-0 overflow-hidden bg-black">
+          {/* Static Background Gradients */}
+          <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-indigo-900/20 blur-[120px]"></div>
+          <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-purple-900/20 blur-[120px]"></div>
       </div>
 
       {/* 2. Glassmorphism Card */}
       <div className="relative z-10 w-full max-w-md p-6">
-        <motion.div 
-           initial={{ opacity: 0, y: 20 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ duration: 0.5 }}
-           className="relative"
-        >
+        <div className="relative">
           {/* Glowing Border Wrap */}
           <div className="absolute -inset-[1px] bg-gradient-to-b from-white/10 to-transparent rounded-[2rem] pointer-events-none"></div>
           
@@ -297,7 +273,7 @@ const Register = () => {
                 </p>
              </div>
           </div>
-        </motion.div>
+        </div>
         
         {/* Footer Text */}
         <div className="absolute bottom-6 left-0 right-0 text-center pointer-events-none">

@@ -8,10 +8,12 @@ import SplashScreen from "./components/SplashScreen";
 import CookieConsent from "./components/CookieConsent";
 import { Toaster } from 'react-hot-toast';
 
+// Direct imports for Critical Path (Home/Culture) to avoid CLS drift from Shell
+import Home from "./pages/Home";
+import Culture from "./pages/Culture";
+
 // Lazy Load Pages for Performance
-const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
-const Culture = lazy(() => import("./pages/Culture"));
 const Services = lazy(() => import("./pages/Services"));
 const Clients = lazy(() => import("./pages/Clients"));
 const Freelancers = lazy(() => import("./pages/Freelancers"));
@@ -66,14 +68,11 @@ const Layout = ({ children }) => {
 
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Splash screen timer
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2500);
-    return () => clearTimeout(timer);
+    // Optional: Add logic here if you need to wait for something real, 
+    // but for 100% performance, we render immediately.
   }, []);
 
   return (

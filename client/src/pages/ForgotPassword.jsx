@@ -46,17 +46,13 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-       {/* Ambient Background */}
+       {/* Ambient Background - Optimized */}
        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-900/20 rounded-full blur-[120px] animate-pulse"></div>
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-900/10 rounded-full blur-[120px] animate-pulse" style={{animationDelay: '2s'}}></div>
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-900/20 rounded-full blur-[120px]"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-900/10 rounded-full blur-[120px]"></div>
        </div>
 
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="max-w-md w-full bg-[#0A0F1C]/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white/5 relative z-10"
-      >
+      <div className="max-w-md w-full bg-[#0A0F1C]/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white/5 relative z-10">
         <div className="text-center mb-8">
            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 mb-4 ring-1 ring-indigo-500/20">
               <KeyRound className="w-6 h-6" />
@@ -150,7 +146,7 @@ const ForgotPassword = () => {
             <ArrowLeft className="w-5 h-5" /> Back to Login
           </Link>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };

@@ -61,12 +61,22 @@ const Clients = () => {
       {/* 1. Hero Section (Compact) */}
       {/* 1. Hero Section (Professional SaaS Style) */}
       <section className="relative w-full h-[90vh] min-h-[600px] flex items-center overflow-hidden bg-black">
-        {/* Background Image - Full Coverage */}
+        {/* Background Image - Full Coverage - Optimized */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://res.cloudinary.com/dikppmyhp/image/upload/v1766045865/0.20_second_Scale_AI_with_cczzbi.jpg"
+            src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_640/v1766045865/0.20_second_Scale_AI_with_cczzbi.jpg"
+            srcSet="
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_640/v1766045865/0.20_second_Scale_AI_with_cczzbi.jpg 640w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1024/v1766045865/0.20_second_Scale_AI_with_cczzbi.jpg 1024w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766045865/0.20_second_Scale_AI_with_cczzbi.jpg 1920w
+            "
+            sizes="100vw"
             alt="Enterprise AI" 
             className="w-full h-full object-cover opacity-90"
+            width="1920"
+            height="1080"
+            fetchPriority="high"
+            decoding="async"
           />
           {/* Professional Overlay: Darker on right for text readability */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-black/50 to-black/90" />
@@ -74,12 +84,8 @@ const Clients = () => {
 
         {/* Content Container - Right Aligned */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-full flex flex-col justify-center items-center text-center md:items-end md:text-right">
-             <motion.div 
-               initial={{ opacity: 0, x: 50 }}
-               animate={{ opacity: 1, x: 0 }}
-               transition={{ duration: 0.8, ease: "easeOut" }}
-               className="max-w-2xl w-full"
-             >
+             {/* Removed motion.div for LCP */}
+             <div className="max-w-2xl w-full">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0A0F1C]/80 border border-gray-700/50 text-indigo-300 mb-6 backdrop-blur-xl hover:border-indigo-500/50 transition-colors cursor-default mx-auto md:ml-auto md:mr-0">
                     <Briefcase className="w-3.5 h-3.5" />
                     <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-bold">Enterprise Solutions</span>
@@ -110,7 +116,7 @@ const Clients = () => {
                       Case Studies <Send className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                    </button>
                 </div>
-             </motion.div>
+             </div>
         </div>
       </section>
 

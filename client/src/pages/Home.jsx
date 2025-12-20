@@ -116,43 +116,42 @@ const Home = () => {
       
       {/* 1. Cinematic Hero Section */}
       <section ref={targetRef} className="relative min-h-[50vh] md:min-h-[85vh] flex items-center justify-center overflow-hidden bg-black pt-24 pb-12 md:pt-32 md:pb-20">
-        {/* Background Parallax */}
-        <motion.div style={{ opacity, scale, y }} className="absolute inset-0">
+        {/* Background Image - Optimized for LCP (No JS Parallax on Mobile/Initial Load) */}
+        <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black/40 z-10" />
           <img 
-            src="https://res.cloudinary.com/dikppmyhp/image/upload/v1766143052/WhatsApp_Image_2025-12-19_at_4.46.30_PM_tejjwi.jpg"
+            src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766143052/WhatsApp_Image_2025-12-19_at_4.46.30_PM_tejjwi.jpg"
+            srcSet="
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_640/v1766143052/WhatsApp_Image_2025-12-19_at_4.46.30_PM_tejjwi.jpg 640w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1024/v1766143052/WhatsApp_Image_2025-12-19_at_4.46.30_PM_tejjwi.jpg 1024w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766143052/WhatsApp_Image_2025-12-19_at_4.46.30_PM_tejjwi.jpg 1920w
+            "
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
             alt="Global AI Network"
             className="w-full h-full object-cover object-center"
+            width="1920"
+            height="1080"
+            fetchPriority="high"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-gray-900 z-10"></div>
-        </motion.div>
+        </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center w-full">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            <motion.div 
-              initial={{ scale: 0 }} 
-              animate={{ scale: 1 }} 
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          {/* Removed motion.div initial opacity=0 to prevent High LCP */}
+          <div>
+            <div 
               className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-white mb-2 shadow-xl hover:bg-white/20 transition-colors cursor-default"
             >
               <Globe className="w-2 h-2 md:w-3 md:h-3 text-sky-400" />
               <span className="text-[8px] md:text-sm font-bold tracking-widest uppercase">Global AI Solutions Provider</span>
-            </motion.div>
+            </div>
 
             <h1 className="text-xl md:text-6xl lg:text-7xl font-bold text-white mb-3 tracking-tight leading-tight bg-clip-text">
               Data That Makes <br />
-              <motion.span 
-                initial={{ opacity: 0, filter: "blur(10px)" }}
-                animate={{ opacity: 1, filter: "blur(0px)" }}
-                transition={{ duration: 1, delay: 0.5 }}
-                className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-400 to-teal-300 inline-block pb-1"
-              >
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-400 to-teal-300 inline-block pb-1">
                 AI Human-Like
-              </motion.span>
+              </span>
             </h1>
 
             <p className="text-[10px] md:text-lg lg:text-xl text-gray-300 mb-5 max-w-2xl mx-auto leading-relaxed font-light px-4">
@@ -160,19 +159,20 @@ const Home = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center items-center gap-2 w-full sm:w-auto px-6">
-              <Link to="/clients" className="group w-[180px] sm:w-auto px-4 py-1.5 md:px-6 md:py-3 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[10px] md:text-base flex items-center justify-center gap-1.5 shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] transition-all duration-300 transform hover:-translate-y-0.5">
+              <Link to="/clients" aria-label="Partner With Us" className="group w-[180px] sm:w-auto px-4 py-1.5 md:px-6 md:py-3 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[10px] md:text-base flex items-center justify-center gap-1.5 shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] transition-all duration-300 transform hover:-translate-y-0.5">
                 Partner With Us
                 <ArrowRight className="w-2.5 h-2.5 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link 
                 to="/freelancers" 
+                aria-label="Join Our Talent Network"
                 className="group w-[180px] sm:w-auto px-4 py-1.5 md:px-6 md:py-3 rounded-full font-bold text-[10px] md:text-base text-white border border-white/20 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all flex items-center justify-center gap-1.5 hover:border-indigo-400/50 transform hover:-translate-y-0.5"
               >
                 <Users className="w-2.5 h-2.5 md:w-4 md:h-4 text-sky-300 group-hover:text-white transition-colors" />
                 Join Our Talent Network
               </Link>
             </div>
-          </motion.div>
+          </div>
         </div>
         
         {/* Scroll Indicator */}
@@ -192,16 +192,13 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-               <motion.div 
+               <div 
                  key={index}
-                 initial={{ opacity: 0, y: 20 }}
-                 whileInView={{ opacity: 1, y: 0 }}
-                 transition={{ delay: index * 0.1 }}
                  className="text-center group"
                >
                  <h3 className="text-base md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-400 to-teal-300 mb-0.5 md:mb-2 group-hover:scale-105 transition-transform duration-300">{stat.value}</h3>
                  <p className="text-[8px] md:text-sm uppercase tracking-widest text-gray-200 font-bold group-hover:text-white transition-colors">{stat.label}</p>
-               </motion.div>
+               </div>
             ))}
           </div>
         </div>
@@ -220,6 +217,9 @@ const Home = () => {
                   src={client.logo} 
                   alt={client.name} 
                   className="h-8 md:h-10 object-contain" 
+                  width="150"
+                  height="40"
+                  loading="lazy"
                   onError={(e) => { 
                       e.target.style.display='none'; 
                       e.target.nextSibling.style.display='block';
@@ -332,7 +332,7 @@ const Home = () => {
                           </div>
                       </div>
 
-                      <Link to="/about" className="text-indigo-400 font-bold inline-flex items-center gap-2 hover:gap-3 transition-all text-base">
+                      <Link to="/about" aria-label="More About Us" className="text-indigo-400 font-bold inline-flex items-center gap-2 hover:gap-3 transition-all text-base">
                           More About Us <ArrowRight className="w-4 h-4" />
                       </Link>
                   </motion.div>
@@ -346,16 +346,19 @@ const Home = () => {
                   >
                       <div className="absolute -inset-4 bg-gradient-to-tr from-indigo-500 to-teal-500 opacity-20 blur-2xl rounded-full"></div>
                       <img 
-                        src="https://res.cloudinary.com/dikppmyhp/image/upload/v1766045862/Our_mission_image_ytxpkx.jpg" 
+                        src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto/v1766045862/Our_mission_image_ytxpkx.jpg" 
                         alt="Team Meeting" 
                         className="relative rounded-2xl shadow-xl border-4 border-white object-cover h-[450px] md:h-[550px] w-full transform hover:scale-[1.01] transition-transform duration-500"
+                        width="600"
+                        height="550"
+                        loading="lazy"
                       />
                       <div className="absolute -bottom-6 -left-6 bg-[#0A0F1C] p-5 rounded-xl shadow-xl max-w-xs hidden md:block border border-gray-800">
                           <div className="flex items-center gap-4 mb-2">
                               <div className="flex -space-x-3">
                                   {[1,2,3,4].map(i => (
                                       <div key={i} className="w-8 h-8 rounded-full bg-gray-700 border-2 border-[#0A0F1C] flex items-center justify-center text-xs font-bold overflow-hidden">
-                                          <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" />
+                                          <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" width="32" height="32" loading="lazy" />
                                       </div>
                                   ))}
                               </div>
@@ -373,7 +376,14 @@ const Home = () => {
       {/* 6. Global Reach (Modern Map Viz) */}
       <section className="py-20 bg-black text-white relative overflow-hidden">
         <div className="absolute inset-0">
-             <img src="https://res.cloudinary.com/dikppmyhp/image/upload/v1766136113/ChatGPT_Image_Dec_19_2025_02_51_16_PM_wrefxa.png" className="w-full h-full object-cover opacity-20 mix-blend-screen" alt="Global Map" />
+             <img 
+                src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto/v1766136113/ChatGPT_Image_Dec_19_2025_02_51_16_PM_wrefxa.png" 
+                className="w-full h-full object-cover opacity-20 mix-blend-screen" 
+                alt="Global Map" 
+                width="1920"
+                height="1080"
+                loading="lazy"
+            />
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
@@ -495,9 +505,12 @@ const Home = () => {
           {/* Background Image with Zoom Effect */}
           <div className="absolute inset-0 overflow-hidden">
               <img 
-                src="https://res.cloudinary.com/dikppmyhp/image/upload/v1766045150/0.08_seconds_h3poas.jpg" 
+                src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto/v1766045150/0.08_seconds_h3poas.jpg" 
                 alt="Modern Office Team" 
                 className="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-[15s] ease-linear"
+                width="1920"
+                height="1080"
+                loading="lazy"
               />
               {/* Professional Gradient Overlay */}
               <div className="absolute inset-0 bg-black/20"></div>

@@ -156,10 +156,8 @@ const Freelancers = () => {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
            <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              {/* Removed motion.div for LCP */}
+              <div 
                 className="w-full lg:w-1/2 text-center lg:text-left pt-8 lg:pt-0"
               >
                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 mb-6 backdrop-blur-md shadow-lg shadow-indigo-500/10 mx-auto lg:mx-0">
@@ -181,12 +179,20 @@ const Freelancers = () => {
                        Explore Roles
                     </button>
                  </div>
-              </motion.div>
+              </div>
 
               <div className="w-full lg:w-1/2 relative mt-8 lg:mt-0 px-4 md:px-0">
                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 group max-w-lg mx-auto lg:max-w-none">
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F1C] via-transparent to-transparent z-10 opacity-60"></div>
-                    <img src="https://res.cloudinary.com/dikppmyhp/image/upload/v1766045858/0.30_Alanxa_work_colture_image_4_x5jfxx.jpg" alt="Remote Team" className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                    <img 
+                        src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_800/v1766045858/0.30_Alanxa_work_colture_image_4_x5jfxx.jpg" 
+                        alt="Remote Team" 
+                        className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover transform group-hover:scale-105 transition-transform duration-700" 
+                        width="600"
+                        height="500"
+                        fetchPriority="high"
+                        decoding="async"
+                    />
                     
                     {/* Floating Stats Card - Responsive positioning */}
                     <div className="absolute bottom-4 left-4 md:auto right-auto md:bottom-8 md:left-8 z-20 bg-black/60 backdrop-blur-xl border border-white/10 p-2 md:p-6 rounded-xl flex flex-row justify-between items-center shadow-lg gap-3 md:gap-4">

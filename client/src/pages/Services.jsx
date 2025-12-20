@@ -78,20 +78,26 @@ const Services = () => {
       <section className="relative flex items-center bg-black overflow-hidden pt-24 pb-12 lg:pt-32 lg:pb-24 lg:min-h-[70vh]">
         <div className="absolute inset-0">
           <img 
-            src="https://res.cloudinary.com/dikppmyhp/image/upload/v1766136646/ChatGPT_Image_Dec_19_2025_03_00_33_PM_sdpumk.png" 
+            src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766136646/ChatGPT_Image_Dec_19_2025_03_00_33_PM_sdpumk.png"
+            srcSet="
+                https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_640/v1766136646/ChatGPT_Image_Dec_19_2025_03_00_33_PM_sdpumk.png 640w,
+                https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1024/v1766136646/ChatGPT_Image_Dec_19_2025_03_00_33_PM_sdpumk.png 1024w,
+                https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766136646/ChatGPT_Image_Dec_19_2025_03_00_33_PM_sdpumk.png 1920w
+            "
+            sizes="100vw"
             alt="Data Services" 
             className="w-full h-full object-cover object-center opacity-30 animate-slow-zoom"
+            width="1920"
+            height="1080"
+            fetchPriority="high"
+            decoding="async"
           />
 
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <motion.div 
-               initial={{ opacity: 0, x: -30 }} 
-               animate={{ opacity: 1, x: 0 }}
-               transition={{ duration: 0.8 }}
-               className="max-w-3xl"
-            >
+            {/* Removed motion.div wrapper from LCP Text */}
+            <div className="max-w-3xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 mb-4 lg:mb-6 backdrop-blur-sm">
                     <SparklesIcon className="w-3 h-3 lg:w-4 lg:h-4" />
                     <span className="text-xs lg:text-sm font-bold uppercase tracking-wider">World-Class Execution</span>
@@ -106,7 +112,7 @@ const Services = () => {
                 <Link to="/contact" className="px-6 py-2.5 lg:px-8 lg:py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-indigo-500/40 inline-flex items-center gap-2 text-sm lg:text-base">
                     Get a Custom Quote <ArrowRightIcon className="w-4 h-4"/>
                 </Link>
-            </motion.div>
+            </div>
         </div>
       </section>
 
@@ -140,6 +146,10 @@ const Services = () => {
                             src={service.image} 
                             alt={service.title} 
                             className="w-full h-full object-cover"
+                            width="640"
+                            height="360"
+                            loading="lazy"
+                            decoding="async"
                           />
                           <div className={`absolute inset-0 ${service.color} mix-blend-overlay opacity-20`}></div>
                       </div>
