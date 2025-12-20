@@ -41,7 +41,7 @@ const Services = () => {
       useCases: ['OCR & Document Understanding', 'Entity Extraction (NER)', 'Image Bounding Boxes', 'Video Object Tracking'],
       reliability: 'Millions of tasks completed with >99% acceptance rates for clients like Uber and Google.',
       color: 'bg-cyan-600',
-      image: "https://res.cloudinary.com/dikppmyhp/image/upload/v1766045863/Data_Annotation_qtyr3h.jpg"
+      image: "https://res.cloudinary.com/dikppmyhp/image/upload/v1766218286/Data_Annotation_1_ujl3ga.jpg"
     },
     {
       id: 'transcription',
