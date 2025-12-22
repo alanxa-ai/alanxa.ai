@@ -109,7 +109,7 @@ const Services = () => {
                 <p className="text-sm lg:text-base text-white leading-relaxed max-w-lg mb-6 lg:mb-8 font-medium">
                     From RLHF to Audio Annotation, we deliver the human intelligence your AI needs to succeed. Scalable, secure, and precise.
                 </p>
-                <Link to="/contact" className="px-6 py-2.5 lg:px-8 lg:py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-indigo-500/40 inline-flex items-center gap-2 text-sm lg:text-base">
+                <Link to="/clients" className="px-6 py-2.5 lg:px-8 lg:py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-indigo-500/40 inline-flex items-center gap-2 text-sm lg:text-base">
                     Get a Custom Quote <ArrowRightIcon className="w-4 h-4"/>
                 </Link>
             </div>
