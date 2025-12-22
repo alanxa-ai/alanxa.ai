@@ -47,7 +47,7 @@ const ClientDashboard = () => {
                             className="h-6 object-contain brightness-0 invert"
                         />
                     </div>
-                    <button onClick={() => setSidebarOpen(false)} className="md:hidden text-gray-400 hover:text-white">
+                    <button onClick={() => setSidebarOpen(false)} className="md:hidden text-white hover:text-white">
                         <X size={24} />
                     </button>
                 </div>
@@ -60,7 +60,7 @@ const ClientDashboard = () => {
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                                 activeTab === item.id 
                                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/40' 
-                                : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                                : 'text-white hover:bg-gray-800 hover:text-white'
                             }`}
                         >
                             <item.icon className="w-5 h-5" />
@@ -76,7 +76,7 @@ const ClientDashboard = () => {
                         </div>
                         <div className="overflow-hidden">
                             <p className="text-base font-bold text-white truncate">{user?.name}</p>
-                            <p className="text-sm text-gray-400 truncate">Client Account</p>
+                            <p className="text-sm text-white truncate">Client Account</p>
                         </div>
                     </div>
                     <button onClick={() => { localStorage.removeItem('token'); window.location.href='/login'; }} className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-900/10 rounded-xl transition-colors">
@@ -89,12 +89,12 @@ const ClientDashboard = () => {
             <main className="flex-1 overflow-y-auto h-screen p-4 md:p-10 relative">
                 <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
                     <div className="flex items-center gap-4">
-                        <button onClick={() => setSidebarOpen(true)} className="md:hidden p-2 bg-[#0A0F1C] border border-gray-800 rounded-lg shadow-sm text-gray-400">
+                        <button onClick={() => setSidebarOpen(true)} className="md:hidden p-2 bg-[#0A0F1C] border border-gray-800 rounded-lg shadow-sm text-white">
                             <Menu size={24} />
                         </button>
                         <div>
                             <h1 className="text-4xl font-bold text-white">Client Dashboard</h1>
-                            <p className="text-gray-300 mt-1 text-base">Track your AI training projects</p>
+                            <p className="text-white mt-1 text-base">Track your AI training projects</p>
                         </div>
                     </div>
                 </header>
@@ -105,7 +105,7 @@ const ClientDashboard = () => {
                             <div className="p-3 bg-indigo-900/20 text-indigo-400 rounded-xl"><Clock size={24}/></div>
                             <div>
                                 <h3 className="text-3xl font-bold text-white">{stats.active}</h3>
-                                <p className="text-base text-gray-300">Active Projects</p>
+                                <p className="text-base text-white">Active Projects</p>
                             </div>
                         </div>
                     </div>
@@ -114,7 +114,7 @@ const ClientDashboard = () => {
                             <div className="p-3 bg-sky-900/20 text-sky-400 rounded-xl"><CheckCircle size={24}/></div>
                             <div>
                                 <h3 className="text-3xl font-bold text-white">{stats.completed}</h3>
-                                <p className="text-base text-gray-300">Completed</p>
+                                <p className="text-base text-white">Completed</p>
                             </div>
                         </div>
                     </div>
@@ -139,13 +139,13 @@ const ClientDashboard = () => {
                                         {project.serviceType && <span className="px-3 py-1 rounded-full text-sm font-bold bg-purple-900/20 text-purple-400">{project.serviceType}</span>}
                                     </div>
                                 </div>
-                                <p className="text-gray-300 mb-4 text-base">{project.description}</p>
-                                <div className="flex items-center gap-4 text-base text-gray-400">
+                                <p className="text-white mb-4 text-base">{project.description}</p>
+                                <div className="flex items-center gap-4 text-base text-white">
                                     <span className="flex items-center gap-1"><Clock size={16} /> Deadline: {project.deadline ? new Date(project.deadline).toLocaleDateString() : 'No Deadline'}</span>
                                 </div>
                             </div>
                             <div className="w-full md:w-64 bg-black border border-gray-800 rounded-xl p-5 flex flex-col justify-center">
-                                <div className="flex justify-between text-sm font-bold text-gray-400 uppercase mb-2">
+                                <div className="flex justify-between text-sm font-bold text-white uppercase mb-2">
                                     <span>Progress</span>
                                     <span>{project.totalItems > 0 ? `${project.completedItems || 0}/${project.totalItems} ${project.unit || ''}` : `${project.progress}%`}</span>
                                 </div>
@@ -177,7 +177,7 @@ const ClientDashboard = () => {
                                 <LayoutDashboard size={24} />
                             </div>
                             <h3 className="text-xl font-bold text-white">No Projects Yet</h3>
-                            <p className="text-gray-400 text-base">Contact admin to start a new project.</p>
+                            <p className="text-white text-base">Contact admin to start a new project.</p>
                         </div>
                     )}
                 </div>

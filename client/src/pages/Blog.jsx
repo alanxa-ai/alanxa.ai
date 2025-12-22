@@ -69,38 +69,37 @@ const Blog = () => {
     <div className="bg-black min-h-screen font-sans">
       
       {/* 1. Compact Hero */}
-      {/* 1. Compact Hero */}
       <section className="relative pt-32 pb-12 bg-black text-white overflow-hidden min-h-[50vh] flex items-center justify-center">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/90 to-slate-900/95 z-10"></div>
           <img 
-            src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766045858/0.30_Alanxa_work_colture_image_4_x5jfxx.jpg" 
+            src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766426009/ChatGPT_Image_Dec_22_2025_11_20_38_PM_1_juqfdz.png" 
             srcSet="
-              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_640/v1766045858/0.30_Alanxa_work_colture_image_4_x5jfxx.jpg 640w,
-              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1024/v1766045858/0.30_Alanxa_work_colture_image_4_x5jfxx.jpg 1024w,
-              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766045858/0.30_Alanxa_work_colture_image_4_x5jfxx.jpg 1920w
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_640/v1766426009/ChatGPT_Image_Dec_22_2025_11_20_38_PM_1_juqfdz.png 640w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1024/v1766426009/ChatGPT_Image_Dec_22_2025_11_20_38_PM_1_juqfdz.png 1024w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766426009/ChatGPT_Image_Dec_22_2025_11_20_38_PM_1_juqfdz.png 1920w
             "
+            sizes="100vw"
             aria-hidden="true"
-            alt="Background" 
-            className="w-full h-full object-cover opacity-30"
+            alt="" 
+            className="w-full h-full object-cover"
             width="1920"
             height="1080"
             fetchPriority="high"
             decoding="async"
           />
+          <div className="absolute inset-0 bg-black/50"></div>
         </div>
 
-        <div className="relative z-20 max-w-5xl mx-auto px-4 text-center">
-            {/* Removed motion.div for LCP */}
+        <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 backdrop-blur-md border border-indigo-500/30 mb-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-4">
                  <SparklesIcon className="w-3.5 h-3.5 text-indigo-300" />
-                 <span className="text-xs font-bold tracking-wider uppercase text-indigo-100">Alanxa Intelligence Hub</span>
+                 <span className="text-xs font-bold tracking-wider uppercase text-white">Alanxa Intelligence Hub</span>
               </div>
-              <h1 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight text-white">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 tracking-tight text-white">
                  Insights for the <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">AI Era</span>
               </h1>
-              <p className="text-sm text-gray-300 max-w-xl mx-auto leading-relaxed">
+              <p className="text-sm sm:text-base text-white max-w-xl mx-auto leading-relaxed">
                  Expert perspectives on data annotation, RLHF, and the future of human-in-the-loop AI.
               </p>
             </div>
@@ -124,7 +123,7 @@ const Blog = () => {
                  </div>
                  <div>
                     <h3 className="text-base font-bold text-white mb-1">{res.title}</h3>
-                    <p className="text-sm text-gray-300 leading-snug">{res.desc}</p>
+                    <p className="text-sm text-white leading-snug">{res.desc}</p>
                  </div>
               </motion.div>
             ))}
@@ -135,7 +134,7 @@ const Blog = () => {
             <h2 className="text-3xl font-bold text-white">Latest Articles</h2>
             
             <div className="relative w-full sm:w-64">
-                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white" />
                 <input type="text" placeholder="Search insights..." className="w-full pl-9 pr-4 py-2 text-lg rounded-lg border border-gray-700 bg-black text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm placeholder-gray-400" />
             </div>
          </div>
@@ -171,18 +170,18 @@ const Blog = () => {
                        </div>
                     </div>
                     <div className="p-5 flex flex-col flex-grow">
-                        <div className="flex items-center gap-3 text-sm text-gray-200 mb-3 font-semibold uppercase tracking-wide">
+                        <div className="flex items-center gap-3 text-sm text-white mb-3 font-semibold uppercase tracking-wide">
                             <span className="flex items-center gap-1"><CalendarIcon className="w-3 h-3"/> {new Date(article.createdAt).toLocaleDateString()}</span>
                             <span className="flex items-center gap-1"><ClockIcon className="w-3 h-3"/> {article.readTime || '5 min'} read</span>
                         </div>
                         <h3 className="text-xl font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors line-clamp-2 leading-tight">
                            {article.title}
                         </h3>
-                        <p className="text-base text-gray-200 line-clamp-3 mb-4 flex-grow">
+                        <p className="text-base text-white line-clamp-3 mb-4 flex-grow">
                            {article.excerpt}
                         </p>
                         <div className="flex items-center justify-between pt-4 border-t border-gray-800 mt-auto">
-                            <span className="text-base font-semibold text-gray-300">{article.author?.name || 'Alanxa Team'}</span>
+                            <span className="text-base font-semibold text-white">{article.author?.name || 'Alanxa Team'}</span>
                             <Link to={`/blog/${article.slug || article._id}`} className="text-indigo-400 text-base font-bold hover:underline flex items-center gap-1">
                                 Read More <ArrowRightIcon className="w-3 h-3" />
                             </Link>
@@ -194,10 +193,10 @@ const Blog = () => {
          ) : (
               <div className="text-center py-16 bg-[#0A0F1C] rounded-xl border border-gray-800 border-dashed">
                    <div className="w-12 h-12 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <MessageSquareIcon className="w-6 h-6 text-gray-500" />
+                      <MessageSquareIcon className="w-6 h-6 text-white" />
                    </div>
                    <h3 className="text-lg font-bold text-white">No articles found</h3>
-                   <p className="text-base text-gray-400">Check back later for updates.</p>
+                   <p className="text-base text-white">Check back later for updates.</p>
               </div>
          )}
       </section>

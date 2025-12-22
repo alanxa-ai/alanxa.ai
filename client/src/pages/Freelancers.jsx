@@ -168,7 +168,7 @@ const Freelancers = () => {
                     Power the Next Era of <br className="hidden md:block"/>
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 animate-gradient">Artificial Intelligence</span>
                  </h1>
-                 <p className="text-sm md:text-lg text-gray-200 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light px-2 md:px-0">
+                 <p className="text-sm md:text-lg text-white mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light px-2 md:px-0">
                     Join an elite community of data experts. Earn competitive rates, work on your schedule, and help shape the future of Generative AI models.
                  </p>
                  <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start w-full sm:w-auto px-4 sm:px-0">
@@ -228,7 +228,7 @@ const Freelancers = () => {
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 px-4">
                <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">Opportunities</h2>
-               <p className="text-gray-300 max-w-2xl mx-auto text-sm md:text-base">Explore flexible, remote opportunities and shape the future of AI, all at your own pace.</p>
+               <p className="text-white max-w-2xl mx-auto text-sm md:text-base">Explore flexible, remote opportunities and shape the future of AI, all at your own pace.</p>
             </div>
 
             {/* Category Filter */}
@@ -240,7 +240,7 @@ const Freelancers = () => {
                         className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[10px] md:text-xs font-bold transition-all whitespace-nowrap ${
                             activeCategory === cat.id 
                             ? 'bg-[#6366F1] text-white shadow-lg shadow-indigo-500/20' 
-                            : 'bg-black text-gray-300 border border-gray-800 hover:bg-[#1E293B] hover:text-white'
+                            : 'bg-black text-white border border-gray-800 hover:bg-[#1E293B] hover:text-white'
                         }`}
                     >
                         {cat.label}
@@ -261,9 +261,9 @@ const Freelancers = () => {
                     >
                         <div className="mb-4">
                              <h3 onClick={() => setViewingJob(job)} className="text-xl font-bold text-white mb-1.5 hover:text-indigo-400 cursor-pointer transition-colors">{job.title}</h3>
-                             <div className="flex flex-wrap gap-1.5 text-xs font-semibold text-gray-300">
-                                <span className="bg-[#1E293B] px-2 py-0.5 rounded border border-gray-700 text-gray-200">{job.type}</span>
-                                <span className="bg-[#1E293B] px-2 py-0.5 rounded border border-gray-700 text-gray-200">{job.category}</span>
+                             <div className="flex flex-wrap gap-1.5 text-xs font-semibold text-white">
+                                <span className="bg-[#1E293B] px-2 py-0.5 rounded border border-gray-700 text-white">{job.type}</span>
+                                <span className="bg-[#1E293B] px-2 py-0.5 rounded border border-gray-700 text-white">{job.category}</span>
                              </div>
                         </div>
 
@@ -276,7 +276,7 @@ const Freelancers = () => {
                         <div className="mt-auto pt-4 border-t border-gray-800 grid grid-cols-2 gap-2">
                             <button 
                                 onClick={() => setViewingJob(job)} 
-                                className="px-3 py-2 bg-black border border-gray-700 text-gray-200 rounded-lg text-xs font-bold hover:border-gray-500 hover:bg-[#1E293B] transition-all uppercase tracking-wide"
+                                className="px-3 py-2 bg-black border border-gray-700 text-white rounded-lg text-xs font-bold hover:border-gray-500 hover:bg-[#1E293B] transition-all uppercase tracking-wide"
                             >
                                 View Details
                             </button>
@@ -295,7 +295,7 @@ const Freelancers = () => {
             </div>
             
             {filteredJobs.length === 0 && (
-                <div className="text-center py-20 text-gray-400">
+                <div className="text-center py-20 text-white">
                     <p>No jobs found in this category.</p>
                 </div>
             )}
@@ -316,15 +316,19 @@ const Freelancers = () => {
                        src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800&q=80" 
                        alt="Work Environment" 
                        className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover hover:scale-105 transition-transform duration-700"
+                       width="800"
+                       height="500"
+                       loading="lazy"
+                       decoding="async"
                      />
                  </div>
                  <div className="space-y-6 md:space-y-8 order-1 lg:order-2">
                      <div>
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 md:mb-6 leading-tight">Work Environment</h2>
-                        <p className="text-gray-300 text-base md:text-lg leading-relaxed mb-4 md:mb-6">
+                        <p className="text-white text-base md:text-lg leading-relaxed mb-4 md:mb-6">
                             We operate like an early-stage startup, even at our scale. Our environment is fast-paced and high-intensity, focusing relentlessly on impact over process. We empower you to solve complex problems from day one.
                         </p>
-                        <p className="text-gray-400 text-sm md:text-base leading-relaxed">
+                        <p className="text-white text-sm md:text-base leading-relaxed">
                             For those who thrive in autonomy, the opportunities are immense. You'll take on expanded responsibilities quickly, collaborating closely with industry leaders shaping the future of AI.
                         </p>
                      </div>
@@ -332,11 +336,11 @@ const Freelancers = () => {
                      <div className="grid grid-cols-2 gap-4 md:gap-6">
                         <div className="p-4 rounded-xl bg-[#1E293B]/50 border border-gray-800 text-center md:text-left">
                              <div className="text-2xl md:text-3xl font-bold text-indigo-400 mb-1">100%</div>
-                             <div className="text-xs md:text-sm text-gray-400">Remote Freedom</div>
+                             <div className="text-xs md:text-sm text-white">Remote Freedom</div>
                         </div>
                         <div className="p-4 rounded-xl bg-[#1E293B]/50 border border-gray-800 text-center md:text-left">
                              <div className="text-2xl md:text-3xl font-bold text-indigo-400 mb-1">Top 1%</div>
-                             <div className="text-xs md:text-sm text-gray-400">Talent Pool</div>
+                             <div className="text-xs md:text-sm text-white">Talent Pool</div>
                         </div>
                      </div>
                  </div>
@@ -347,7 +351,7 @@ const Freelancers = () => {
          <div className="mb-16 md:mb-24">
             <div className="text-center mb-10 md:mb-16">
                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Perks and Benefits</h2>
-               <p className="text-gray-300 text-sm md:text-base max-w-2xl mx-auto px-4">We believe in taking care of our community with professional-grade benefits.</p>
+               <p className="text-white text-sm md:text-base max-w-2xl mx-auto px-4">We believe in taking care of our community with professional-grade benefits.</p>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -367,7 +371,7 @@ const Freelancers = () => {
                        </div>
                        <div>
                            <h3 className="text-white font-bold text-sm mb-0.5 md:mb-1">{perk.label}</h3>
-                           <p className="text-gray-400 text-xs">{perk.desc}</p>
+                           <p className="text-white text-xs">{perk.desc}</p>
                        </div>
                    </div>
                 ))}
@@ -392,7 +396,7 @@ const Freelancers = () => {
                              className="w-full flex justify-between items-center p-6 text-left hover:bg-[#1E293B] transition-colors"
                          >
                              <span className="font-bold text-white">{faq.q}</span>
-                             {openFaq === i ? <X className="w-5 h-5 text-gray-400"/> : <Check className="w-5 h-5 text-gray-400 rotate-45 transform origin-center transition-transform"/>} 
+                             {openFaq === i ? <X className="w-5 h-5 text-white"/> : <Check className="w-5 h-5 text-white rotate-45 transform origin-center transition-transform"/>} 
                          </button>
                          <AnimatePresence>
                              {openFaq === i && (
@@ -400,7 +404,7 @@ const Freelancers = () => {
                                      initial={{ height: 0, opacity: 0 }}
                                      animate={{ height: 'auto', opacity: 1 }}
                                      exit={{ height: 0, opacity: 0 }}
-                                     className="px-6 pb-6 text-gray-300 text-base leading-relaxed"
+                                     className="px-6 pb-6 text-white text-base leading-relaxed"
                                  >
                                      {faq.a}
                                  </motion.div>
@@ -426,7 +430,7 @@ const Freelancers = () => {
                              <div className="absolute top-0 left-0 w-full h-full bg-indigo-900/20 blur-3xl"></div>
                              <div className="relative z-10">
                                 <h3 className="text-xl font-bold mb-1">Complete Your Application</h3>
-                                <p className="text-gray-300 text-sm">You are applying for <span className="text-white font-bold underline decoration-indigo-500">{selectedJob.title}</span></p>
+                                <p className="text-white text-sm">You are applying for <span className="text-white font-bold underline decoration-indigo-500">{selectedJob.title}</span></p>
                              </div>
                              <button onClick={() => setSelectedJob(null)} className="absolute top-3 right-3 p-1.5 bg-white/5 hover:bg-white/10 rounded-full transition-colors text-white">
                                 <X className="w-4 h-4" />
@@ -437,42 +441,42 @@ const Freelancers = () => {
                              <form onSubmit={handleSubmit} className="space-y-6">
                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <div className="space-y-2">
-                                       <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Full Name</label>
+                                       <label className="text-xs font-bold text-white uppercase tracking-wider">Full Name</label>
                                        <input type="text" name="name" required value={formData.name} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="Jane Doe" />
                                     </div>
                                     <div className="space-y-2">
-                                       <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Email</label>
+                                       <label className="text-xs font-bold text-white uppercase tracking-wider">Email</label>
                                        <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="jane@example.com" />
                                     </div>
                                  </div>
 
                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <div className="space-y-2">
-                                       <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Language</label>
+                                       <label className="text-xs font-bold text-white uppercase tracking-wider">Language</label>
                                        <input type="text" name="languages" required value={formData.languages} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="e.g. Spanish" />
                                     </div>
                                     <div className="space-y-2">
-                                       <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Phone</label>
+                                       <label className="text-xs font-bold text-white uppercase tracking-wider">Phone</label>
                                        <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="+1..." />
                                     </div>
                                  </div>
 
                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <div className="space-y-2">
-                                       <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Experience</label>
+                                       <label className="text-xs font-bold text-white uppercase tracking-wider">Experience</label>
                                        <input type="text" name="experience" value={formData.experience} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="e.g. 2 years" />
                                     </div>
                                     <div className="space-y-2">
-                                       <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Availability</label>
+                                       <label className="text-xs font-bold text-white uppercase tracking-wider">Availability</label>
                                        <input type="text" name="availability" value={formData.availability} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="e.g. 20 hrs/wk" />
                                     </div>
                                  </div>
 
                                  <div className="space-y-3">
-                                    <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Skills</label>
+                                    <label className="text-xs font-bold text-white uppercase tracking-wider">Skills</label>
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                        {['Annotation', 'Transcription', 'Translation', 'Coding', 'Content', 'Review'].map((skill) => (
-                                          <label key={skill} className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-all ${formData.interests.includes(skill) ? 'bg-indigo-900/20 text-indigo-400 border-indigo-500' : 'bg-black border-gray-700 hover:bg-[#1E293B] text-gray-300'}`}>
+                                          <label key={skill} className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-all ${formData.interests.includes(skill) ? 'bg-indigo-900/20 text-indigo-400 border-indigo-500' : 'bg-black border-gray-700 hover:bg-[#1E293B] text-white'}`}>
                                              <input 
                                                 type="checkbox" 
                                                 name="interests" 
@@ -488,7 +492,7 @@ const Freelancers = () => {
                                  </div>
 
                                  <div className="space-y-3">
-                                    <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Resume</label>
+                                    <label className="text-xs font-bold text-white uppercase tracking-wider">Resume</label>
                                     <div className={`border-2 border-dashed rounded-xl p-8 text-center transition-all bg-black ${resumeFile ? 'border-indigo-500 bg-indigo-900/10' : 'border-gray-700 hover:border-indigo-500 hover:bg-[#1E293B]'}`}>
                                           <input 
                                              id="resume-upload"
@@ -511,8 +515,8 @@ const Freelancers = () => {
                                                    <div className="w-12 h-12 bg-[#1E293B] rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-sm">
                                                         <Upload className="w-6 h-6 text-indigo-400" />
                                                    </div>
-                                                   <span className="text-base font-bold text-gray-300">Click to upload Resume</span>
-                                                   <span className="text-xs text-gray-400 mt-1">PDF, DOCX up to 5MB</span>
+                                                   <span className="text-base font-bold text-white">Click to upload Resume</span>
+                                                   <span className="text-xs text-white mt-1">PDF, DOCX up to 5MB</span>
                                                 </div>
                                              )}
                                           </label>
@@ -533,21 +537,21 @@ const Freelancers = () => {
       {/* Compact Footer Strip */}
       <div className="border-t border-gray-800 bg-[#0A0F1C] py-8">
         <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
-            <span className="text-xs font-semibold text-gray-500 uppercase">Connect with us</span>
+            <span className="text-xs font-semibold text-white uppercase">Connect with us</span>
             <div className="flex gap-3">
-                <a href="https://www.linkedin.com/company/alanxa-ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-gray-400 hover:text-indigo-400 transition-all">
+                <a href="https://www.linkedin.com/company/alanxa-ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-white hover:text-indigo-400 transition-all">
                     <Linkedin className="w-4 h-4" />
                 </a>
-                <a href="https://x.com/alanxa_ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-gray-400 hover:text-indigo-400 transition-all">
+                <a href="https://x.com/alanxa_ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-white hover:text-indigo-400 transition-all">
                     <Twitter className="w-4 h-4" />
                 </a>
-                <a href="https://www.instagram.com/alanxa.ai/" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-gray-400 hover:text-indigo-400 transition-all">
+                <a href="https://www.instagram.com/alanxa.ai/" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-white hover:text-indigo-400 transition-all">
                     <Instagram className="w-4 h-4" />
                 </a>
-                <a href="https://www.facebook.com/alanxa07" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-gray-400 hover:text-indigo-400 transition-all">
+                <a href="https://www.facebook.com/alanxa07" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-white hover:text-indigo-400 transition-all">
                     <Facebook className="w-4 h-4" />
                 </a>
-                <a href="https://www.threads.com/@alanxa.ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-gray-400 hover:text-indigo-400 transition-all">
+                <a href="https://www.threads.com/@alanxa.ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-white hover:text-indigo-400 transition-all">
                     <AtSign className="w-4 h-4" />
                 </a>
             </div>
@@ -574,12 +578,12 @@ const Freelancers = () => {
                <div className="sticky top-0 bg-[#0A0F1C] border-b border-gray-800 p-6 flex justify-between items-center z-10">
                    <div>
                        <h3 className="text-3xl font-bold text-white">{viewingJob.title}</h3>
-                       <div className="flex gap-3 text-base text-gray-300 mt-1">
+                       <div className="flex gap-3 text-base text-white mt-1">
                           <span className="px-2 py-0.5 rounded bg-blue-900/20 text-blue-400 font-bold uppercase text-xs">{viewingJob.type}</span>
                           <span className="flex items-center gap-1"><Globe className="w-3 h-3"/> {viewingJob.location}</span>
                        </div>
                    </div>
-                   <button onClick={() => setViewingJob(null)} className="p-2 hover:text-gray-300 text-gray-500 rounded-full transition-colors">
+                   <button onClick={() => setViewingJob(null)} className="p-2 hover:text-white text-white rounded-full transition-colors">
                        <X className="w-6 h-6" />
                    </button>
                </div>
@@ -592,7 +596,7 @@ const Freelancers = () => {
                              <h4 className="font-bold text-white mb-3 text-base uppercase">Required Skills</h4>
                              <div className="flex flex-wrap gap-2">
                                  {viewingJob.skills.map((skill, i) => (
-                                     <span key={i} className="px-3 py-1 bg-[#1E293B] text-gray-200 rounded-lg text-sm font-semibold">{skill}</span>
+                                     <span key={i} className="px-3 py-1 bg-[#1E293B] text-white rounded-lg text-sm font-semibold">{skill}</span>
                                  ))}
                              </div>
                          </div>

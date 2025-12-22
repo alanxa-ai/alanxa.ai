@@ -25,7 +25,8 @@ app.set("trust proxy", 1);
 ================================ */
 const allowedOrigins = [
     "https://alanxa.ai",
-    "https://www.alanxa.ai"
+    "https://www.alanxa.ai",
+    "http://localhost:5173"
 ];
 
 /* ================================

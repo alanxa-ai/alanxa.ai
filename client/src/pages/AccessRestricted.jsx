@@ -30,32 +30,32 @@ const AccessRestricted = () => {
             <div className="relative">
                 <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full"></div>
                 <div className="relative w-16 h-16 bg-black border border-gray-700 rounded-full flex items-center justify-center">
-                    <Lock className="w-6 h-6 text-gray-300" />
+                    <Lock className="w-6 h-6 text-white" />
                 </div>
             </div>
 
             {/* Headings */}
             <div className="space-y-2">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white">Access Restricted</h1>
-                <p className="text-gray-300 font-medium text-base md:text-lg">This platform is available by invitation only</p>
+                <p className="text-white font-medium text-base md:text-lg">This platform is available by invitation only</p>
             </div>
 
             {/* Explanation */}
             <div className="space-y-4 text-left bg-black/40 p-6 rounded-xl border border-gray-800/50 w-full">
-                <p className="text-gray-300 text-base leading-relaxed">
+                <p className="text-white text-base leading-relaxed">
                     Alanxa is an enterprise-grade AI training platform protected by strict security protocols. Access is currently limited to authorized personnel only.
                 </p>
                 
                 {/* Access List */}
                 <div className="space-y-3 pt-2">
-                    <h3 className="text-xs uppercase tracking-widest font-bold text-gray-400">Authorized Access For:</h3>
+                    <h3 className="text-xs uppercase tracking-widest font-bold text-white">Authorized Access For:</h3>
                     <ul className="space-y-2">
                         {[
                             "Enterprise Clients (Contracted)",
                             "Verified Linguists & Annotators",
                             "System Administrators"
                         ].map((item, i) => (
-                            <li key={i} className="flex items-center gap-2 text-base text-gray-200">
+                            <li key={i} className="flex items-center gap-2 text-base text-white">
                                 <Shield className="w-4 h-4 text-indigo-500/70" />
                                 {item}
                             </li>
@@ -65,7 +65,7 @@ const AccessRestricted = () => {
             </div>
 
             {/* How to get access */}
-            <div className="text-sm text-gray-400 max-w-xs mx-auto">
+            <div className="text-sm text-white max-w-xs mx-auto">
                 <p className="flex items-start gap-2 justify-center">
                     <Info className="w-4 h-4 shrink-0 mt-0.5" />
                     If you believe you should have access, please contact your project manager or organization admin.
@@ -77,7 +77,7 @@ const AccessRestricted = () => {
                 <Link to="/contact" className="flex-1 px-6 py-3 bg-white text-black font-bold text-base rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
                     <Mail className="w-5 h-5" /> Contact Support
                 </Link>
-                <Link to="/" className="flex-1 px-6 py-3 bg-transparent border border-gray-700 text-gray-200 font-bold text-base rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
+                <Link to="/" className="flex-1 px-6 py-3 bg-transparent border border-gray-700 text-white font-bold text-base rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
                     <ArrowLeft className="w-5 h-5" /> Back Home
                 </Link>
             </div>
@@ -87,7 +87,7 @@ const AccessRestricted = () => {
 
         {/* Footer */}
         <div className="mt-8 text-center">
-            <p className="text-gray-500 text-sm uppercase tracking-widest font-bold">
+            <p className="text-white text-sm uppercase tracking-widest font-bold">
                 Alanxa Enterprise Security
             </p>
         </div>

@@ -77,7 +77,7 @@ const Register = () => {
                 <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
                     {step === 1 ? 'Create Account' : 'Verify Email'}
                 </h2>
-                <p className="text-gray-300 text-base">
+                <p className="text-white text-base">
                     {step === 1 ? 'Join the future of AI training workflows' : `We sent a code to ${formData.email}`}
                 </p>
              </div>
@@ -104,11 +104,11 @@ const Register = () => {
 
                         {/* Name Input */}
                         <div className="space-y-1.5">
-                           <label className="text-sm font-semibold text-gray-200 ml-1">Full Name</label>
+                           <label className="text-sm font-semibold text-white ml-1">Full Name</label>
                            <div className={`relative group transition-all duration-300 ${focusedInput === 'name' ? 'scale-[1.02]' : ''}`}>
                               <div className={`absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-sky-600 rounded-xl blur opacity-0 transition duration-500 ${focusedInput === 'name' ? 'opacity-30' : ''}`}></div>
                               <div className="relative">
-                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-hover:text-gray-400 transition-colors">
+                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white group-hover:text-white transition-colors">
                                     <User size={18} />
                                  </div>
                                  <input 
@@ -128,11 +128,11 @@ const Register = () => {
 
                         {/* Email Input */}
                         <div className="space-y-1.5">
-                           <label className="text-sm font-semibold text-gray-200 ml-1">Email Address</label>
+                           <label className="text-sm font-semibold text-white ml-1">Email Address</label>
                            <div className={`relative group transition-all duration-300 ${focusedInput === 'email' ? 'scale-[1.02]' : ''}`}>
                               <div className={`absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-sky-600 rounded-xl blur opacity-0 transition duration-500 ${focusedInput === 'email' ? 'opacity-30' : ''}`}></div>
                               <div className="relative">
-                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-hover:text-gray-400 transition-colors">
+                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white group-hover:text-white transition-colors">
                                     <Mail size={18} />
                                  </div>
                                  <input 
@@ -152,11 +152,11 @@ const Register = () => {
 
                         {/* Password Input */}
                         <div className="space-y-1.5">
-                           <label className="text-sm font-semibold text-gray-200 ml-1">Password</label>
+                           <label className="text-sm font-semibold text-white ml-1">Password</label>
                            <div className={`relative group transition-all duration-300 ${focusedInput === 'password' ? 'scale-[1.02]' : ''}`}>
                               <div className={`absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-sky-600 rounded-xl blur opacity-0 transition duration-500 ${focusedInput === 'password' ? 'opacity-30' : ''}`}></div>
                               <div className="relative">
-                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-hover:text-gray-400 transition-colors">
+                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white group-hover:text-white transition-colors">
                                     <Key size={18} />
                                  </div>
                                  <input 
@@ -216,11 +216,11 @@ const Register = () => {
                         )}
 
                          <div className="space-y-1.5">
-                           <label className="text-sm font-semibold text-gray-200 ml-1">One-Time Password</label>
+                           <label className="text-sm font-semibold text-white ml-1">One-Time Password</label>
                            <div className={`relative group transition-all duration-300 ${focusedInput === 'otp' ? 'scale-[1.02]' : ''}`}>
                               <div className={`absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-sky-600 rounded-xl blur opacity-0 transition duration-500 ${focusedInput === 'otp' ? 'opacity-30' : ''}`}></div>
                               <div className="relative">
-                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-hover:text-gray-400 transition-colors">
+                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white group-hover:text-white transition-colors">
                                     <Shield size={18} />
                                  </div>
                                  <input 
@@ -264,7 +264,7 @@ const Register = () => {
 
              {/* Footer */}
              <div className="mt-8 text-center">
-                <p className="text-gray-400 text-base">
+                <p className="text-white text-base">
                    Already have an account?{' '}
                    <Link to="/login" className="text-indigo-300 font-bold hover:text-indigo-200 transition-colors relative inline-block group">
                       Sign in
@@ -277,7 +277,7 @@ const Register = () => {
         
         {/* Footer Text */}
         <div className="absolute bottom-6 left-0 right-0 text-center pointer-events-none">
-           <p className="text-sm text-gray-300 uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+           <p className="text-sm text-white uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
              <Shield className="w-3 h-3" /> Secure Registration
            </p>
         </div>

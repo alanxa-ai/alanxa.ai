@@ -223,13 +223,13 @@ const AdminBlog = () => {
                 <h2 className="text-xl font-bold text-white">
                 {editingBlog ? 'Edit Blog' : 'Create New Blog'}
                 </h2>
-                <button onClick={() => setShowForm(false)} className="text-gray-300 hover:text-gray-200"><X size={24}/></button>
+                <button onClick={() => setShowForm(false)} className="text-white hover:text-white"><X size={24}/></button>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Title</label>
+                  <label className="block text-sm font-bold text-white uppercase mb-1">Title</label>
                   <input
                     type="text"
                     name="title"
@@ -242,9 +242,9 @@ const AdminBlog = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Slug</label>
+                  <label className="block text-sm font-bold text-white uppercase mb-1">Slug</label>
                   <div className="flex items-center">
-                    <span className="bg-gray-800 border border-r-0 border-gray-700 rounded-l-lg px-3 py-2 text-gray-300 text-sm text-nowrap">/blog/</span>
+                    <span className="bg-gray-800 border border-r-0 border-gray-700 rounded-l-lg px-3 py-2 text-white text-sm text-nowrap">/blog/</span>
                     <input
                         type="text"
                         name="slug"
@@ -256,7 +256,7 @@ const AdminBlog = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Category</label>
+                  <label className="block text-sm font-bold text-white uppercase mb-1">Category</label>
                    <input 
                      type="text" 
                      name="category"
@@ -267,7 +267,7 @@ const AdminBlog = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Read Time</label>
+                  <label className="block text-sm font-bold text-white uppercase mb-1">Read Time</label>
                   <input
                     type="text"
                     name="readTime"
@@ -279,7 +279,7 @@ const AdminBlog = () => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Excerpt</label>
+                  <label className="block text-sm font-bold text-white uppercase mb-1">Excerpt</label>
                   <textarea
                     name="excerpt"
                     value={formData.excerpt}
@@ -292,7 +292,7 @@ const AdminBlog = () => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Content</label>
+                  <label className="block text-sm font-bold text-white uppercase mb-1">Content</label>
                   <div className="bg-black rounded-lg border border-gray-700">
                       <ReactQuill 
                         ref={quillRef}
@@ -339,7 +339,7 @@ const AdminBlog = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Author Name</label>
+                  <label className="block text-sm font-bold text-white uppercase mb-1">Author Name</label>
                   <input
                     type="text"
                     name="author.name"
@@ -351,7 +351,7 @@ const AdminBlog = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Author Role</label>
+                  <label className="block text-sm font-bold text-white uppercase mb-1">Author Role</label>
                   <input
                     type="text"
                     name="author.role"
@@ -362,7 +362,7 @@ const AdminBlog = () => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Featured Image</label>
+                  <label className="block text-xs font-bold text-white uppercase mb-1">Featured Image</label>
                   {/* Current Image Preview */}
                   {formData.featuredImage && (
                     <div className="mb-3 relative group w-fit">
@@ -394,7 +394,7 @@ const AdminBlog = () => {
                       onChange={handleChange}
                       className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-600 rounded"
                     />
-                    <span className="text-base font-bold text-gray-200">Publish Immediately</span>
+                    <span className="text-base font-bold text-white">Publish Immediately</span>
                   </label>
                 </div>
               </div>
@@ -409,7 +409,7 @@ const AdminBlog = () => {
                 <button
                   type="button"
                   onClick={() => { setShowForm(false); setEditingBlog(null); resetForm(); }}
-                  className="px-6 py-2.5 bg-gray-800 text-gray-300 rounded-lg text-base font-bold hover:bg-gray-700 border border-gray-700 transition-colors"
+                  className="px-6 py-2.5 bg-gray-800 text-white rounded-lg text-base font-bold hover:bg-gray-700 border border-gray-700 transition-colors"
                 >
                   Cancel
                 </button>
@@ -427,10 +427,10 @@ const AdminBlog = () => {
                     <span className={`w-2.5 h-2.5 rounded-full ${blog.published ? 'bg-green-500' : 'bg-yellow-400'}`}></span>
                     <h3 className="text-xl font-bold text-white truncate">{blog.title}</h3>
                  </div>
-                 <p className="text-sm text-gray-300 truncate mb-2">{blog.excerpt}</p>
+                 <p className="text-sm text-white truncate mb-2">{blog.excerpt}</p>
                  <div className="flex gap-2">
-                     <span className="px-2.5 py-1 rounded-md bg-gray-800 text-gray-300 text-xs font-bold uppercase">{blog.category}</span>
-                     <span className="text-xs text-gray-400 py-1">{new Date(blog.createdAt).toLocaleDateString()}</span>
+                     <span className="px-2.5 py-1 rounded-md bg-gray-800 text-white text-xs font-bold uppercase">{blog.category}</span>
+                     <span className="text-xs text-white py-1">{new Date(blog.createdAt).toLocaleDateString()}</span>
                  </div>
               </div>
               
@@ -451,7 +451,7 @@ const AdminBlog = () => {
             </div>
           ))}
           {blogs.length === 0 && (
-              <div className="text-center py-12 text-gray-300 text-lg">No blog posts found.</div>
+              <div className="text-center py-12 text-white text-lg">No blog posts found.</div>
           )}
         </div>
       </div>

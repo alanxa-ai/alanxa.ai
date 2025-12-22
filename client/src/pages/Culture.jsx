@@ -56,7 +56,7 @@ const Culture = () => {
           <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">
             More Than Just a <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Workplace.</span>
           </h1>
-          <p className="text-base text-gray-200 mb-6 max-w-xl mx-auto">
+          <p className="text-base text-white mb-6 max-w-xl mx-auto">
             Building a community of innovators, dreamers, and doers.
           </p>
         </div>
@@ -67,7 +67,7 @@ const Culture = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-2xl font-bold text-white mb-2">Our Core Values</h2>
-            <p className="text-gray-300 text-sm max-w-lg mx-auto">The principles that guide every decision we make.</p>
+            <p className="text-white text-sm max-w-lg mx-auto">The principles that guide every decision we make.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -90,7 +90,7 @@ const Culture = () => {
                   <val.icon className={`w-5 h-5 ${val.color}`} aria-hidden="true" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">{val.title}</h3>
-                <p className="text-gray-300 leading-relaxed text-sm">{val.desc}</p>
+                <p className="text-white leading-relaxed text-sm">{val.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -102,7 +102,7 @@ const Culture = () => {
         <div className="max-w-6xl mx-auto px-4 mb-10 flex justify-between items-end">
           <div>
             <h2 className="text-2xl font-bold text-white mb-1">Life at Alanxa</h2>
-            <p className="text-gray-300 text-sm">Peek inside our world.</p>
+            <p className="text-white text-sm">Peek inside our world.</p>
           </div>
           <a href="https://www.instagram.com/alanxa.ai/" target="_blank" rel="noopener noreferrer" className="text-indigo-400 text-sm font-semibold hover:text-indigo-300 transition-colors">Instagram &rarr;</a>
         </div>
@@ -135,7 +135,7 @@ const Culture = () => {
          <div className="max-w-6xl mx-auto px-4 relative z-10">
             <div className="text-center mb-10">
                <h2 className="text-2xl font-bold mb-2">We Take Care of You</h2>
-               <p className="text-gray-300 text-sm">Holistic benefits for a balanced life.</p>
+               <p className="text-white text-sm">Holistic benefits for a balanced life.</p>
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -160,7 +160,7 @@ const Culture = () => {
                       <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                           <perk.icon className="w-6 h-6 text-white" />
                       </div>
-                      <h3 className="font-semibold text-base text-gray-200">{perk.label}</h3>
+                      <h3 className="font-semibold text-base text-white">{perk.label}</h3>
                    </motion.div>
                 ))}
             </div>
@@ -185,7 +185,7 @@ const Culture = () => {
 
          <div className="relative z-10 max-w-2xl mx-auto px-4 text-center">
              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Ready to join us?</h2>
-             <p className="text-gray-300 text-base mb-8">
+             <p className="text-white text-base mb-8">
                  Challenge yourself. Grow with us. Create the future of AI.
              </p>
              <Link 

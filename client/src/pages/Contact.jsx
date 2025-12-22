@@ -44,9 +44,19 @@ const Contact = () => {
       <section className="relative h-[50vh] min-h-[400px] flex items-center bg-black text-white overflow-hidden">
         <div className="absolute inset-0">
           <img 
-            src="https://res.cloudinary.com/dikppmyhp/image/upload/v1766045859/contact_sqropp.jpg"
+            src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766045859/contact_sqropp.jpg"
+            srcSet="
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_640/v1766045859/contact_sqropp.jpg 640w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1024/v1766045859/contact_sqropp.jpg 1024w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766045859/contact_sqropp.jpg 1920w
+            "
+            sizes="100vw"
             alt="Contact Us"
-            className="w-full h-full object-cover opacity-40 animate-slow-zoom"
+            className="w-full h-full object-cover opacity-40"
+            width="1920"
+            height="1080"
+            fetchPriority="high"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 via-gray-900/40 to-black"></div>
         </div>
@@ -61,7 +71,7 @@ const Contact = () => {
                <MessageSquareIcon className="w-6 h-6 text-blue-300" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Get in Touch</h1>
-            <p className="text-base text-gray-100 max-w-2xl mx-auto leading-relaxed font-light">
+            <p className="text-base text-white max-w-2xl mx-auto leading-relaxed font-light">
               Have questions about our services, pricing, or custom projects? We'd love to hear from you.
             </p>
           </motion.div>
@@ -87,34 +97,14 @@ const Contact = () => {
                     </div>
                     <div>
                         <h3 className="font-bold text-white text-base">Email Us</h3>
-                        <p className="text-sm text-gray-300">For general inquiries</p>
+                        <p className="text-sm text-white">For general inquiries</p>
                     </div>
                 </div>
-                <a href="mailto:aman@alanxa.ai" className="text-base font-medium text-gray-200 hover:text-blue-400 transition-colors block">
+                <a href="mailto:aman@alanxa.ai" className="text-base font-medium text-white hover:text-blue-400 transition-colors block">
                     aman@alanxa.ai
                 </a>
              </motion.div>
 
-             {/* WhatsApp / Phone */}
-             <motion.div 
-               initial={{ opacity: 0, x: -20 }}
-               animate={{ opacity: 1, x: 0 }}
-               transition={{ delay: 0.2 }}
-               className="bg-[#0A0F1C] p-6 rounded-2xl shadow-lg border border-gray-800 hover:shadow-xl transition-shadow"
-             >
-                <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 bg-green-900/20 text-green-400 rounded-xl">
-                        <PhoneIcon className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <h3 className="font-bold text-white text-base">WhatsApp</h3>
-                        <p className="text-sm text-gray-300">Quick chat support</p>
-                    </div>
-                </div>
-                <a href="https://wa.me/919209599003" className="text-base font-medium text-gray-200 hover:text-green-400 transition-colors block">
-                    +91 9209599003 
-                </a>
-             </motion.div>
 
              {/* Social */}
              <motion.div 
@@ -129,23 +119,23 @@ const Contact = () => {
                     </div>
                     <div>
                         <h3 className="font-bold text-white text-base">Follow Us</h3>
-                        <p className="text-sm text-gray-300">Join our community</p>
+                        <p className="text-sm text-white">Join our community</p>
                     </div>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                    <a href="https://www.linkedin.com/company/alanxa-ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-lg hover:bg-indigo-900/30 text-gray-400 hover:text-indigo-400 transition-colors">
+                    <a href="https://www.linkedin.com/company/alanxa-ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-lg hover:bg-indigo-900/30 text-white hover:text-indigo-400 transition-colors">
                         <LinkedinIcon className="w-5 h-5" />
                     </a>
-                    <a href="https://x.com/alanxa_ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-lg hover:bg-black/50 text-gray-400 hover:text-white transition-colors">
+                    <a href="https://x.com/alanxa_ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-lg hover:bg-black/50 text-white hover:text-white transition-colors">
                         <TwitterIcon className="w-5 h-5" />
                     </a>
-                    <a href="https://www.instagram.com/alanxa.ai/" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-lg hover:bg-pink-900/30 text-gray-400 hover:text-pink-400 transition-colors">
+                    <a href="https://www.instagram.com/alanxa.ai/" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-lg hover:bg-pink-900/30 text-white hover:text-pink-400 transition-colors">
                         <InstagramIcon className="w-5 h-5" />
                     </a>
-                    <a href="https://www.facebook.com/alanxa07" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-lg hover:bg-blue-900/30 text-gray-400 hover:text-blue-400 transition-colors">
+                    <a href="https://www.facebook.com/alanxa07" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-lg hover:bg-blue-900/30 text-white hover:text-blue-400 transition-colors">
                         <FacebookIcon className="w-5 h-5" />
                     </a>
-                    <a href="https://www.threads.com/@alanxa.ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-white transition-colors">
+                    <a href="https://www.threads.com/@alanxa.ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-lg hover:bg-gray-700 text-white hover:text-white transition-colors">
                         <ThreadsIcon className="w-5 h-5" />
                     </a>
                 </div>
@@ -164,7 +154,7 @@ const Contact = () => {
              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Your Name</label>
+                      <label className="text-xs font-bold text-white uppercase tracking-wider">Your Name</label>
                       <input 
                         type="text" 
                         name="name" 
@@ -176,7 +166,7 @@ const Contact = () => {
                       />
                    </div>
                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Email Address</label>
+                      <label className="text-xs font-bold text-white uppercase tracking-wider">Email Address</label>
                       <input 
                         type="email" 
                         name="email" 
@@ -190,7 +180,7 @@ const Contact = () => {
                 </div>
 
                 <div className="space-y-1">
-                   <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Subject</label>
+                   <label className="text-xs font-bold text-white uppercase tracking-wider">Subject</label>
                    <input 
                      type="text" 
                      name="subject" 
@@ -203,7 +193,7 @@ const Contact = () => {
                 </div>
 
                 <div className="space-y-1">
-                   <label className="text-xs font-bold text-gray-300 uppercase tracking-wider">Message</label>
+                   <label className="text-xs font-bold text-white uppercase tracking-wider">Message</label>
                    <textarea 
                      name="message" 
                      rows={6} 

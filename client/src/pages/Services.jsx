@@ -41,7 +41,7 @@ const Services = () => {
       useCases: ['OCR & Document Understanding', 'Entity Extraction (NER)', 'Image Bounding Boxes', 'Video Object Tracking'],
       reliability: 'Millions of tasks completed with >99% acceptance rates for clients like Uber and Google.',
       color: 'bg-cyan-600',
-      image: "https://res.cloudinary.com/dikppmyhp/image/upload/v1766218286/Data_Annotation_1_ujl3ga.jpg"
+      image: "https://res.cloudinary.com/dikppmyhp/image/upload/v1766430552/Data_Annotation_1_1_3_r1u0xt.jpg"
     },
     {
       id: 'transcription',
@@ -86,7 +86,7 @@ const Services = () => {
             "
             sizes="100vw"
             alt="Data Services" 
-            className="w-full h-full object-cover object-center opacity-30 animate-slow-zoom"
+            className="w-full h-full object-cover object-center opacity-30"
             width="1920"
             height="1080"
             fetchPriority="high"
@@ -106,7 +106,7 @@ const Services = () => {
                     Data Services That <br/>
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-sky-400">Power Intelligence</span>
                 </h1>
-                <p className="text-sm lg:text-base text-gray-100 leading-relaxed max-w-lg mb-6 lg:mb-8 font-medium">
+                <p className="text-sm lg:text-base text-white leading-relaxed max-w-lg mb-6 lg:mb-8 font-medium">
                     From RLHF to Audio Annotation, we deliver the human intelligence your AI needs to succeed. Scalable, secure, and precise.
                 </p>
                 <Link to="/contact" className="px-6 py-2.5 lg:px-8 lg:py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-indigo-500/40 inline-flex items-center gap-2 text-sm lg:text-base">
@@ -164,13 +164,13 @@ const Services = () => {
                           <div className={`p-1.5 rounded-md ${service.color} bg-opacity-20`}>
                               <Icon className={`w-4 h-4 text-gray-700`} />
                           </div>
-                          <span className="text-xs font-bold text-gray-100">Expert Verified</span>
+                          <span className="text-xs font-bold text-white">Expert Verified</span>
                       </motion.div>
                   </div>
 
                   {/* Text Side */}
                   <div className="w-full lg:w-7/12">
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${service.color} bg-opacity-20 text-gray-100 font-bold text-xs mb-3`}>
+                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${service.color} bg-opacity-20 text-white font-bold text-xs mb-3`}>
                           <Icon className="w-3 h-3" />
                           {service.title}
                       </div>
@@ -182,7 +182,7 @@ const Services = () => {
                           </span>
                       </h3>
                       
-                      <p className="text-sm text-gray-200 leading-relaxed mb-4">
+                      <p className="text-sm text-white leading-relaxed mb-4">
                           {service.desc}
                       </p>
 
@@ -195,7 +195,7 @@ const Services = () => {
                                   <motion.div 
                                     whileHover={{ x: 5 }}
                                     key={i} 
-                                    className="flex items-center gap-2 text-gray-200 text-xs font-medium"
+                                    className="flex items-center gap-2 text-white text-xs font-medium"
                                   >
                                       <CheckCircleIcon className={`w-3 h-3 ${service.color.replace('bg-', 'text-')} shrink-0`} />
                                       {useCase}
@@ -205,7 +205,7 @@ const Services = () => {
                       </div>
 
                       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between border-t border-gray-800 pt-4">
-                           <div className="text-xs text-gray-300 italic max-w-xs">
+                           <div className="text-xs text-white italic max-w-xs">
                                "{service.reliability}"
                            </div>
                            <Link 
@@ -235,7 +235,7 @@ const Services = () => {
               
               <div className="text-center mb-10 relative z-10">
                   <h2 className="text-2xl md:text-3xl font-bold mb-2">How We Deliver Excellence</h2>
-                  <p className="text-gray-200 text-xs md:text-sm">Our battle-tested workflow for consistent quality.</p>
+                  <p className="text-white text-xs md:text-sm">Our battle-tested workflow for consistent quality.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
@@ -255,7 +255,7 @@ const Services = () => {
                       >
                           <div className="text-4xl font-bold text-gray-600/50 mb-3">{item.step}</div>
                           <h3 className="text-lg font-bold text-white mb-1.5">{item.title}</h3>
-                          <p className="text-gray-200 text-xs leading-relaxed">{item.desc}</p>
+                          <p className="text-white text-xs leading-relaxed">{item.desc}</p>
                       </motion.div>
                   ))}
               </div>
@@ -274,9 +274,13 @@ const Services = () => {
                   {/* Background Image & Overlay */}
                   <div className="absolute inset-0">
                       <img 
-                        src="https://res.cloudinary.com/dikppmyhp/image/upload/v1766164357/WhatsApp_Image_2025-12-19_at_10.25.43_PM_bkrjeh.jpg" 
+                        src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_800/v1766164357/WhatsApp_Image_2025-12-19_at_10.25.43_PM_bkrjeh.jpg" 
                         alt="CTA Background" 
-                        className="w-full h-full object-cover opacity-100"
+                        className="w-full h-full object-cover"
+                        width="800"
+                        height="600"
+                        loading="lazy"
+                        decoding="async"
                       />
                       <div className="absolute inset-0 bg-[#020617]/60"></div>
                   </div>

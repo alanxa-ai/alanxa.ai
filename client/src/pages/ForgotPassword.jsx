@@ -60,7 +60,7 @@ const ForgotPassword = () => {
            <h2 className="text-3xl font-extrabold text-white tracking-tight">
             {step === 1 ? 'Forgot Password?' : 'Reset Password'}
            </h2>
-           <p className="mt-2 text-base text-gray-300">
+           <p className="mt-2 text-base text-white">
              {step === 1 ? "Enter your email and we'll send you a recovery code." : "Create a strong new password for your account."}
            </p>
         </div>
@@ -81,10 +81,10 @@ const ForgotPassword = () => {
         {step === 1 ? (
           <form className="space-y-6" onSubmit={handleSendOtp}>
             <div>
-              <label htmlFor="email-address" className="block text-base font-bold text-gray-200 mb-2">Email address</label>
+              <label htmlFor="email-address" className="block text-base font-bold text-white mb-2">Email address</label>
               <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
+                    <Mail className="h-5 w-5 text-white" />
                   </div>
                   <input 
                     id="email-address" 
@@ -110,7 +110,7 @@ const ForgotPassword = () => {
           <form className="space-y-6" onSubmit={handleResetPassword}>
              <div className="space-y-4">
               <div>
-                <label className="block text-base font-bold text-gray-200 mb-2">OTP Code</label>
+                <label className="block text-base font-bold text-white mb-2">OTP Code</label>
                 <input 
                     type="text" 
                     required 
@@ -121,7 +121,7 @@ const ForgotPassword = () => {
                 />
               </div>
               <div>
-                <label className="block text-base font-bold text-gray-200 mb-2">New Password</label>
+                <label className="block text-base font-bold text-white mb-2">New Password</label>
                 <input 
                     type="password" 
                     required 
@@ -142,7 +142,7 @@ const ForgotPassword = () => {
           </form>
         )}
         <div className="mt-8 text-center bg-white/5 mx-[-2rem] mb-[-2rem] p-4 rounded-b-2xl border-t border-white/5">
-          <Link to="/login" className="font-bold text-base text-gray-300 hover:text-white flex items-center justify-center gap-2 transition-colors">
+          <Link to="/login" className="font-bold text-base text-white hover:text-white flex items-center justify-center gap-2 transition-colors">
             <ArrowLeft className="w-5 h-5" /> Back to Login
           </Link>
         </div>

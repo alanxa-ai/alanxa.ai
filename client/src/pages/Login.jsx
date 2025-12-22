@@ -65,7 +65,7 @@ const Login = () => {
              {/* Header */}
              <div className="text-center mb-10 relative">
                 <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">Welcome to Alanxa</h2>
-                <p className="text-gray-300 text-base">Sign in to continue</p>
+                <p className="text-white text-base">Sign in to continue</p>
              </div>
 
              {/* Form */}
@@ -82,11 +82,11 @@ const Login = () => {
 
                 {/* Email Input */}
                 <div className="space-y-1.5">
-                   <label className="text-sm font-semibold text-gray-200 ml-1">Email Address</label>
+                   <label className="text-sm font-semibold text-white ml-1">Email Address</label>
                    <div className={`relative group transition-all duration-300 ${focusedInput === 'email' ? 'scale-[1.02]' : ''}`}>
                       <div className={`absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-sky-600 rounded-xl blur opacity-0 transition duration-500 ${focusedInput === 'email' ? 'opacity-30' : ''}`}></div>
                       <div className="relative">
-                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-hover:text-gray-400 transition-colors">
+                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white group-hover:text-white transition-colors">
                             <Mail size={18} />
                          </div>
                          <input 
@@ -107,13 +107,13 @@ const Login = () => {
                 {/* Password Input */}
                 <div className="space-y-1.5">
                    <div className="flex justify-between items-center ml-1">
-                      <label className="text-sm font-semibold text-gray-200">Password</label>
+                      <label className="text-sm font-semibold text-white">Password</label>
                       <Link to="/forgot-password" className="text-sm text-indigo-300 hover:text-indigo-200 transition-colors font-medium">Forgot password?</Link>
                    </div>
                    <div className={`relative group transition-all duration-300 ${focusedInput === 'password' ? 'scale-[1.02]' : ''}`}>
                       <div className={`absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-sky-600 rounded-xl blur opacity-0 transition duration-500 ${focusedInput === 'password' ? 'opacity-30' : ''}`}></div>
                       <div className="relative">
-                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-hover:text-gray-400 transition-colors">
+                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white group-hover:text-white transition-colors">
                             <Key size={18} />
                          </div>
                          <input 
@@ -157,7 +157,7 @@ const Login = () => {
 
              {/* Footer */}
              <div className="mt-8 text-center">
-                <p className="text-gray-400 text-base">
+                <p className="text-white text-base">
                    Don't have an account?{' '}
                    <Link to="/register" className="text-indigo-300 font-bold hover:text-indigo-200 transition-colors relative inline-block group">
                       Create account
@@ -170,7 +170,7 @@ const Login = () => {
         
         {/* Footer Text */}
         <div className="absolute bottom-6 left-0 right-0 text-center pointer-events-none">
-           <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+           <p className="text-xs text-white uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
              <Shield className="w-3 h-3" /> Secure Enterprise Login
            </p>
         </div>

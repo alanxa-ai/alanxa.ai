@@ -279,7 +279,8 @@ const AdminDashboard = () => {
       'Contact Person': req.contactPerson,
       'Email': req.email,
       'Country': req.country,
-      'Service': req.service,
+      'Service': req.service === 'Other' && req.otherService ? `Other: ${req.otherService}` : req.service,
+      'Other Service': req.otherService || '',
       'Volume': req.volume,
       'Notes': req.notes,
       'Status': req.status,
@@ -336,14 +337,14 @@ const AdminDashboard = () => {
                 className="h-6 object-contain brightness-0 invert"
              />
           </div>
-          <button onClick={() => setSidebarOpen(false)} className="md:hidden text-gray-400 hover:text-white">
+          <button onClick={() => setSidebarOpen(false)} className="md:hidden text-white hover:text-white">
             <X size={24} />
           </button>
         </div>
 
         <nav className="p-4 space-y-2 mt-4 flex-1 overflow-y-auto">
-          <a href="/" className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-400 hover:bg-gray-800 hover:text-white group">
-              <Home className="w-5 h-5 text-gray-400 group-hover:text-white" />
+          <a href="/" className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-white hover:bg-gray-800 hover:text-white group">
+              <Home className="w-5 h-5 text-white group-hover:text-white" />
               <span className="font-medium text-base">Home</span>
           </a>
           {navItems.map(item => (
@@ -353,10 +354,10 @@ const AdminDashboard = () => {
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                 activeTab === item.id 
                   ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/40' 
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  : 'text-white hover:bg-gray-800 hover:text-white'
               }`}
             >
-              <item.icon className={`w-5 h-5 ${activeTab === item.id ? 'text-white' : 'text-gray-400 group-hover:text-white'}`} />
+              <item.icon className={`w-5 h-5 ${activeTab === item.id ? 'text-white' : 'text-white group-hover:text-white'}`} />
               <span className="font-medium text-base">{item.label}</span>
               {activeTab === item.id && <ArrowRight className="w-4 h-4 ml-auto opacity-50" />}
             </button>
@@ -374,14 +375,14 @@ const AdminDashboard = () => {
        <main className="flex-1 overflow-y-auto h-screen relative bg-black p-4 md:p-8">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-4">
-                <button onClick={() => setSidebarOpen(true)} className="md:hidden p-2 bg-[#0A0F1C] border border-gray-800 rounded-lg text-gray-400">
+                <button onClick={() => setSidebarOpen(true)} className="md:hidden p-2 bg-[#0A0F1C] border border-gray-800 rounded-lg text-white">
                     <Menu size={24} />
                 </button>
                 <div>
                     <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2">
                         {navItems.find(i => i.id === activeTab)?.label || 'Dashboard'}
                     </h1>
-                    <p className="text-gray-300 text-sm md:text-base">Welcome back, Admin</p>
+                    <p className="text-white text-sm md:text-base">Welcome back, Admin</p>
                 </div>
             </div>
             <div className="flex items-center gap-4">
@@ -481,7 +482,7 @@ const StatCard = ({ icon: Icon, label, value, color, bg }) => (
             </div>
         </div>
         <h3 className="text-4xl font-bold text-white mb-1">{value}</h3>
-        <p className="text-gray-300 text-base">{label}</p>
+        <p className="text-white text-base">{label}</p>
     </div>
 );
 
@@ -561,15 +562,15 @@ const UsersManagement = ({ users, showForm, setShowForm, onCreateUser }) => {
                     <h3 className="text-lg font-bold mb-4 text-white">{editingUser ? 'Update User' : 'Create New Account'}</h3>
                     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                         <div>
-                            <label className="block text-base font-medium mb-1 text-gray-300">Name</label>
+                            <label className="block text-base font-medium mb-1 text-white">Name</label>
                             <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg text-base" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
                         </div>
                         <div>
-                            <label className="block text-base font-medium mb-1 text-gray-300">Email</label>
+                            <label className="block text-base font-medium mb-1 text-white">Email</label>
                             <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg text-base" type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required disabled={!!editingUser} />
                         </div>
                         <div>
-                            <label className="block text-base font-medium mb-1 text-gray-300">Role</label>
+                            <label className="block text-base font-medium mb-1 text-white">Role</label>
                             <select className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg text-base" value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})}>
                                 <option value="client">Client</option>
                                 <option value="freelancer">Freelancer</option>
@@ -588,18 +589,18 @@ const UsersManagement = ({ users, showForm, setShowForm, onCreateUser }) => {
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-[#1E293B] border-b border-gray-700 text-gray-200">
+                        <thead className="bg-[#1E293B] border-b border-gray-700 text-white">
                             <tr><th className="p-4 text-base font-bold">Name</th><th className="p-4 text-base font-bold">Email</th><th className="p-4 text-base font-bold">Role</th><th className="p-4 text-base font-bold">Actions</th></tr>
                         </thead>
                         <tbody>
                         {users.map(u => (
                             <tr key={u._id} className="border-b border-gray-800 hover:bg-[#1E293B] transition-colors">
                                 <td className="p-4 font-bold text-white text-base">{u.name}</td>
-                                <td className="p-4 text-base text-gray-300">{u.email}</td>
-                                <td className="p-4"><span className="px-2 py-1 rounded-full bg-gray-800 text-xs uppercase font-bold text-gray-300">{u.role}</span></td>
+                                <td className="p-4 text-base text-white">{u.email}</td>
+                                <td className="p-4"><span className="px-2 py-1 rounded-full bg-gray-800 text-xs uppercase font-bold text-white">{u.role}</span></td>
                                 <td className="p-4 flex gap-2">
-                                    <button onClick={() => startEdit(u)} className="p-1 text-gray-500 hover:text-indigo-400"><Edit2 size={16}/></button>
-                                    <button onClick={() => handleDelete(u._id)} className="p-1 text-gray-500 hover:text-red-500"><Trash2 size={16}/></button>
+                                    <button onClick={() => startEdit(u)} className="p-1 text-white hover:text-indigo-400"><Edit2 size={16}/></button>
+                                    <button onClick={() => handleDelete(u._id)} className="p-1 text-white hover:text-red-500"><Trash2 size={16}/></button>
                                 </td>
                             </tr>
                         ))}
@@ -684,7 +685,7 @@ const ProjectsManagement = ({ projects, users, showForm, setShowForm, onCreatePr
                 <div className="bg-[#0A0F1C] p-6 rounded-2xl shadow-lg border border-gray-800 mb-6">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="text-lg font-bold text-white">{editingProject ? 'Edit Project' : 'Launch New Project'}</h3>
-                        <button onClick={() => { setShowForm(false); setEditingProject(null); setFormData({ title: '', description: '', client: '', freelancers: [], deadline: '', category: '', serviceType: '', totalItems: '', unit: 'Tasks' }); }} className="text-gray-400 hover:text-gray-300"><X size={20}/></button>
+                        <button onClick={() => { setShowForm(false); setEditingProject(null); setFormData({ title: '', description: '', client: '', freelancers: [], deadline: '', category: '', serviceType: '', totalItems: '', unit: 'Tasks' }); }} className="text-white hover:text-white"><X size={20}/></button>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
@@ -694,14 +695,14 @@ const ProjectsManagement = ({ projects, users, showForm, setShowForm, onCreatePr
                         
                         <div className="grid grid-cols-2 gap-4">
                              <div>
-                                <label className="block text-base font-bold mb-1 text-gray-300">Service Category</label>
+                                <label className="block text-base font-bold mb-1 text-white">Service Category</label>
                                 <select className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg text-base" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value, serviceType: ''})} required>
                                     <option value="">Select Category</option>
                                     {Object.keys(SERVICE_CATEGORIES).map(cat => <option key={cat} value={cat}>{cat}</option>)}
                                 </select>
                              </div>
                              <div>
-                                <label className="block text-base font-bold mb-1 text-gray-300">Service Type</label>
+                                <label className="block text-base font-bold mb-1 text-white">Service Type</label>
                                 <select className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg text-base" value={formData.serviceType} onChange={e => setFormData({...formData, serviceType: e.target.value})} required disabled={!formData.category}>
                                     <option value="">Select Type</option>
                                     {formData.category && SERVICE_CATEGORIES[formData.category].map(type => <option key={type} value={type}>{type}</option>)}
@@ -712,11 +713,11 @@ const ProjectsManagement = ({ projects, users, showForm, setShowForm, onCreatePr
                         {/* Quantity and Unit Input */}
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-base font-bold mb-1 text-gray-300">Total Quantity</label>
+                                <label className="block text-base font-bold mb-1 text-white">Total Quantity</label>
                                 <input type="number" className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg placeholder-gray-500 text-base" placeholder="e.g. 1000" value={formData.totalItems} onChange={e => setFormData({...formData, totalItems: e.target.value})} />
                             </div>
                             <div>
-                                <label className="block text-base font-bold mb-1 text-gray-300">Unit Type</label>
+                                <label className="block text-base font-bold mb-1 text-white">Unit Type</label>
                                 <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg placeholder-gray-500 text-base" placeholder="e.g. Images, Hours" value={formData.unit} onChange={e => setFormData({...formData, unit: e.target.value})} />
                             </div>
                         </div>
@@ -725,14 +726,14 @@ const ProjectsManagement = ({ projects, users, showForm, setShowForm, onCreatePr
                         
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-base font-bold mb-1 text-gray-300">Assign Client</label>
+                                <label className="block text-base font-bold mb-1 text-white">Assign Client</label>
                                 <select className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg text-base" value={formData.client} onChange={e => setFormData({...formData, client: e.target.value})} required>
                                     <option value="">Select Client</option>
                                     {clients.map(c => <option key={c._id} value={c._id}>{c.name} ({c.email})</option>)}
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-base font-bold mb-1 text-gray-300">Assign Freelancers (Ctrl+Click for multiple)</label>
+                                <label className="block text-base font-bold mb-1 text-white">Assign Freelancers (Ctrl+Click for multiple)</label>
                                 <select multiple className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg h-32 text-base" value={formData.freelancers} onChange={handleFreelancerChange}>
                                     {freelancers.map(f => <option key={f._id} value={f._id}>{f.name} ({f.email})</option>)}
                                 </select>
@@ -746,7 +747,7 @@ const ProjectsManagement = ({ projects, users, showForm, setShowForm, onCreatePr
             <div className="grid grid-cols-1 gap-4">
                  {/* Project List */}
                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-bold text-gray-300">Active Projects</h3>
+                    <h3 className="font-bold text-white">Active Projects</h3>
                     <button onClick={() => { setShowForm(!showForm); setEditingProject(null); setFormData({ title: '', description: '', client: '', freelancers: [], deadline: '', category: '', serviceType: '' }); }} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-indigo-700">+ New Project</button>
                  </div>
                  
@@ -757,31 +758,31 @@ const ProjectsManagement = ({ projects, users, showForm, setShowForm, onCreatePr
                                  <h4 className="text-xl font-bold text-white">{p.title}</h4>
                                  <span className={`px-2 py-0.5 rounded text-xs font-bold uppercase ${
                                      p.status === 'Completed' ? 'bg-green-900/20 text-green-400' : 
-                                     p.status === 'In Progress' ? 'bg-blue-900/20 text-blue-400' : 'bg-gray-800 text-gray-400'
+                                     p.status === 'In Progress' ? 'bg-blue-900/20 text-blue-400' : 'bg-gray-800 text-white'
                                  }`}>{p.status}</span>
                                  {p.serviceType && <span className="px-2 py-0.5 rounded text-xs font-bold bg-purple-900/20 text-purple-400">{p.serviceType}</span>}
                              </div>
-                             <p className="text-gray-400 text-sm mb-4">{p.description}</p>
+                             <p className="text-white text-sm mb-4">{p.description}</p>
                              
                              <div className="flex gap-6 text-sm">
                                  <div>
-                                     <span className="block text-gray-500 text-xs uppercase font-bold">Client</span>
+                                     <span className="block text-white text-xs uppercase font-bold">Client</span>
                                      <span className="font-semibold text-white">{p.client?.name || 'Unknown'}</span>
                                  </div>
                                  <div className="w-px bg-gray-800"></div>
                                  <div className="flex flex-col">
-                                     <span className="block text-gray-500 text-xs uppercase font-bold">Freelancers</span>
+                                     <span className="block text-white text-xs uppercase font-bold">Freelancers</span>
                                      <div className="flex flex-wrap gap-1">
                                          {p.freelancers && p.freelancers.length > 0 ? p.freelancers.map(f => (
                                              <span key={f._id} className="font-semibold text-white bg-gray-800 px-1 rounded">{f.name}</span>
-                                         )) : <span className="font-semibold text-gray-500">Unassigned</span>}
+                                         )) : <span className="font-semibold text-white">Unassigned</span>}
                                      </div>
                                  </div>
                              </div>
                          </div>
                          
                          <div className="w-full md:w-64 bg-black rounded-xl p-4 flex flex-col justify-center border border-gray-800">
-                             <div className="flex justify-between text-xs font-bold text-gray-400 mb-1">
+                             <div className="flex justify-between text-xs font-bold text-white mb-1">
                                  <span>Progress</span>
                                  <span>{p.completedItems || 0} / {p.totalItems || '-'} {p.unit || 'Tasks'}</span>
                              </div>
@@ -819,7 +820,7 @@ const ProjectsManagement = ({ projects, users, showForm, setShowForm, onCreatePr
                                  </div>
                              )}
 
-                             <button onClick={() => startEdit(p)} className="w-full py-2 bg-[#0A0F1C] border border-gray-700 rounded-lg text-sm font-bold text-gray-300 hover:bg-gray-800 mb-2">Manage Details</button>
+                             <button onClick={() => startEdit(p)} className="w-full py-2 bg-[#0A0F1C] border border-gray-700 rounded-lg text-sm font-bold text-white hover:bg-gray-800 mb-2">Manage Details</button>
                              <button onClick={() => onDeleteProject(p._id)} className="w-full py-2 bg-red-900/20 border border-red-900/30 rounded-lg text-sm font-bold text-red-500 hover:bg-red-900/40 flex items-center justify-center gap-2"><Trash2 size={16}/> Delete Project</button>
                          </div>
                      </div>
@@ -873,22 +874,22 @@ const JobsManagement = ({ jobs, showForm, setShowForm, editingJob, setEditingJob
                 <div className="bg-[#0A0F1C] p-6 rounded-2xl shadow-lg border border-gray-800">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="text-lg font-bold text-white">{editingJob ? 'Edit Job' : 'Post New Job'}</h3>
-                        <button onClick={() => { setShowForm(false); setEditingJob(null); setFormData({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '' }); }}><X size={20} className="text-gray-400 hover:text-gray-300"/></button>
+                        <button onClick={() => { setShowForm(false); setEditingJob(null); setFormData({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '' }); }}><X size={20} className="text-white hover:text-white"/></button>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Job Title</label>
+                                <label className="block text-sm font-bold text-white uppercase mb-1">Job Title</label>
                                 <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg placeholder-gray-500 text-base" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Category</label>
+                                <label className="block text-sm font-bold text-white uppercase mb-1">Category</label>
                                 <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg placeholder-gray-500 text-base" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} placeholder="e.g. AI Training" required />
                             </div>
                         </div>
                         <div className="grid grid-cols-3 gap-4">
                             <div>
-                                <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Type</label>
+                                <label className="block text-sm font-bold text-white uppercase mb-1">Type</label>
                                 <select className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg text-base" value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})}>
                                     <option value="Freelance">Freelance</option>
                                     <option value="Full-time">Full-time</option>
@@ -897,22 +898,22 @@ const JobsManagement = ({ jobs, showForm, setShowForm, editingJob, setEditingJob
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Location</label>
+                                <label className="block text-sm font-bold text-white uppercase mb-1">Location</label>
                                 <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg placeholder-gray-500 text-base" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Salary / Rate</label>
+                                <label className="block text-sm font-bold text-white uppercase mb-1">Salary / Rate</label>
                                 <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg placeholder-gray-500 text-base" value={formData.salary} onChange={e => setFormData({...formData, salary: e.target.value})} placeholder="e.g. $20/hr"/>
                             </div>
                         </div>
                         
                         <div>
-                             <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Skills (comma separated)</label>
+                             <label className="block text-sm font-bold text-white uppercase mb-1">Skills (comma separated)</label>
                              <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg placeholder-gray-500 text-base" value={formData.skills} onChange={e => setFormData({...formData, skills: e.target.value})} placeholder="Python, Annotation, Native Speaker"/>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-bold text-gray-300 uppercase mb-1">Description</label>
+                            <label className="block text-sm font-bold text-white uppercase mb-1">Description</label>
                             <ReactQuill theme="snow" value={formData.description} onChange={val => setFormData({...formData, description: val})} className="h-48 mb-12" />
                         </div>
                          
@@ -931,9 +932,9 @@ const JobsManagement = ({ jobs, showForm, setShowForm, editingJob, setEditingJob
                         <div key={job._id} className="p-6 border-b border-gray-800 hover:bg-[#1E293B] flex justify-between items-center group transition-colors">
                             <div>
                                 <h4 className="font-bold text-xl text-white">{job.title}</h4>
-                                <div className="flex gap-2 text-base text-gray-300 mt-1">
+                                <div className="flex gap-2 text-base text-white mt-1">
                                     <span className="px-2 py-0.5 bg-blue-900/20 text-blue-400 rounded text-sm font-bold uppercase">{job.type}</span>
-                                    <span className="px-2 py-0.5 bg-gray-800 text-gray-300 rounded text-sm font-bold uppercase">{job.category}</span>
+                                    <span className="px-2 py-0.5 bg-gray-800 text-white rounded text-sm font-bold uppercase">{job.category}</span>
                                     <span>{job.location}</span>
                                 </div>
                             </div>
@@ -950,12 +951,12 @@ const JobsManagement = ({ jobs, showForm, setShowForm, editingJob, setEditingJob
                                     });
                                     setEditingJob(job); 
                                     setShowForm(true); 
-                                }} className="p-2 text-gray-400 hover:text-indigo-400 bg-black border border-gray-700 rounded-lg shadow-sm"><Edit2 size={16}/></button>
-                                <button onClick={() => onDeleteJob(job._id)} className="p-2 text-gray-400 hover:text-red-500 bg-black border border-gray-700 rounded-lg shadow-sm"><Trash2 size={16}/></button>
+                                }} className="p-2 text-white hover:text-indigo-400 bg-black border border-gray-700 rounded-lg shadow-sm"><Edit2 size={16}/></button>
+                                <button onClick={() => onDeleteJob(job._id)} className="p-2 text-white hover:text-red-500 bg-black border border-gray-700 rounded-lg shadow-sm"><Trash2 size={16}/></button>
                             </div>
                         </div>
                     ))}
-                    {jobs.length === 0 && <div className="p-8 text-center text-gray-300 text-lg">No active job postings.</div>}
+                    {jobs.length === 0 && <div className="p-8 text-center text-white text-lg">No active job postings.</div>}
                 </div>
             </div>
         </div>
@@ -1035,28 +1036,28 @@ const BlogsManagement = ({ blogs, showForm, setShowForm, editingBlog, setEditing
          <div className="bg-[#0A0F1C] rounded-xl shadow-lg border border-gray-800 overflow-hidden mb-6 max-w-4xl mx-auto">
             <div className="px-6 py-4 border-b border-gray-800 flex justify-between items-center bg-[#0A0F1C]">
                <h3 className="text-xl font-bold text-white">{editingBlog ? 'Edit Blog Post' : 'Create New Post'}</h3>
-               <button onClick={() => { setShowForm(false); resetForm(); }} className="p-1 hover:text-gray-200 rounded-full transition text-gray-300"><X size={20} /></button>
+               <button onClick={() => { setShowForm(false); resetForm(); }} className="p-1 hover:text-white rounded-full transition text-white"><X size={20} /></button>
             </div>
             <div className="p-6">
                <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                       <label className="text-sm font-bold text-gray-300 uppercase">Title</label>
+                       <label className="text-sm font-bold text-white uppercase">Title</label>
                        <input type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="w-full px-3 py-2 text-base text-white bg-black rounded-lg border border-gray-700 focus:ring-1 focus:ring-indigo-500 outline-none placeholder-gray-500" placeholder="Blog Title" required />
                     </div>
                     <div className="space-y-1">
-                       <label className="text-sm font-bold text-gray-300 uppercase">Category</label>
+                       <label className="text-sm font-bold text-white uppercase">Category</label>
                        <input type="text" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full px-3 py-2 text-base text-white bg-black rounded-lg border border-gray-700 focus:ring-1 focus:ring-indigo-500 outline-none placeholder-gray-500" placeholder="e.g. AI" required />
                     </div>
                   </div>
                   
                   <div className="space-y-1">
-                      <label className="text-sm font-bold text-gray-300 uppercase">Excerpt</label>
+                      <label className="text-sm font-bold text-white uppercase">Excerpt</label>
                       <textarea rows={2} value={formData.excerpt} onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })} className="w-full px-3 py-2 text-base text-white bg-black rounded-lg border border-gray-700 focus:ring-1 focus:ring-indigo-500 outline-none resize-none placeholder-gray-500" placeholder="Brief summary..." required />
                   </div>
 
                   <div className="space-y-1">
-                      <label className="text-sm font-bold text-gray-300 uppercase">Content</label>
+                      <label className="text-sm font-bold text-white uppercase">Content</label>
                       <div className="bg-black rounded-lg border border-gray-700 overflow-hidden">
                           <ReactQuill 
                             key={editingBlog ? editingBlog._id : 'new-blog-post'}
@@ -1071,15 +1072,15 @@ const BlogsManagement = ({ blogs, showForm, setShowForm, editingBlog, setEditing
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                      <div className="space-y-1">
-                        <label className="text-sm font-bold text-gray-300 uppercase">Author</label>
+                        <label className="text-sm font-bold text-white uppercase">Author</label>
                         <input type="text" value={formData.author.name} onChange={(e) => setFormData({ ...formData, author: { ...formData.author, name: e.target.value } })} className="w-full px-3 py-2 text-base text-white bg-black rounded-lg border border-gray-700 focus:ring-1 focus:ring-indigo-500 outline-none placeholder-gray-500" placeholder="Name" required />
                      </div>
                      <div className="space-y-1">
-                        <label className="text-sm font-bold text-gray-300 uppercase">Read Time</label>
+                        <label className="text-sm font-bold text-white uppercase">Read Time</label>
                         <input type="text" value={formData.readTime} onChange={(e) => setFormData({ ...formData, readTime: e.target.value })} className="w-full px-3 py-2 text-base text-white bg-black rounded-lg border border-gray-700 focus:ring-1 focus:ring-indigo-500 outline-none placeholder-gray-500" placeholder="5 min" />
                      </div>
                      <div className="space-y-1">
-                        <label className="text-sm font-bold text-gray-300 uppercase flex justify-between">
+                        <label className="text-sm font-bold text-white uppercase flex justify-between">
                             Featured Image
                             {formData.featuredImage && (
                                 <button type="button" onClick={() => setFormData({...formData, featuredImage: ''})} className="text-red-400 hover:text-red-300 text-xs lowercase hover:underline">remove</button>
@@ -1088,7 +1089,7 @@ const BlogsManagement = ({ blogs, showForm, setShowForm, editingBlog, setEditing
                         {formData.featuredImage ? (
                             <div className="h-10 w-full flex items-center gap-2 border border-gray-700 rounded-lg px-2 bg-black">
                                 <img src={formData.featuredImage} alt="Preview" className="h-8 w-8 rounded object-cover" />
-                                <span className="text-xs text-gray-400 truncate flex-1">{formData.featuredImage}</span>
+                                <span className="text-xs text-white truncate flex-1">{formData.featuredImage}</span>
                             </div>
                         ) : (
                             <CloudinaryImageUpload 
@@ -1101,14 +1102,14 @@ const BlogsManagement = ({ blogs, showForm, setShowForm, editingBlog, setEditing
 
                   <div className="flex items-center gap-2 pt-2">
                      <input type="checkbox" id="pub" checked={formData.published} onChange={(e) => setFormData({ ...formData, published: e.target.checked })} className="rounded text-indigo-600 focus:ring-indigo-500 w-5 h-5 bg-black border-gray-700" />
-                     <label htmlFor="pub" className="text-base font-medium text-gray-300">Publish Immediately</label>
+                     <label htmlFor="pub" className="text-base font-medium text-white">Publish Immediately</label>
                   </div>
 
                   <div className="flex gap-3 pt-2">
                      <button type="submit" className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow transition-colors text-base">
                         {editingBlog ? 'Update Post' : 'Publish Post'}
                      </button>
-                     <button type="button" onClick={() => { setShowForm(false); resetForm(); }} className="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold rounded-lg transition-colors text-base">
+                     <button type="button" onClick={() => { setShowForm(false); resetForm(); }} className="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-lg transition-colors text-base">
                         Cancel
                      </button>
                   </div>
@@ -1132,10 +1133,10 @@ const BlogsManagement = ({ blogs, showForm, setShowForm, editingBlog, setEditing
                                  <span className={`w-2 h-2 rounded-full ${blog.published ? 'bg-green-500' : 'bg-yellow-400'}`}></span>
                                  <h4 className="font-bold text-white text-lg truncate">{blog.title}</h4>
                              </div>
-                             <p className="text-sm text-gray-300 truncate">{blog.excerpt}</p>
+                             <p className="text-sm text-white truncate">{blog.excerpt}</p>
                              <div className="mt-2 flex gap-2">
-                                <span className="px-2 py-0.5 bg-gray-800 text-gray-300 text-xs rounded uppercase font-bold tracking-wider">{blog.category}</span>
-                                <span className="text-xs text-gray-400 py-0.5">{new Date(blog.createdAt).toLocaleDateString()}</span>
+                                <span className="px-2 py-0.5 bg-gray-800 text-white text-xs rounded uppercase font-bold tracking-wider">{blog.category}</span>
+                                <span className="text-xs text-white py-0.5">{new Date(blog.createdAt).toLocaleDateString()}</span>
                              </div>
                          </div>
                          <div className="flex gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1159,7 +1160,7 @@ const BlogsManagement = ({ blogs, showForm, setShowForm, editingBlog, setEditing
                      </div>
                  ))}
                  {blogs.length === 0 && (
-                     <div className="text-center py-10 text-gray-300 text-base">No blogs found. Create one to get started.</div>
+                     <div className="text-center py-10 text-white text-base">No blogs found. Create one to get started.</div>
                  )}
              </div>
         </div>
@@ -1179,7 +1180,7 @@ const ClientRequestsManagement = ({ requests, onUpdateStatus, onDelete, onExport
                  </div>
                  <div className="overflow-x-auto">
                      <table className="w-full">
-                         <thead className="bg-[#1E293B] text-sm font-bold text-gray-200 uppercase tracking-wider text-left border-b border-gray-700">
+                         <thead className="bg-[#1E293B] text-sm font-bold text-white uppercase tracking-wider text-left border-b border-gray-700">
                              <tr>
                                  <th className="p-4">Company</th>
                                  <th className="p-4">Contact</th>
@@ -1194,16 +1195,16 @@ const ClientRequestsManagement = ({ requests, onUpdateStatus, onDelete, onExport
                                  <tr key={req._id} className="hover:bg-[#1E293B] transition-colors">
                                      <td className="p-4">
                                          <div className="font-bold text-white text-base">{req.companyName}</div>
-                                         <div className="text-sm text-gray-300">{req.country}</div>
+                                         <div className="text-sm text-white">{req.country}</div>
                                      </td>
                                      <td className="p-4">
                                          <div className="text-base text-white">{req.contactPerson}</div>
-                                         <div className="text-sm text-gray-300">{req.email}</div>
+                                         <div className="text-sm text-white">{req.email}</div>
                                      </td>
                                      <td className="p-4">
-                                         <span className="px-2 py-1 rounded bg-blue-900/20 text-blue-400 text-sm font-semibold">{req.service}</span>
+                                         <span className="px-2 py-1 rounded bg-blue-900/20 text-blue-400 text-sm font-semibold">{req.service === 'Other' && req.otherService ? `Other: ${req.otherService}` : req.service}</span>
                                      </td>
-                                     <td className="p-4 text-base text-gray-300">{new Date(req.createdAt).toLocaleDateString()}</td>
+                                     <td className="p-4 text-base text-white">{new Date(req.createdAt).toLocaleDateString()}</td>
                                      <td className="p-4">
                                         <select 
                                             value={req.status} 
@@ -1219,7 +1220,7 @@ const ClientRequestsManagement = ({ requests, onUpdateStatus, onDelete, onExport
                                         </select>
                                      </td>
                                      <td className="p-4">
-                                        <button onClick={() => onDelete(req._id)} className="p-2 text-gray-500 hover:text-red-500 rounded-full hover:bg-red-900/20 transition"><Trash2 size={18} /></button>
+                                        <button onClick={() => onDelete(req._id)} className="p-2 text-white hover:text-red-500 rounded-full hover:bg-red-900/20 transition"><Trash2 size={18} /></button>
                                      </td>
                                  </tr>
                              ))}
@@ -1241,7 +1242,7 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
                  </div>
                  <div className="overflow-x-auto">
                      <table className="w-full">
-                         <thead className="bg-[#1E293B] text-sm font-bold text-gray-200 uppercase tracking-wider text-left border-b border-gray-700">
+                         <thead className="bg-[#1E293B] text-sm font-bold text-white uppercase tracking-wider text-left border-b border-gray-700">
                              <tr>
                                  <th className="p-4">Applicant</th>
                                  <th className="p-4">Role/Skills</th>
@@ -1256,27 +1257,27 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
                                  <tr key={app._id} className="hover:bg-[#1E293B] transition-colors">
                                      <td className="p-4">
                                          <div className="font-bold text-white text-base">{app.name}</div>
-                                         <div className="text-sm text-gray-300">{app.email}</div>
-                                         <div className="text-sm text-gray-400">{app.phone}</div>
+                                         <div className="text-sm text-white">{app.email}</div>
+                                         <div className="text-sm text-white">{app.phone}</div>
                                      </td>
                                      <td className="p-4">
                                          <div className="text-base text-white line-clamp-1">{app.languages}</div>
                                          <div className="flex flex-wrap gap-1 mt-1">
                                              {app.interests?.slice(0, 2).map((i, idx) => (
-                                                 <span key={idx} className="text-xs px-1.5 py-0.5 bg-gray-800 rounded text-gray-300">{i}</span>
+                                                 <span key={idx} className="text-xs px-1.5 py-0.5 bg-gray-800 rounded text-white">{i}</span>
                                              ))}
                                          </div>
                                      </td>
-                                     <td className="p-4 text-base text-gray-300">
+                                     <td className="p-4 text-base text-white">
                                          {app.availability || 'N/A'}
-                                         <span className="block text-sm text-gray-400">{app.experience}</span>
+                                         <span className="block text-sm text-white">{app.experience}</span>
                                      </td>
                                      <td className="p-4">
                                          {app.resume ? (
                                              <a href={app.resume} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1 text-base font-medium">
                                                  <FileText size={16} /> View
                                              </a>
-                                         ) : <span className="text-gray-400 text-sm">-</span>}
+                                         ) : <span className="text-white text-sm">-</span>}
                                      </td>
                                      <td className="p-4">
                                         <select 
@@ -1295,7 +1296,7 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
                                         </select>
                                      </td>
                                      <td className="p-4">
-                                        <button onClick={() => onDelete(app._id)} className="p-2 text-gray-500 hover:text-red-500 rounded-full hover:bg-red-900/20 transition"><Trash2 size={18} /></button>
+                                        <button onClick={() => onDelete(app._id)} className="p-2 text-white hover:text-red-500 rounded-full hover:bg-red-900/20 transition"><Trash2 size={18} /></button>
                                      </td>
                                  </tr>
                              ))}

@@ -114,8 +114,8 @@ const CloudinaryImageUpload = ({ onUploadSuccess, folder = 'alanxa' }) => {
                       <Upload className="w-8 h-8 text-indigo-500" />
                   </div>
                   <p className="text-white font-bold mb-1">Click to upload image</p>
-                  <p className="text-gray-500 text-sm">PNG, JPG, GIF (Max 5MB)</p>
-                  <div className="mt-4 px-6 py-2 bg-[#1E293B] border border-gray-700 rounded-lg text-sm font-semibold text-gray-300 hover:bg-gray-700 transition-colors">
+                  <p className="text-white text-sm">PNG, JPG, GIF (Max 5MB)</p>
+                  <div className="mt-4 px-6 py-2 bg-[#1E293B] border border-gray-700 rounded-lg text-sm font-semibold text-white hover:bg-gray-700 transition-colors">
                       Choose File
                   </div>
                 </>

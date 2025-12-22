@@ -51,7 +51,7 @@ const SplashScreen = () => {
               />
            </div>
            
-           <p className="text-gray-500 text-xs mt-3 tracking-[0.2em] font-medium uppercase">Initializing</p>
+           <p className="text-white text-xs mt-3 tracking-[0.2em] font-medium uppercase">Initializing</p>
         </motion.div>
       </div>
     </motion.div>
