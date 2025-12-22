@@ -90,7 +90,7 @@ const Navbar = () => {
                     className={`text-sm font-medium transition-colors flex items-center gap-1 ${
                       activeDropdown === item.name || location.pathname === item.path
                         ? 'text-white' 
-                        : 'text-gray-300 hover:text-white'
+                        : 'text-white hover:text-white'
                     }`}
                     onClick={(e) => item.dropdown && e.preventDefault()}
                   >
@@ -117,7 +117,7 @@ const Navbar = () => {
                             <Link
                               key={subItem.name}
                               to={subItem.path}
-                              className="block px-4 py-2.5 text-sm text-gray-400 hover:bg-white/5 hover:text-white font-medium transition-colors"
+                              className="block px-4 py-2.5 text-sm text-white hover:bg-white/5 hover:text-white font-medium transition-colors"
                             >
                               {subItem.name}
                             </Link>
@@ -144,7 +144,7 @@ const Navbar = () => {
             <div className="lg:hidden flex items-center">
               <button 
                 onClick={() => setIsOpen(true)} 
-                className="text-white hover:text-gray-300 transition-colors focus:outline-none"
+                className="text-white hover:text-white transition-colors focus:outline-none"
                 aria-label="Open main menu"
               >
                 <Menu className="h-6 w-6" strokeWidth={2} />
@@ -184,7 +184,7 @@ const Navbar = () => {
                   />
                   <button 
                     onClick={() => setIsOpen(false)}
-                    className="p-2 rounded-full hover:bg-white/10 transition-colors text-gray-400 hover:text-white"
+                    className="p-2 rounded-full hover:bg-white/10 transition-colors text-white hover:text-white"
                     aria-label="Close menu"
                   >
                     <X className="h-5 w-5" />
@@ -201,7 +201,7 @@ const Navbar = () => {
                              className="w-full px-4 py-3 text-white font-semibold text-base flex justify-between items-center hover:bg-white/5 transition-colors rounded-lg"
                            >
                              {item.name}
-                             <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${mobileSubmenuOpen === item.name ? 'rotate-180' : ''}`} />
+                             <ChevronDown className={`w-4 h-4 text-white transition-transform duration-300 ${mobileSubmenuOpen === item.name ? 'rotate-180' : ''}`} />
                            </button>
                            <AnimatePresence>
                              {mobileSubmenuOpen === item.name && (
@@ -216,7 +216,7 @@ const Navbar = () => {
                                      <Link
                                        key={subItem.name}
                                        to={subItem.path}
-                                       className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 transition-all text-sm rounded-md"
+                                       className="flex items-center gap-3 px-4 py-3 text-white hover:text-white hover:bg-white/5 transition-all text-sm rounded-md"
                                        onClick={() => setIsOpen(false)}
                                      >
                                        <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full"></span>
@@ -231,7 +231,7 @@ const Navbar = () => {
                       ) : (
                         <Link
                           to={item.path}
-                          className="block px-4 py-4 text-gray-300 font-medium hover:bg-white/5 hover:text-white transition-all rounded-lg"
+                          className="block px-4 py-4 text-white font-medium hover:bg-white/5 hover:text-white transition-all rounded-lg"
                           onClick={() => setIsOpen(false)}
                         >
                           {item.name}

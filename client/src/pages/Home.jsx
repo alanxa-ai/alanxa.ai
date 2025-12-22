@@ -154,7 +154,7 @@ const Home = () => {
               </span>
             </h1>
 
-            <p className="text-[10px] md:text-lg lg:text-xl text-gray-300 mb-5 max-w-2xl mx-auto leading-relaxed font-light px-4">
+            <p className="text-[10px] md:text-lg lg:text-xl text-white mb-5 max-w-2xl mx-auto leading-relaxed font-light px-4">
               Premium AI training, RLHF, and multilingual data annotation services trusted by pioneers like Google, Meta, and Uber.
             </p>
 
@@ -197,7 +197,7 @@ const Home = () => {
                  className="text-center group"
                >
                  <h3 className="text-base md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-400 to-teal-300 mb-0.5 md:mb-2 group-hover:scale-105 transition-transform duration-300">{stat.value}</h3>
-                 <p className="text-[8px] md:text-sm uppercase tracking-widest text-gray-200 font-bold group-hover:text-white transition-colors">{stat.label}</p>
+                 <p className="text-[8px] md:text-sm uppercase tracking-widest text-white font-bold group-hover:text-white transition-colors">{stat.label}</p>
                </div>
             ))}
           </div>
@@ -207,7 +207,7 @@ const Home = () => {
       {/* 3. Trusted Partners (Marquee) */}
       <section className="py-16 bg-black border-b border-gray-800 overflow-hidden">
         <div className="mb-8 text-center px-4">
-            <p className="text-sm font-bold text-gray-300 uppercase tracking-widest">Trusted by Innovation Leaders</p>
+            <p className="text-sm font-bold text-white uppercase tracking-widest">Trusted by Innovation Leaders</p>
         </div>
         <div className="relative w-full overflow-hidden">
           <div className="flex w-max animate-marquee">
@@ -225,7 +225,7 @@ const Home = () => {
                       e.target.nextSibling.style.display='block';
                   }}
                 />
-                <span style={{display: 'none'}} className="text-lg md:text-xl font-black text-gray-300 uppercase tracking-tighter hover:text-gray-500 transition-colors cursor-default whitespace-nowrap">
+                <span style={{display: 'none'}} className="text-lg md:text-xl font-black text-white uppercase tracking-tighter hover:text-white transition-colors cursor-default whitespace-nowrap">
                     {client.name}
                 </span>
               </div>
@@ -236,7 +236,7 @@ const Home = () => {
           <div className="absolute top-0 right-0 w-20 md:w-40 h-full bg-gradient-to-l from-black to-transparent pointer-events-none"></div>
         </div>
         <div className="text-center mt-10 px-4">
-            <p className="text-sm text-gray-300 italic max-w-2xl mx-auto">
+            <p className="text-sm text-white italic max-w-2xl mx-auto">
                "{portfolioText}"
             </p>
         </div>
@@ -248,7 +248,7 @@ const Home = () => {
             <div className="text-center mb-16">
                 <span className="text-indigo-400 font-bold tracking-wider uppercase text-sm mb-2 block">Our Capabilities</span>
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Multi-Modal Data Solutions</h2>
-                <p className="text-base text-gray-200 max-w-2xl mx-auto">
+                <p className="text-base text-white max-w-2xl mx-auto">
                     We handle every data type with domain-specific expertise.
                 </p>
             </div>
@@ -310,7 +310,7 @@ const Home = () => {
                       <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
                           We believe AI should reflect the <span className="text-indigo-400">diversity</span> of the human experience.
                       </h2>
-                      <p className="text-sm text-gray-300 mb-8 leading-relaxed">
+                      <p className="text-sm text-white mb-8 leading-relaxed">
                           Alanxa.ai was created with a simple idea: AI becomes better only when real people train it with care, skill, and understanding. 
                           Named after Alan Turing, we align technology with humanity.
                       </p>
@@ -320,14 +320,14 @@ const Home = () => {
                               <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600 mt-1 shrink-0"><CheckCircle className="w-5 h-5"/></div>
                               <div>
                                   <h4 className="font-bold text-white text-sm">Ethical Sourcing</h4>
-                                  <p className="text-gray-300 text-xs mt-1">We ensure fair pay and working conditions for our global annotator community.</p>
+                                  <p className="text-white text-xs mt-1">We ensure fair pay and working conditions for our global annotator community.</p>
                               </div>
                           </div>
                           <div className="flex items-start gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors">
                               <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600 mt-1 shrink-0"><Shield className="w-5 h-5"/></div>
                               <div>
                                   <h4 className="font-bold text-white text-sm">Enterprise Security</h4>
-                                  <p className="text-gray-300 text-xs mt-1">ISO 27001 compliant workflows with strict NDA and PII protection protocols.</p>
+                                  <p className="text-white text-xs mt-1">ISO 27001 compliant workflows with strict NDA and PII protection protocols.</p>
                               </div>
                           </div>
                       </div>
@@ -364,7 +364,7 @@ const Home = () => {
                               </div>
                               <span className="font-bold text-white text-base">+1.5k Experts</span>
                           </div>
-                          <p className="text-sm text-gray-200">
+                          <p className="text-sm text-white">
                               Top-tier linguists and domain experts ready to deploy.
                           </p>
                       </div>
@@ -396,7 +396,7 @@ const Home = () => {
                     <span className="flex items-center gap-2 text-sm font-bold"><Globe className="w-3 h-3 text-sky-400"/> GLOBAL COVERAGE</span>
                  </div>
                  <h2 className="text-3xl md:text-5xl font-bold mb-6">Speaking the World's Languages</h2>
-                 <p className="text-base text-blue-50 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+                 <p className="text-base text-white max-w-2xl mx-auto mb-10 leading-relaxed font-light">
                      Our decentralized workforce spans 35+ countries, providing native-level nuance in 99+ languages including Hindi, Spanish, French, and more.
                  </p>
                  
@@ -410,7 +410,7 @@ const Home = () => {
                             {lang}
                         </motion.span>
                     ))}
-                    <span className="px-4 py-2 rounded-lg border border-dashed border-white/20 text-gray-400 text-sm flex items-center">
+                    <span className="px-4 py-2 rounded-lg border border-dashed border-white/20 text-white text-sm flex items-center">
                         + 50 More Dialects
                     </span>
                  </div>
@@ -424,7 +424,7 @@ const Home = () => {
             <div className="text-center mb-16">
                 <span className="text-indigo-400 font-bold tracking-wider uppercase text-base mb-2 block">The Alanxa Standard</span>
                 <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Engineered for Scale</h2>
-                <p className="text-lg text-gray-200 max-w-2xl mx-auto">
+                <p className="text-lg text-white max-w-2xl mx-auto">
                     We turn chaos into structured data through a battle-tested three-phase workflow.
                 </p>
             </div>
@@ -474,7 +474,7 @@ const Home = () => {
                             </div>
                             <div className="text-center px-4">
                                 <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                                <p className="text-gray-200 leading-relaxed text-sm">
+                                <p className="text-white leading-relaxed text-sm">
                                     {item.desc}
                                 </p>
                             </div>
@@ -492,7 +492,7 @@ const Home = () => {
                     { label: "HIPAA", sub: "Aligned" },
                 ].map((badge, i) => (
                     <div key={i} className="flex flex-col items-center justify-center group cursor-default">
-                        <span className="text-lg md:text-xl font-bold text-gray-100 mb-1 group-hover:text-indigo-900 transition-colors">{badge.label}</span>
+                        <span className="text-lg md:text-xl font-bold text-white mb-1 group-hover:text-indigo-900 transition-colors">{badge.label}</span>
                         <span className="text-[10px] md:text-xs uppercase tracking-widest text-indigo-300 font-bold bg-indigo-900/30 px-2 py-0.5 rounded opacity-70 group-hover:opacity-100">{badge.sub}</span>
                     </div>
                 ))}
@@ -530,7 +530,7 @@ const Home = () => {
                   <h2 className="relative text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-400 mb-3 tracking-tight leading-tight">
                       Ready to scale with human-in-the-loop?
                   </h2>
-                  <p className="relative text-sm text-gray-300 font-light max-w-xl mx-auto md:mx-0">
+                  <p className="relative text-sm text-white font-light max-w-xl mx-auto md:mx-0">
                       Join the leaders building safe, inclusive AI models with Alanxa.
                   </p>
               </motion.div>

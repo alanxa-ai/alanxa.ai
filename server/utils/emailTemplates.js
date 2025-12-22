@@ -61,7 +61,7 @@ const wrapEmail = (content, title) => `
         <div style="padding: 20px;">
             <div class="container">
                 <div class="header">
-                     <img src="${LOGO_URL}" alt="${COMPANY_NAME}" class="logo" style="display: block; margin: 0 auto; border: 0;"> 
+                     <h1 style="margin: 0; font-size: 28px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px;">Alanxa</h1>
                 </div>
                 <div class="content">
                     ${content}
@@ -103,7 +103,7 @@ const getConfirmationTemplate = (name, action = "account verification") => {
         <p>You can now access your account and explore all the features of the ${COMPANY_NAME} platform.</p>
         
         <div style="text-align: center;">
-            <a href="${WEBSITE_URL}/login" class="button">Go to Dashboard</a>
+            <a href="${WEBSITE_URL}/login" class="button" style="display: inline-block; background-color: #4F46E5; color: #ffffff !important; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; text-align: center; font-size: 16px;">Go to Dashboard</a>
         </div>
         
         <p style="margin-top: 30px;">Need help? Reply to this email or contact support.</p>
@@ -122,7 +122,7 @@ const getNewsletterTemplate = (title, mainContent, linkUrl) => {
         
         ${linkUrl ? `
         <div style="text-align: center; margin-top: 30px;">
-            <a href="${linkUrl}" class="button">Read More</a>
+            <a href="${linkUrl}" class="button" style="display: inline-block; background-color: #4F46E5; color: #ffffff !important; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; text-align: center; font-size: 16px;">Read More</a>
         </div>
         ` : ''}
     `;
@@ -156,7 +156,7 @@ const getCredentialsTemplate = (name, email, password, role) => {
         </div>
         
         <div style="text-align: center;">
-            <a href="${WEBSITE_URL}/login" class="button">Login Now</a>
+            <a href="${WEBSITE_URL}/login" class="button" style="display: inline-block; background-color: #4F46E5; color: #ffffff !important; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; text-align: center; font-size: 16px;">Login Now</a>
         </div>
     `;
     return wrapEmail(content, `Your New ${COMPANY_NAME} Account`);
@@ -191,7 +191,7 @@ const getContactFormAdminTemplate = (data) => {
         </div>
         
         <div style="text-align: center; margin-top: 20px;">
-            <a href="mailto:${data.email}?subject=Re: ${data.subject || 'Your Inquiry'}" class="button">Reply to User</a>
+            <a href="mailto:${data.email}?subject=Re: ${data.subject || 'Your Inquiry'}" class="button" style="display: inline-block; background-color: #4F46E5; color: #ffffff !important; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; text-align: center; font-size: 16px;">Reply to User</a>
         </div>
     `;
     return wrapEmail(content, `New Contact: ${data.subject || 'Inquiry'}`);

@@ -118,7 +118,7 @@ const CloudinaryResumeUpload = ({ onUploadSuccess, folder = 'alanxa/resumes' }) 
                       <Upload className="w-6 h-6 text-indigo-500" />
                   </div>
                   <p className="text-white font-bold mb-1">Upload Resume</p>
-                  <p className="text-gray-500 text-xs">PDF, DOC, DOCX (Max 10MB)</p>
+                  <p className="text-white text-xs">PDF, DOC, DOCX (Max 10MB)</p>
                 </>
               )}
             </div>
@@ -139,7 +139,7 @@ const CloudinaryResumeUpload = ({ onUploadSuccess, folder = 'alanxa/resumes' }) 
           </div>
           <div className="flex-1 min-w-0">
              <p className="font-bold text-white truncate">{fileData.name}</p>
-             <p className="text-xs text-gray-500">{fileData.size}</p>
+             <p className="text-xs text-white">{fileData.size}</p>
           </div>
           
           {uploading ? (
@@ -152,7 +152,7 @@ const CloudinaryResumeUpload = ({ onUploadSuccess, folder = 'alanxa/resumes' }) 
                  <button
                     type="button"
                     onClick={clearFile}
-                    className="p-1 text-gray-400 hover:text-red-400 hover:bg-red-900/20 rounded-full transition"
+                    className="p-1 text-white hover:text-red-400 hover:bg-red-900/20 rounded-full transition"
                   >
                     <X className="w-5 h-5" />
                   </button>

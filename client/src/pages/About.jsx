@@ -16,36 +16,69 @@ const About = () => {
         url="/about"
       />
       
-      {/* 1. Vision Header (Moved to Top, Soft White, Small Text) */}
-      {/* 1. Vision Header (Moved to Top, Soft White, Small Text) */}
-      <div className="max-w-4xl mx-auto text-center mb-10 pt-2">
-          <div className="inline-block p-2 rounded-full bg-[#0A0F1C] border border-indigo-900/30 mb-4">
-              <Sparkles className="w-4 h-4 text-indigo-500" />
+      {/* 1. Hero Section with Banner */}
+      <section className="relative min-h-[60vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766429166/ChatGPT_Image_Dec_23_2025_12_15_18_AM_1_dq3jzu.png" 
+            srcSet="
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_640/v1766429166/ChatGPT_Image_Dec_23_2025_12_15_18_AM_1_dq3jzu.png 640w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1024/v1766429166/ChatGPT_Image_Dec_23_2025_12_15_18_AM_1_dq3jzu.png 1024w,
+              https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_1920/v1766429166/ChatGPT_Image_Dec_23_2025_12_15_18_AM_1_dq3jzu.png 1920w
+            "
+            sizes="100vw"
+            alt="" 
+            className="w-full h-full object-cover"
+            width="1920"
+            height="1080"
+            fetchPriority="high"
+            decoding="async"
+          />
+          <div className="absolute inset-0 bg-black/60"></div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
+            <Sparkles className="w-4 h-4 text-indigo-300" />
+            <span className="text-xs font-bold tracking-wider uppercase text-white">About Alanxa</span>
           </div>
-          <h1 className="text-xl md:text-2xl font-light text-gray-200 leading-relaxed mb-6 italic max-w-2xl mx-auto">
-              "We are not just preparing datasets. We are shaping the emotional intelligence of tomorrow’s technology. With every project, we move one step closer to a world where AI understands people the way people understand each other."
+          
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            Shaping the <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Future of AI</span>
           </h1>
           
-          <div className="h-px w-10 bg-gray-800 mx-auto mb-4"></div>
-          
-          <h2 className="text-base font-bold text-white uppercase tracking-widest mb-1">
-              Welcome to Alanxa.ai
-          </h2>
-          <p className="text-gray-300 text-sm">
-              Where human intelligence teaches artificial intelligence to feel human.
+          <p className="text-base sm:text-lg text-white max-w-2xl mx-auto leading-relaxed mb-10">
+            Where human intelligence teaches artificial intelligence to understand people, cultures, emotions, and voices.
           </p>
-      </div>
 
-      {/* 2. Founder's Profile (Circular Image) */}
-      <div className="max-w-4xl mx-auto mb-16 text-center">
+          {/* Stats Cards Row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            {[
+              { value: '10M+', label: 'Data Points' },
+              { value: '99+', label: 'Languages' },
+              { value: '99%', label: 'Accuracy' },
+              { value: '<24h', label: 'Kickoff Time' }
+            ].map((stat, i) => (
+              <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 hover:bg-white/15 transition-colors">
+                <div className="text-2xl sm:text-3xl font-bold text-white mb-1">{stat.value}</div>
+                <div className="text-xs sm:text-sm text-white uppercase tracking-wider">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Founder Section */}
+      <div className="max-w-4xl mx-auto py-16 px-4 text-center">
           <div className="relative inline-block mb-4 group">
               <div className="absolute inset-0 bg-indigo-500 rounded-full blur-xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
               <img 
                   src="/founder.jpg" 
                   alt="Aman Shaikh" 
-                  className="relative z-10 w-32 h-32 object-cover rounded-full shadow-lg border-2 border-white" 
-                  width="128"
-                  height="128"
+                  className="relative z-10 w-28 h-28 object-cover rounded-full shadow-lg border-2 border-white" 
+                  width="112"
+                  height="112"
+                  loading="lazy"
               />
           </div>
           
@@ -54,11 +87,11 @@ const About = () => {
                <p className="text-indigo-400 text-xs font-bold tracking-[0.2em] uppercase">Founder & CEO</p>
           </div>
 
-          <h3 className="text-xl md:text-2xl font-bold text-white leading-tight mb-3">
-              “We don’t just train AI—we give it a soul that understands every language.”
-          </h3>
-          <p className="text-sm text-gray-200 leading-relaxed font-light max-w-xl mx-auto">
-              Alanxa.ai was created with the belief that artificial intelligence should feel human. True intelligence is not just about processing data but understanding people, cultures, emotions, and voices. Our work brings this belief to life.
+          <p className="text-xl md:text-2xl font-bold text-white leading-tight mb-3 italic">
+              "We don't just train AI—we give it a soul that understands every language."
+          </p>
+          <p className="text-sm text-white leading-relaxed max-w-xl mx-auto">
+              Alanxa.ai was created with the belief that artificial intelligence should feel human. True intelligence is not just about processing data but understanding people, cultures, emotions, and voices.
           </p>
       </div>
 
@@ -75,7 +108,7 @@ const About = () => {
                   <Globe className="w-4 h-4 text-white" />
               </div>
               <h3 className="font-bold text-white text-base mb-2">Global Mission</h3>
-              <p className="text-gray-300 text-xs leading-relaxed">
+              <p className="text-white text-xs leading-relaxed">
                   We specialize in building high-quality datasets across the world’s languages. From widely spoken languages to rare dialects, ensuring every voice has a place in AI.
               </p>
           </motion.div>
@@ -91,7 +124,7 @@ const About = () => {
                   <ShieldCheck className="w-4 h-4 text-white" />
               </div>
               <h3 className="font-bold text-white text-base mb-2">Accuracy & Fairness</h3>
-              <p className="text-gray-300 text-xs leading-relaxed">
+              <p className="text-white text-xs leading-relaxed">
                   Solving the industry's biggest challenges: inconsistent quality and high pricing. We focus on accuracy, fairness, and affordability.
               </p>
           </motion.div>
@@ -107,7 +140,7 @@ const About = () => {
                   <Users className="w-4 h-4 text-white" />
               </div>
               <h3 className="font-bold text-white text-base mb-2">Expert Network</h3>
-              <p className="text-gray-300 text-xs leading-relaxed">
+              <p className="text-white text-xs leading-relaxed">
                    A network spanning continents with professionals in speech annotation, linguistic evaluation, and advanced AI workflows. Precise, culturally aware data.
               </p>
           </motion.div>
@@ -123,7 +156,7 @@ const About = () => {
                   <Award className="w-4 h-4 text-white" />
               </div>
               <h3 className="font-bold text-white text-base mb-2">Our Principles</h3>
-              <p className="text-gray-300 text-xs leading-relaxed">
+              <p className="text-white text-xs leading-relaxed">
                   Training AI in every language, providing best possible quality, exceptional client experience, and delivering complete solutions for every project.
               </p>
           </motion.div>
@@ -187,7 +220,7 @@ const About = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
          <div className="text-center mb-10">
             <h2 className="text-4xl font-bold text-white mb-3">About Alanxa.ai</h2>
-            <p className="text-gray-300 max-w-2xl mx-auto text-base">Delivering exceptional AI training and data solutions with precision, integrity, and a global mindset.</p>
+            <p className="text-white max-w-2xl mx-auto text-base">Delivering exceptional AI training and data solutions with precision, integrity, and a global mindset.</p>
          </div>
 
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -199,7 +232,7 @@ const About = () => {
                    <ShieldCheck className="w-4 h-4" />
                 </div>
                 <h3 className="text-base font-bold text-white mb-2">Uncompromising Quality</h3>
-                <p className="text-sm text-gray-200 leading-relaxed">
+                <p className="text-sm text-white leading-relaxed">
                    Quality is the heart of Alanxa.ai. Every annotation, transcription, and data label is reviewed through strict internal quality checks to meet global standards.
                 </p>
              </motion.div>
@@ -212,7 +245,7 @@ const About = () => {
                    <Users className="w-4 h-4" />
                 </div>
                 <h3 className="text-base font-bold text-white mb-2">Global Workforce</h3>
-                <p className="text-sm text-gray-200 leading-relaxed">
+                <p className="text-sm text-white leading-relaxed">
                    Experts across Hindi, Marathi, Gujarati, English, and many more. We support advanced AI systems that need to understand people across regions and cultures.
                 </p>
              </motion.div>
@@ -225,7 +258,7 @@ const About = () => {
                    <Zap className="w-4 h-4" />
                 </div>
                 <h3 className="text-base font-bold text-white mb-2">Fair & Accessible</h3>
-                <p className="text-sm text-gray-200 leading-relaxed">
+                <p className="text-sm text-white leading-relaxed">
                    We combine top-tier expertise with fair pricing. We believe AI development should be accessible and honesty is the best policy for long-term partnerships.
                 </p>
              </motion.div>

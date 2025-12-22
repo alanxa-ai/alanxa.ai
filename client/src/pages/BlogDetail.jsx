@@ -38,9 +38,9 @@ const BlogDetail = () => {
     return (
       <div className="bg-black min-h-screen flex flex-col items-center justify-center pt-24 text-center px-4">
         <div className="bg-[#0A0F1C] p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-800">
-            <BookOpen className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+            <BookOpen className="w-16 h-16 text-white mx-auto mb-4" />
             <h2 className="text-3xl font-bold text-white mb-2">Article Not Found</h2>
-            <p className="text-gray-300 mb-6">The article you are looking for does not exist or has been removed.</p>
+            <p className="text-white mb-6">The article you are looking for does not exist or has been removed.</p>
             <Link to="/blog" className="inline-flex items-center justify-center w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold transition-colors">
             <ArrowLeft className="w-5 h-5 mr-2" /> Back to Intelligence Hub
             </Link>
@@ -54,7 +54,7 @@ const BlogDetail = () => {
       <article className="max-w-2xl mx-auto px-4 sm:px-6">
         
         {/* Navigation */}
-        <Link to="/blog" className="inline-flex items-center text-gray-300 hover:text-indigo-400 mb-6 transition-colors group font-bold text-sm uppercase tracking-wide">
+        <Link to="/blog" className="inline-flex items-center text-white hover:text-indigo-400 mb-6 transition-colors group font-bold text-sm uppercase tracking-wide">
           <ArrowLeft className="w-4 h-4 mr-1.5 group-hover:-translate-x-1 transition-transform" />
           Back to Articles
         </Link>
@@ -75,7 +75,7 @@ const BlogDetail = () => {
              {blog.title}
            </h1>
 
-           <div className="flex items-center justify-center gap-4 text-sm text-gray-300 border-b border-gray-800 pb-6 mb-6">
+           <div className="flex items-center justify-center gap-4 text-sm text-white border-b border-gray-800 pb-6 mb-6">
               <div className="flex items-center">
                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold mr-2">
                     {blog.author.name.charAt(0)}
@@ -118,7 +118,7 @@ const BlogDetail = () => {
             transition={{ delay: 0.2 }}
         >
           {/* Excerpt */}
-          <div className="text-base md:text-lg text-gray-300 font-medium mb-8 leading-relaxed italic border-l-4 border-indigo-500 pl-4 bg-[#0A0F1C] py-3 pr-3 rounded-r-lg">
+          <div className="text-base md:text-lg text-white font-medium mb-8 leading-relaxed italic border-l-4 border-indigo-500 pl-4 bg-[#0A0F1C] py-3 pr-3 rounded-r-lg">
             {blog.excerpt}
           </div>
           
@@ -131,19 +131,19 @@ const BlogDetail = () => {
         {/* Footer / Tags */}
         <div className="mt-10 pt-6 border-t border-gray-800">
            <div className="flex flex-wrap items-center gap-2">
-             <Tag className="w-4 h-4 text-gray-400 mr-1" />
+             <Tag className="w-4 h-4 text-white mr-1" />
              {blog.tags && blog.tags.length > 0 ? (
                 blog.tags.map((tag, index) => (
                   <Link 
                     to={`/blog?tag=${tag}`}
                     key={index} 
-                    className="px-2.5 py-1 bg-[#1E293B] hover:bg-indigo-900/30 text-gray-300 hover:text-indigo-400 rounded-md text-xs font-bold uppercase transition-colors border border-gray-700 hover:border-indigo-500/30"
+                    className="px-2.5 py-1 bg-[#1E293B] hover:bg-indigo-900/30 text-white hover:text-indigo-400 rounded-md text-xs font-bold uppercase transition-colors border border-gray-700 hover:border-indigo-500/30"
                   >
                     #{tag}
                   </Link>
                 ))
              ) : (
-                <span className="text-gray-300 text-sm italic">No tags</span>
+                <span className="text-white text-sm italic">No tags</span>
              )}
            </div>
         </div>

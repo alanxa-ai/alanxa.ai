@@ -34,7 +34,7 @@ const CookieConsent = () => {
                             <div className="p-2 bg-indigo-900/30 rounded-md shrink-0 h-fit">
                                 <Cookie className="w-4 h-4 text-indigo-400" />
                             </div>
-                            <div className="text-xs text-gray-400 leading-relaxed">
+                            <div className="text-xs text-white leading-relaxed">
                                 <p>
                                     We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.
                                     <Link to="/privacy-policy" className="ml-1 text-white hover:underline">Privacy Policy</Link>
@@ -44,7 +44,7 @@ const CookieConsent = () => {
                         <div className="flex gap-2 justify-end">
                             <button 
                                 onClick={() => setIsVisible(false)}
-                                className="px-3 py-1.5 text-xs font-bold text-gray-500 hover:text-white transition-colors"
+                                className="px-3 py-1.5 text-xs font-bold text-white hover:text-white transition-colors"
                             >
                                 Decline
                             </button>

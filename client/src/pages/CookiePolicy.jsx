@@ -11,21 +11,21 @@ const CookiePolicy = () => {
               <CookieIcon className="w-8 h-8 text-indigo-400" />
            </div>
            <h1 className="text-4xl font-bold text-white mb-4">Cookie Policy</h1>
-           <p className="text-gray-300 text-lg">Understanding how we use cookies</p>
+           <p className="text-white text-lg">Understanding how we use cookies</p>
         </div>
 
         <div className="bg-[#0A0F1C] rounded-3xl shadow-2xl border border-gray-800 p-8 md:p-12 space-y-8">
             
             <section>
                 <h2 className="text-xl font-bold text-white mb-4">What Are Cookies?</h2>
-                <p className="text-gray-300 leading-relaxed text-base">
+                <p className="text-white leading-relaxed text-base">
                     Cookies are small text files that are placed on your computer or mobile device by websites that you visit. They are widely used in order to make websites work, or work more efficiently, as well as to provide information to the owners of the site.
                 </p>
             </section>
 
             <section>
                 <h2 className="text-xl font-bold text-white mb-4">How We Use Cookies</h2>
-                <ul className="list-disc pl-6 space-y-3 text-gray-300 text-base">
+                <ul className="list-disc pl-6 space-y-3 text-white text-base">
                     <li><strong className="text-white">Essential Cookies:</strong> These are necessary for the website to function responsibly.</li>
                     <li><strong className="text-white">Analytics Cookies:</strong> We use these to measure how you interact with our website to improve your experience.</li>
                     <li><strong className="text-white">Functional Cookies:</strong> These allow the website to remember choices you make (such as your user name, language or the region you are in).</li>
@@ -34,7 +34,7 @@ const CookiePolicy = () => {
 
             <section>
                 <h2 className="text-xl font-bold text-white mb-4">Managing Cookies</h2>
-                <p className="text-gray-300 leading-relaxed text-base">
+                <p className="text-white leading-relaxed text-base">
                     Most web browsers allow some control of most cookies through the browser settings. To find out more about cookies, including how to see what cookies have been set, visit www.aboutcookies.org or www.allaboutcookies.org.
                 </p>
             </section>

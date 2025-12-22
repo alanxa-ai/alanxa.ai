@@ -114,7 +114,7 @@ const FreelancerDashboard = () => {
                         <img src="/Alanxa.ai_Logo.png" alt="Alanxa AI" className="h-6 object-contain brightness-0 invert" />
                         <span className="text-[10px] uppercase tracking-wider opacity-50 bg-gray-800 px-1.5 py-0.5 rounded">Freelancer</span>
                     </div>
-                    <button onClick={() => setSidebarOpen(false)} className="md:hidden text-gray-400 hover:text-white">
+                    <button onClick={() => setSidebarOpen(false)} className="md:hidden text-white hover:text-white">
                         <X size={24} />
                     </button>
                 </div>
@@ -125,7 +125,7 @@ const FreelancerDashboard = () => {
                             key={item.id}
                             onClick={() => { setActiveTab(item.id); setSidebarOpen(false); }}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                                activeTab === item.id ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/40' : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                                activeTab === item.id ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/40' : 'text-white hover:bg-gray-800 hover:text-white'
                             }`}
                         >
                             <item.icon size={20} />
@@ -144,12 +144,12 @@ const FreelancerDashboard = () => {
 
             <main className="flex-1 p-4 md:p-10 relative overflow-y-auto">
                 <header className="mb-10 flex items-center gap-4">
-                    <button onClick={() => setSidebarOpen(true)} className="md:hidden p-2 bg-[#0A0F1C] border border-gray-800 rounded-lg shadow-sm text-gray-400">
+                    <button onClick={() => setSidebarOpen(true)} className="md:hidden p-2 bg-[#0A0F1C] border border-gray-800 rounded-lg shadow-sm text-white">
                         <Menu size={24} />
                     </button>
                     <div>
                         <h1 className="text-3xl font-bold text-white">Task Board</h1>
-                        <p className="text-gray-400">Manage your assigned tasks and track progress</p>
+                        <p className="text-white">Manage your assigned tasks and track progress</p>
                     </div>
                 </header>
 
@@ -159,7 +159,7 @@ const FreelancerDashboard = () => {
                             <div className="p-6 border-b border-gray-800 flex justify-between items-start bg-[#0A0F1C]">
                                 <div>
                                     <h3 className="text-xl font-bold text-white mb-1">{project.title}</h3>
-                                    <p className="text-sm text-gray-400">{project.description}</p>
+                                    <p className="text-sm text-white">{project.description}</p>
                                 </div>
                                 <div className="flex gap-2">
                                     <span className="px-3 py-1 bg-green-900/20 text-green-400 rounded-full text-xs font-bold uppercase">
@@ -173,7 +173,7 @@ const FreelancerDashboard = () => {
                             
                             <div className="p-6 bg-black">
                                 <div className="mb-4">
-                                    <div className="flex justify-between text-sm font-bold text-gray-400 mb-2">
+                                    <div className="flex justify-between text-sm font-bold text-white mb-2">
                                         <span>Current Progress</span>
                                         <span>
                                             {project.totalItems > 0 
@@ -217,7 +217,7 @@ const FreelancerDashboard = () => {
 
                                 <div className="flex gap-4">
                                     {/* Action Buttons */}
-                                    <button onClick={() => openModal(project, 'details')} className="flex items-center gap-2 px-4 py-2 bg-[#1E293B] border border-gray-700 rounded-lg text-sm font-bold text-gray-300 hover:bg-gray-700 transition">
+                                    <button onClick={() => openModal(project, 'details')} className="flex items-center gap-2 px-4 py-2 bg-[#1E293B] border border-gray-700 rounded-lg text-sm font-bold text-white hover:bg-gray-700 transition">
                                         <FileText size={16} /> View Details
                                     </button>
                                     <button onClick={() => openModal(project, 'upload')} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold hover:bg-indigo-700 shadow-sm transition">
@@ -229,7 +229,7 @@ const FreelancerDashboard = () => {
                     ))}
                     
                     {projects.length === 0 && (
-                        <div className="text-center py-20 text-gray-500 bg-[#0A0F1C] rounded-2xl border border-dashed border-gray-800">
+                        <div className="text-center py-20 text-white bg-[#0A0F1C] rounded-2xl border border-dashed border-gray-800">
                              <CheckCircle size={48} className="mx-auto mb-4 opacity-50" />
                              <h3>No tasks assigned yet.</h3>
                         </div>
@@ -247,20 +247,20 @@ const FreelancerDashboard = () => {
                                             <h2 className="text-2xl font-bold text-white mb-2">{selectedProject.title}</h2>
                                              <div className="flex gap-2">
                                                 <span className="px-3 py-1 bg-purple-900/20 text-purple-400 rounded-full text-xs font-bold">{selectedProject.serviceType || 'General Task'}</span>
-                                                <span className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-xs font-bold">{selectedProject.category || 'Uncategorized'}</span>
+                                                <span className="px-3 py-1 bg-gray-800 text-white rounded-full text-xs font-bold">{selectedProject.category || 'Uncategorized'}</span>
                                              </div>
                                         </div>
-                                        <button onClick={closeModal} className="p-2 hover:text-gray-300 text-gray-500 rounded-full"><X size={24} /></button>
+                                        <button onClick={closeModal} className="p-2 hover:text-white text-white rounded-full"><X size={24} /></button>
                                     </div>
                                     
                                     <div className="space-y-6">
                                         <div>
-                                            <h3 className="text-sm font-bold text-gray-400 uppercase mb-2">Instructions</h3>
-                                            <p className="text-gray-300 admin-text bg-black p-4 rounded-xl border border-gray-800">{selectedProject.description}</p>
+                                            <h3 className="text-sm font-bold text-white uppercase mb-2">Instructions</h3>
+                                            <p className="text-white admin-text bg-black p-4 rounded-xl border border-gray-800">{selectedProject.description}</p>
                                         </div>
 
                                         <div>
-                                            <h3 className="text-sm font-bold text-gray-400 uppercase mb-2">Service Guidelines ({selectedProject.serviceType})</h3>
+                                            <h3 className="text-sm font-bold text-white uppercase mb-2">Service Guidelines ({selectedProject.serviceType})</h3>
                                             <div className="p-4 border border-blue-900/30 bg-blue-900/10 rounded-xl text-sm text-blue-300">
                                                 <p><strong>Standard Protocol:</strong> Please ensure all data points are annotated according to the specific guidelines for <strong>{selectedProject.serviceType}</strong>.</p>
                                                 <ul className="list-disc pl-5 mt-2 space-y-1">
@@ -273,7 +273,7 @@ const FreelancerDashboard = () => {
 
                                         {/* Placeholder for specific tool integration */}
                                         <div className="p-6 border-2 border-dashed border-gray-800 rounded-xl text-center bg-black/50">
-                                            <p className="text-gray-400 font-bold mb-2">Annotation Tool Placeholder</p>
+                                            <p className="text-white font-bold mb-2">Annotation Tool Placeholder</p>
                                             <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-bold transition">Launch {selectedProject.serviceType} Tool</button>
                                         </div>
                                     </div>
@@ -284,14 +284,14 @@ const FreelancerDashboard = () => {
                                 <div className="p-8">
                                     <div className="flex justify-between items-center mb-6">
                                         <h2 className="text-2xl font-bold text-white">Submit Work</h2>
-                                        <button onClick={closeModal} className="p-2 hover:text-gray-300 text-gray-500 rounded-full"><X size={24} /></button>
+                                        <button onClick={closeModal} className="p-2 hover:text-white text-white rounded-full"><X size={24} /></button>
                                     </div>
                                     
                                     <div className="space-y-6">
-                                        <p className="text-gray-400">Upload your completed files or provide a link to your work for <strong>{selectedProject.title}</strong>.</p>
+                                        <p className="text-white">Upload your completed files or provide a link to your work for <strong>{selectedProject.title}</strong>.</p>
                                         
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-400 mb-2">Work Link (Google Drive / GitHub / etc)</label>
+                                            <label className="block text-sm font-bold text-white mb-2">Work Link (Google Drive / GitHub / etc)</label>
                                             <input 
                                                 type="text" 
                                                 className="w-full p-3 border border-gray-700 rounded-xl bg-black text-white focus:outline-none focus:border-indigo-500" 
@@ -305,7 +305,7 @@ const FreelancerDashboard = () => {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-400 mb-2">Or Upload Files</label>
+                                            <label className="block text-sm font-bold text-white mb-2">Or Upload Files</label>
                                             <input 
                                                 type="file" 
                                                 ref={fileInputRef}
@@ -320,13 +320,13 @@ const FreelancerDashboard = () => {
                                                     <>
                                                         <CheckCircle className="mx-auto h-10 w-10 text-green-500 mb-2" />
                                                         <p className="text-sm text-green-400 font-bold">{submissionFile.name}</p>
-                                                        <p className="text-xs text-gray-500">{(submissionFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                                                        <p className="text-xs text-white">{(submissionFile.size / 1024 / 1024).toFixed(2)} MB</p>
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <Upload className="mx-auto h-10 w-10 text-gray-500 mb-2" />
-                                                        <p className="text-sm text-gray-400 font-bold">Click to upload or drag and drop</p>
-                                                        <p className="text-xs text-gray-500">ZIP, CSV, JSON, PNG (Max 50MB)</p>
+                                                        <Upload className="mx-auto h-10 w-10 text-white mb-2" />
+                                                        <p className="text-sm text-white font-bold">Click to upload or drag and drop</p>
+                                                        <p className="text-xs text-white">ZIP, CSV, JSON, PNG (Max 50MB)</p>
                                                     </>
                                                 )}
                                             </div>

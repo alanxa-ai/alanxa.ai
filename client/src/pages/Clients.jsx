@@ -18,6 +18,7 @@ const Clients = () => {
     email: '',
     country: '',
     service: '',
+    otherService: '',
     volume: '',
     notes: ''
   });
@@ -38,7 +39,7 @@ const Clients = () => {
       toast.success('Request received! We will contact you shortly.');
       setFormData({
         companyName: '', contactPerson: '', email: '', country: '',
-        service: '', volume: '', notes: ''
+        service: '', otherService: '', volume: '', notes: ''
       });
     } catch (error) {
       console.error(error);
@@ -98,7 +99,7 @@ const Clients = () => {
                    </span>
                 </h1>
                 
-                <p className="text-sm sm:text-lg text-gray-300 mb-8 leading-relaxed font-medium max-w-lg mx-auto md:ml-auto md:mr-0">
+                <p className="text-sm sm:text-lg text-white mb-8 leading-relaxed font-medium max-w-lg mx-auto md:ml-auto md:mr-0">
                    The essential human layer for top-tier AI models. Reliable, secure, and infinitely scalable data solutions tailored for the enterprise.
                 </p>
                 
@@ -140,7 +141,7 @@ const Clients = () => {
                               {step.step}
                           </span>
                           <h3 className="text-base font-bold text-white mb-1">{step.title}</h3>
-                          <p className="text-xs text-gray-300">{step.desc}</p>
+                          <p className="text-xs text-white">{step.desc}</p>
                       </div>
                   ))}
               </div>
@@ -156,7 +157,7 @@ const Clients = () => {
                         "Strict NDA Protection",
                         "Dedicated PMs"
                     ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-2 text-gray-200 font-medium text-xs">
+                        <div key={i} className="flex items-center gap-2 text-white font-medium text-xs">
                             <CheckCircle className="w-4 h-4 text-indigo-400 shrink-0" />
                             {item}
                         </div>
@@ -177,51 +178,59 @@ const Clients = () => {
                  <div className="relative z-10">
                      <div className="mb-6 text-center md:text-left">
                         <h2 className="text-2xl font-bold text-white mb-1">Request a Proposal</h2>
-                        <p className="text-xs text-gray-300">We typically respond within 2 hours.</p>
+                        <p className="text-xs text-white">We typically respond within 2 hours.</p>
                      </div>
 
                      <form onSubmit={handleSubmit} className="space-y-4">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                          <div>
-                           <label className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-1 block">Company</label>
+                           <label className="text-xs font-bold text-white uppercase tracking-wider mb-1 block">Company</label>
                            <input type="text" name="companyName" required value={formData.companyName} onChange={handleChange} className="w-full px-3 py-2 text-base rounded-lg bg-black border border-gray-700 text-white focus:ring-1 focus:ring-indigo-500 outline-none placeholder-gray-500" placeholder="Acme Inc." />
                          </div>
                          <div>
-                           <label className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-1 block">Name</label>
+                           <label className="text-xs font-bold text-white uppercase tracking-wider mb-1 block">Name</label>
                            <input type="text" name="contactPerson" required value={formData.contactPerson} onChange={handleChange} className="w-full px-3 py-2 text-base rounded-lg bg-black border border-gray-700 text-white focus:ring-1 focus:ring-indigo-500 outline-none placeholder-gray-500" placeholder="John Doe" />
                          </div>
                        </div>
 
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                          <div>
-                           <label className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-1 block">Email</label>
+                           <label className="text-xs font-bold text-white uppercase tracking-wider mb-1 block">Email</label>
                            <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full px-3 py-2 text-base rounded-lg bg-black border border-gray-700 text-white focus:ring-1 focus:ring-indigo-500 outline-none placeholder-gray-500" placeholder="john@company.com" />
                          </div>
                          <div>
-                           <label className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-1 block">Country</label>
+                           <label className="text-xs font-bold text-white uppercase tracking-wider mb-1 block">Country</label>
                            <input type="text" name="country" required value={formData.country} onChange={handleChange} className="w-full px-3 py-2 text-base rounded-lg bg-black border border-gray-700 text-white focus:ring-1 focus:ring-indigo-500 outline-none placeholder-gray-500" placeholder="USA" />
                          </div>
                        </div>
 
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                          <div>
-                           <label className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-1 block">Service</label>
+                           <label className="text-xs font-bold text-white uppercase tracking-wider mb-1 block">Service</label>
                            <select name="service" value={formData.service} onChange={handleChange} className="w-full px-3 py-2 text-base rounded-lg bg-black border border-gray-700 text-white focus:ring-1 focus:ring-indigo-500 outline-none">
-                              <option value="" disabled className="text-gray-400">Select Service</option>
+                              <option value="" disabled className="text-white">Select Service</option>
                               <option>AI Training</option>
                               <option>Annotation</option>
                               <option>Transcription</option>
                               <option>Translation</option>
+                               <option>Other</option>
                            </select>
                          </div>
                          <div>
-                           <label className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-1 block">Volume</label>
+                           <label className="text-xs font-bold text-white uppercase tracking-wider mb-1 block">Volume</label>
                            <input type="text" name="volume" value={formData.volume} onChange={handleChange} className="w-full px-3 py-2 text-base rounded-lg bg-black border border-gray-700 text-white focus:ring-1 focus:ring-indigo-500 outline-none placeholder-gray-500" placeholder="e.g. 50k items" />
                          </div>
                        </div>
 
+                       {formData.service === 'Other' && (
+                         <div>
+                           <label className="text-xs font-bold text-white uppercase tracking-wider mb-1 block">Specify Other Service</label>
+                           <input type="text" name="otherService" required value={formData.otherService} onChange={handleChange} className="w-full px-3 py-2 text-base rounded-lg bg-black border border-gray-700 text-white focus:ring-1 focus:ring-indigo-500 outline-none placeholder-gray-500" placeholder="e.g. Data Labeling" />
+                         </div>
+                       )}
+
                        <div>
-                         <label className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-1 block">Details</label>
+                         <label className="text-xs font-bold text-white uppercase tracking-wider mb-1 block">Details</label>
                          <textarea name="notes" rows={3} required value={formData.notes} onChange={handleChange} className="w-full px-3 py-2 text-base rounded-lg bg-black border border-gray-700 text-white focus:ring-1 focus:ring-indigo-500 outline-none resize-none placeholder-gray-500" placeholder="Project requirements..."></textarea>
                        </div>
 
@@ -236,21 +245,21 @@ const Clients = () => {
       </div>
       <div className="border-t border-gray-800 bg-black py-4">
         <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
-            <span className="text-[10px] font-semibold text-gray-500 uppercase">Connect with us</span>
+            <span className="text-[10px] font-semibold text-white uppercase">Connect with us</span>
             <div className="flex gap-3">
-                <a href="https://www.linkedin.com/company/alanxa-ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-gray-400 hover:text-white hover:bg-black transition-all">
+                <a href="https://www.linkedin.com/company/alanxa-ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-white hover:text-white hover:bg-black transition-all">
                     <Linkedin className="w-4 h-4" />
                 </a>
-                <a href="https://x.com/alanxa_ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-gray-400 hover:text-white hover:bg-black transition-all">
+                <a href="https://x.com/alanxa_ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-white hover:text-white hover:bg-black transition-all">
                     <Twitter className="w-4 h-4" />
                 </a>
-                <a href="https://www.instagram.com/alanxa.ai/" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-gray-400 hover:text-white hover:bg-black transition-all">
+                <a href="https://www.instagram.com/alanxa.ai/" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-white hover:text-white hover:bg-black transition-all">
                     <Instagram className="w-4 h-4" />
                 </a>
-                <a href="https://www.facebook.com/alanxa07" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-gray-400 hover:text-white hover:bg-black transition-all">
+                <a href="https://www.facebook.com/alanxa07" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-white hover:text-white hover:bg-black transition-all">
                     <Facebook className="w-4 h-4" />
                 </a>
-                <a href="https://www.threads.com/@alanxa.ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-gray-400 hover:text-white hover:bg-black transition-all">
+                <a href="https://www.threads.com/@alanxa.ai" target="_blank" rel="noopener noreferrer" className="p-2 bg-[#1E293B] rounded-full shadow-sm text-white hover:text-white hover:bg-black transition-all">
                     <AtSign className="w-4 h-4" />
                 </a>
             </div>
