@@ -81,42 +81,45 @@ const App = () => {
   return (
     <Router>
       <ScrollToTop />
-      <AnimatePresence>
-        {isLoading && <SplashScreen key="splash" />}
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <SplashScreen key="splash" />
+        ) : (
+          <Layout key="main">
+            <Suspense fallback={null}>
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/culture" element={<Culture />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/clients" element={<Clients />} />
+                <Route path="/freelancers" element={<Freelancers />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:id" element={<BlogDetail />} /> {/* Handles both ID and Slug */}
+                <Route path="/contact" element={<Contact />} />
+                
+                {/* Auth Routes */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+
+                {/* Dashboard Routes */}
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/blogs" element={<AdminBlog />} />
+                <Route path="/client-dashboard" element={<ClientDashboard />} />
+                <Route path="/freelancer-dashboard" element={<FreelancerDashboard />} />
+
+                {/* Legal Routes */}
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
+                <Route path="/cookie-policy" element={<CookiePolicy />} />
+                <Route path="/access-restricted" element={<AccessRestricted />} />
+              </Routes>
+            </Suspense>
+          </Layout>
+        )}
       </AnimatePresence>
-      <Layout>
-        <Suspense fallback={null}>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/culture" element={<Culture />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/clients" element={<Clients />} />
-            <Route path="/freelancers" element={<Freelancers />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:id" element={<BlogDetail />} /> {/* Handles both ID and Slug */}
-            <Route path="/contact" element={<Contact />} />
-            
-            {/* Auth Routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-
-            {/* Dashboard Routes */}
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/blogs" element={<AdminBlog />} />
-            <Route path="/client-dashboard" element={<ClientDashboard />} />
-            <Route path="/freelancer-dashboard" element={<FreelancerDashboard />} />
-
-            {/* Legal Routes */}
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/cookie-policy" element={<CookiePolicy />} />
-            <Route path="/access-restricted" element={<AccessRestricted />} />
-          </Routes>
-        </Suspense>
-      </Layout>
     </Router>
   );
 };

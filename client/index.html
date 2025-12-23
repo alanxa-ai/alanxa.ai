@@ -164,24 +164,38 @@
 
 <body>
   <div id="root">
-    <!-- App Shell (Instantly Visible) -->
-    <nav class="shell-nav">
-      <div class="shell-container">
-        <img src="/Alanxa.ai_Logo.png" alt="Alanxa AI" class="shell-logo" width="120" height="20" />
-      </div>
-    </nav>
-    <section class="shell-hero">
-      <div class="shell-text">
-        <div
-          style="display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:9999px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);margin-bottom:8px;">
-          <span style="font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">Global AI Solutions
-            Provider</span>
+    <!-- Splash Screen Shell (Shows before React loads) -->
+    <div
+      style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#000;">
+      <div style="text-align:center;">
+        <!-- Logo -->
+        <img src="/uns.jpg" alt="Alanxa"
+          style="width:96px;height:96px;object-fit:contain;border-radius:16px;border:1px solid #1f2937;background:#0A0F1C;padding:8px;" />
+        <!-- Loading Bar -->
+        <div style="margin-top:32px;">
+          <div
+            style="height:4px;width:128px;background:#111827;border-radius:9999px;overflow:hidden;margin:0 auto;border:1px solid #1f2937;">
+            <div
+              style="height:100%;width:100%;background:linear-gradient(90deg,transparent,#6366f1,transparent);animation:loading 1.5s ease-in-out infinite;">
+            </div>
+          </div>
+          <p
+            style="color:#fff;font-size:12px;margin-top:12px;letter-spacing:0.2em;font-weight:500;text-transform:uppercase;">
+            Initializing</p>
         </div>
-        <h1>Data That Makes <br /> AI Human-Like</h1>
-        <p class="shell-sub">Premium AI training, RLHF, and multilingual data annotation services trusted by pioneers
-          like Google, Meta, and Uber.</p>
       </div>
-    </section>
+    </div>
+    <style>
+      @keyframes loading {
+        0% {
+          transform: translateX(-100%);
+        }
+
+        100% {
+          transform: translateX(100%);
+        }
+      }
+    </style>
   </div>
   <script type="module" src="/src/main.jsx"></script>
 </body>

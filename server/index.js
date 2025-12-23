@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -6,10 +5,6 @@ const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 
 const app = express();
-
-require('dotenv').config();
-const { CLIENT_URL } = require('./config/constants');
-
 
 /* ================================
    Trust Proxy (IMPORTANT for VPS)
@@ -30,7 +25,6 @@ const allowedOrigins = [
 ================================ */
 app.use(express.json());
 
-
 app.use(
     cors({
         origin: function (origin, callback) {
@@ -40,7 +34,8 @@ app.use(
             if (allowedOrigins.includes(origin)) {
                 callback(null, true);
             } else {
-                callback(new Error(`CORS blocked for origin: ${origin}`));
+                // Silently reject unknown origins instead of throwing error
+                callback(null, false);
             }
         },
         credentials: true,
@@ -58,27 +53,6 @@ app.use("/uploads", express.static("uploads"));
 /* ================================
    Database
 ================================ */
-
-app.use(cors({
-    origin: CLIENT_URL,
-    credentials: true
-}));
-app.use(cookieParser());
-app.use('/uploads', express.static('uploads'));
-app.use(cors({
-  origin: [
-    "https://alanxa.ai",
-    "https://www.alanxa.ai"
-  ],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
-
-
-
-app.options("*", cors());
-// Database Connection
 connectDB();
 
 /* ================================
@@ -98,7 +72,7 @@ app.use("/api/jobs", require("./routes/jobRoutes"));
 app.use("/api/contact", require("./routes/contactRoutes"));
 
 /* ================================
-   Error Handler (IMPORTANT)
+   Error Handler
 ================================ */
 app.use((err, req, res, next) => {
     console.error("API Error:", err.message);
