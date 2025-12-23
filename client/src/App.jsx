@@ -68,11 +68,14 @@ const Layout = ({ children }) => {
 
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Optional: Add logic here if you need to wait for something real, 
-    // but for 100% performance, we render immediately.
+    // Show splash screen for 2 seconds
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
