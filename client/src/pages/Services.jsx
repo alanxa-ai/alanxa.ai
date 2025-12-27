@@ -41,7 +41,7 @@ const Services = () => {
       useCases: ['OCR & Document Understanding', 'Entity Extraction (NER)', 'Image Bounding Boxes', 'Video Object Tracking'],
       reliability: 'Millions of tasks completed with >99% acceptance rates for clients like Uber and Google.',
       color: 'bg-cyan-600',
-      image: "https://res.cloudinary.com/dikppmyhp/image/upload/v1766430552/Data_Annotation_1_1_3_r1u0xt.jpg"
+      image: "/Dataanotation.png"
     },
     {
       id: 'transcription',
@@ -51,7 +51,7 @@ const Services = () => {
       useCases: ['Audio Transcription', 'Subtitle Creation', 'Cultural Adaptation', 'Machine Translation Post-Editing'],
       reliability: 'Native speakers in 20+ Indian & Global languages (Hindi, Marathi, Tamil, etc.).',
       color: 'bg-emerald-600',
-      image: "https://res.cloudinary.com/dikppmyhp/image/upload/v1766045858/0.15_Transcription_tallpr.jpg"
+      image: "https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_800/v1766045858/0.15_Transcription_tallpr.jpg"
     },
     {
       id: 'audio-voice',

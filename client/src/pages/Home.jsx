@@ -346,25 +346,27 @@ const Home = () => {
                   >
                       <div className="absolute -inset-4 bg-gradient-to-tr from-indigo-500 to-teal-500 opacity-20 blur-2xl rounded-full"></div>
                       <img 
-                        src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto/v1766045862/Our_mission_image_ytxpkx.jpg" 
+                        src="https://res.cloudinary.com/dikppmyhp/image/upload/f_auto,q_auto,w_800/v1766045862/Our_mission_image_ytxpkx.jpg" 
                         alt="Team Meeting" 
-                        className="relative rounded-2xl shadow-xl border-4 border-white object-cover h-[450px] md:h-[550px] w-full transform hover:scale-[1.01] transition-transform duration-500"
-                        width="600"
+                        className="relative rounded-2xl shadow-xl border-4 border-white object-cover h-[350px] md:h-[550px] w-full transform hover:scale-[1.01] transition-transform duration-500"
+                        width="800"
                         height="550"
                         loading="lazy"
+                        decoding="async"
                       />
-                      <div className="absolute -bottom-6 -left-6 bg-[#0A0F1C] p-5 rounded-xl shadow-xl max-w-xs hidden md:block border border-gray-800">
-                          <div className="flex items-center gap-4 mb-2">
-                              <div className="flex -space-x-3">
+                      {/* Experts Badge - Small rectangle on left side */}
+                      <div className="absolute -bottom-3 -left-2 md:-bottom-6 md:-left-6 bg-[#0A0F1C] p-2 md:p-5 rounded-lg md:rounded-xl shadow-xl max-w-[160px] md:max-w-xs border border-gray-800">
+                          <div className="flex items-center gap-1.5 md:gap-4 mb-0.5 md:mb-2">
+                              <div className="flex -space-x-1.5 md:-space-x-3">
                                   {[1,2,3,4].map(i => (
-                                      <div key={i} className="w-8 h-8 rounded-full bg-gray-700 border-2 border-[#0A0F1C] flex items-center justify-center text-xs font-bold overflow-hidden">
+                                      <div key={i} className="w-5 h-5 md:w-8 md:h-8 rounded-full bg-gray-700 border border-[#0A0F1C] md:border-2 flex items-center justify-center text-xs font-bold overflow-hidden">
                                           <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" width="32" height="32" loading="lazy" />
                                       </div>
                                   ))}
                               </div>
-                              <span className="font-bold text-white text-base">+1.5k Experts</span>
+                              <span className="font-bold text-white text-[10px] md:text-base">+1.5k Experts</span>
                           </div>
-                          <p className="text-sm text-white">
+                          <p className="text-[8px] md:text-sm text-white leading-tight">
                               Top-tier linguists and domain experts ready to deploy.
                           </p>
                       </div>
