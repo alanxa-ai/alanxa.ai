@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Globe, Zap, Users, Coffee, BookOpen, Smile, Award } from 'lucide-react';
+import { Heart, Globe, Zap, Users, Coffee, BookOpen, Smile, Award, Shield, Target, TrendingUp, Plane } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Culture = () => {
@@ -148,6 +148,10 @@ const Culture = () => {
                    { icon: Users, label: "Team Retreats"},
                    { icon: Zap, label: "Top Gear"},
                    { icon: Heart, label: "Parental Leave"},
+                   { icon: Shield, label: "Health Insurance"},
+                   { icon: Target, label: "Performance Bonus"},
+                   { icon: TrendingUp, label: "Career Growth"},
+                   { icon: Plane, label: "Global Mobility"},
                 ].map((perk, i) => (
                    <motion.div 
                      key={i}
