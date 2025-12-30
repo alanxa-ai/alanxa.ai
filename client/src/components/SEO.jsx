@@ -14,8 +14,8 @@ const SEO = ({
   structuredData
 }) => {
   const siteTitle = 'Alanxa.ai | Leading AI Training & Data Annotation Services in India';
-  const defaultDescription = 'Alanxa.ai provides premium AI training, RLHF, data annotation, and content moderation services. Based in India, serving global leaders like Google and Meta with high-quality, scalable human-in-the-loop solutions.';
-  const defaultKeywords = 'AI training, Data Annotation, RLHF, Machine Learning, India, BPO, Outsourcing, Image Annotation, Text Labeling, Content Moderation, Freelancers';
+  const defaultDescription = 'Alanxa AI provides secure, scalable AI training data, data annotation, RLHF, and multilingual datasets to power enterprise-grade machine learning models.';
+  const defaultKeywords = 'AI training data services, Data annotation company, AI data annotation services, Human in the loop AI, AI model training services, Machine learning data labeling, AI dataset creation, Enterprise AI data services, AI data solutions provider, AI data annotation company India, AI training data services India';
   const siteUrl = 'https://alanxa.ai';
 
   const fullTitle = title ? `${title} | Alanxa.ai` : siteTitle;
@@ -24,6 +24,34 @@ const SEO = ({
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
   const fullImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
 
+  // Always include Organization Schema
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Alanxa AI",
+    "url": "https://alanxa.ai",
+    "logo": "https://alanxa.ai/Alanxa.ai_Logo.png",
+    "sameAs": [
+      "https://www.linkedin.com/company/alanxa",
+      "https://twitter.com/alanxa_ai",
+      "https://www.instagram.com/alanxa.ai/"
+    ],
+    "description": defaultDescription,
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Pune",
+      "addressRegion": "Maharashtra",
+      "addressCountry": "IN"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+91-6392525639",
+      "contactType": "customer service",
+      "areaServed": ["IN", "US", "GB", "AE"],
+      "availableLanguage": ["English", "Hindi"]
+    }
+  };
+
   return (
     <Helmet>
       {/* Standard Metadata */}
@@ -31,6 +59,9 @@ const SEO = ({
       <meta name="description" content={fullDescription} />
       <meta name="keywords" content={fullKeywords} />
       <link rel="canonical" href={fullUrl} />
+      <link rel="icon" href="/favicon.ico" sizes="48x48" />
+      <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
+      <link rel="apple-touch-icon" href="/favicon.jpg" />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
@@ -57,42 +88,15 @@ const SEO = ({
       <meta name="geo.position" content="18.5204;73.8567" />
       <meta name="ICBM" content="18.5204, 73.8567" />
 
-      {/* Structured Data (JSON-LD) */}
+      {/* Always render Organization Schema */}
+      <script type="application/ld+json">
+        {JSON.stringify(organizationSchema)}
+      </script>
+
+      {/* Additional Structured Data (e.g. WebSite, Article) */}
       {structuredData && (
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
-        </script>
-      )}
-      
-      {/* Default Organization Schema */}
-      {!structuredData && (
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Alanxa AI",
-            "url": "https://alanxa.ai",
-            "logo": "https://alanxa.ai/Alanxa.ai_Logo.png",
-            "sameAs": [
-              "https://www.linkedin.com/company/alanxa",
-              "https://twitter.com/alanxa_ai",
-              "https://www.instagram.com/alanxa.ai/"
-            ],
-            "description": defaultDescription,
-            "address": {
-              "@type": "PostalAddress",
-              "addressLocality": "Pune",
-              "addressRegion": "Maharashtra",
-              "addressCountry": "IN"
-            },
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "telephone": "+91-6392525639",
-              "contactType": "customer service",
-              "areaServed": ["IN", "US", "GB", "AE"],
-              "availableLanguage": ["English", "Hindi"]
-            }
-          })}
         </script>
       )}
     </Helmet>

@@ -11,8 +11,9 @@ const About = () => {
   return (
     <div className="bg-black min-h-screen font-sans selection:bg-indigo-900 selection:text-white pt-14 md:pt-16 pb-16">
       <SEO 
-        title="About Alanxa.ai - Our Mission" 
-        description="Alanxa.ai connects global talent to build better AI. A vision of precision, integrity, and trust."
+        title="About Alanxa AI - Enterprise AI Data Partner" 
+        description="Secure, scalable, and confidential AI data annotation services. Your trusted Enterprise AI data partner in India for high-quality training datasets."
+        keywords="Enterprise AI data partner, Scalable AI data annotation, Secure AI data services, Confidential AI data annotation, AI outsourcing company India, AI services for startups"
         url="/about"
       />
       

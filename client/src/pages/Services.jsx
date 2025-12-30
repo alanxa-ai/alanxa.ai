@@ -68,9 +68,9 @@ const Services = () => {
   return (
     <div className="bg-black overflow-hidden font-sans">
       <SEO 
-        title="Our Services - AI Training & Annotation"
-        description="Comprehensive AI services including RLHF, Data Annotation, Content Moderation, and Transcription. Providing high-quality training data for LLMs and Computer Vision."
-        keywords="RLHF Services, Data Annotation Company, Image Labeling, Video Annotation, Audio Transcription, Content Moderation India, AI Model Training"
+        title="AI Data Annotation & Labeling Services | Alanxa AI"
+        description="Expert AI training data services for Computer Vision (Image/Video Annotation), NLP, Speech, and Generative AI (RLHF). High-accuracy human-in-the-loop experts."
+        keywords="Image annotation services, Video annotation services, Bounding box annotation, Object detection annotation, NLP data annotation, Text annotation services, Speech data collection, Audio transcription services, RLHF data annotation, LLM training data services, Generative AI training data"
         url="/services"
       />
       

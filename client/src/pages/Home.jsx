@@ -98,9 +98,9 @@ const Home = () => {
   return (
     <div className="bg-black overflow-hidden font-sans text-white">
       <SEO 
-        title="AI Training & Data Annotation Services in India"
-        description="Alanxa.ai offers premium human-in-the-loop AI training, RLHF, and data annotation services. Trusted by global innovators for accurate, scalable, and ethically sourced datasets."
-        keywords="AI training India, Data Annotation Services, RLHF, Machine Learning Data, Image Annotation, Text Labeling, Audio Transcription, Content Moderation, Outsourcing India"
+        title="Alanxa: AI Training & Data Annotation Services"
+        description="Alanxa AI provides secure, scalable AI training data, data annotation, RLHF, and multilingual datasets to power enterprise-grade machine learning models."
+        keywords="AI training data services, Data annotation company, AI data annotation services, Human in the loop AI, AI model training services, Machine learning data labeling, AI dataset creation, Enterprise AI data services, AI data solutions provider, AI data annotation company India, AI training data services India"
         structuredData={{
           "@context": "https://schema.org",
           "@type": "WebSite",
@@ -148,9 +148,9 @@ const Home = () => {
             </div>
 
             <h1 className="text-xl md:text-6xl lg:text-7xl font-bold text-white mb-3 tracking-tight leading-tight bg-clip-text">
-              Data That Makes <br />
+              High-Quality <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-400 to-teal-300 inline-block pb-1">
-                AI Human-Like
+                AI Training Data
               </span>
             </h1>
 

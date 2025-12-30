@@ -8,6 +8,7 @@ import {
 import api from '../utils/api';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import SEO from '../components/SEO';
 
 const Blog = () => {
   const [articles, setArticles] = useState([]);
@@ -67,6 +68,12 @@ const Blog = () => {
 
   return (
     <div className="bg-black min-h-screen font-sans">
+      <SEO 
+        title="Alanxa AI Blog - Insights for the AI Era" 
+        description="Explore expert insights on how to train AI models with human feedback. Best data annotation practices for startups and enterprise computer vision models."
+        keywords="How to train AI models with human feedback, Best data annotation company for startups, AI data labeling for computer vision models, Multilingual data annotation services, Human reviewed AI training datasets"
+        url="/blog"
+      />
       
       {/* 1. Compact Hero */}
       <section className="relative pt-32 pb-12 bg-black text-white overflow-hidden min-h-[50vh] flex items-center justify-center">
