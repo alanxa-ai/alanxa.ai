@@ -22,15 +22,28 @@ const storage = multer.diskStorage({
 
 // File filter
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = /pdf|doc|docx/;
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype) ||
-        file.mimetype === 'application/msword' ||
-        file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    // Debugging: exact file details
+    console.log(`[Upload Debug] Processing file: ${file.originalname} | Mime: ${file.mimetype}`);
+
+    const allowedExtensions = /pdf|doc|docx/;
+    const extname = allowedExtensions.test(path.extname(file.originalname).toLowerCase());
+
+    // Expanded Mime Types for better compatibility
+    const allowedMimeTypes = [
+        'application/pdf',
+        'application/msword', // .doc
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+        'application/vnd.google-apps.document', // Google Docs
+        'application/wps-office.doc', // WPS
+        'application/octet-stream' // Binary fallback (risky but needed sometimes)
+    ];
+
+    const mimetype = allowedMimeTypes.includes(file.mimetype);
 
     if (extname && mimetype) {
         return cb(null, true);
     } else {
+        console.error(`[Upload Error] Invalid file type. Ext: ${extname}, MimeValid: ${mimetype} (${file.mimetype})`);
         cb(new Error('Only PDF, DOC, and DOCX files are allowed!'));
     }
 };

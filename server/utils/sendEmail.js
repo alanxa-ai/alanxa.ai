@@ -25,6 +25,11 @@ const sendEmail = async (to, subject, htmlContent) => {
             return;
         } catch (brevoError) {
             console.error('✗ Brevo also failed:', brevoError.message);
+            if (brevoError.status === 401 || (brevoError.response && brevoError.response.status === 401)) {
+                console.error("👉 ACTION REQUIRED: Your BREVO_API_KEY is invalid or unauthorized. Please check server/.env");
+            }
+            // In fire-and-forget mode, we throw so the caller's .catch() can log it, 
+            // but it won't crash the already-sent HTTP response.
             throw new Error('Email sending failed: Both Gmail and Brevo failed');
         }
     }

@@ -27,41 +27,33 @@ exports.createApplication = async (req, res) => {
 
         await newApplication.save();
 
-        // 1. Send Notification to Admin
-        try {
-            await sendEmail(
-                process.env.GMAIL_USER,
-                `New Freelancer Application: ${name}`,
-                `<h1>New Application Received</h1>
-                 <p><b>Name:</b> ${name}</p>
-                 <p><b>Email:</b> ${email}</p>
-                 <p><b>Phone:</b> ${phone}</p>
-                 <p><b>Role:</b> ${interests}</p>
-                 <p><b>Resume:</b> <a href="${resumeUrl}">${resumeUrl}</a></p>
-                 <br/><a href="${CLIENT_URL}/admin">Login to review</a>`
-            );
-        } catch (emailError) {
-            console.error("Failed to send admin notification", emailError);
-        }
+        // 1. Send Notification to Admin (Non-blocking)
+        sendEmail(
+            process.env.GMAIL_USER,
+            `New Freelancer Application: ${name}`,
+            `<h1>New Application Received</h1>
+                <p><b>Name:</b> ${name}</p>
+                <p><b>Email:</b> ${email}</p>
+                <p><b>Phone:</b> ${phone}</p>
+                <p><b>Role:</b> ${interests}</p>
+                <p><b>Resume:</b> <a href="${resumeUrl}">${resumeUrl}</a></p>
+                <br/><a href="${CLIENT_URL}/admin">Login to review</a>`
+        ).catch(err => console.error("Background Admin Email Failed:", err.message));
 
-        // 2. Send Confirmation to Freelancer
-        try {
-            await sendEmail(
-                email,
-                'Application Received - Alanxa AI',
-                `<div style="font-family: Arial, sans-serif; color: #333;">
-                    <h2>Hi ${name},</h2>
-                    <p>Thanks for applying to join the Alanxa AI freelancer network.</p>
-                    <p>We have received your application and our team is currently reviewing your profile.</p>
-                    <p>If your skills match our current projects, we will be in touch shortly for an interview/test.</p>
-                    <br/>
-                    <p>Best Regards,</p>
-                    <p><b>The Alanxa Team</b></p>
-                 </div>`
-            );
-        } catch (emailError) {
-            console.error("Failed to send freelancer confirmation", emailError);
-        }
+        // 2. Send Confirmation to Freelancer (Non-blocking)
+        sendEmail(
+            email,
+            'Application Received - Alanxa AI',
+            `<div style="font-family: Arial, sans-serif; color: #333;">
+                <h2>Hi ${name},</h2>
+                <p>Thanks for applying to join the Alanxa AI freelancer network.</p>
+                <p>We have received your application and our team is currently reviewing your profile.</p>
+                <p>If your skills match our current projects, we will be in touch shortly for an interview/test.</p>
+                <br/>
+                <p>Best Regards,</p>
+                <p><b>The Alanxa Team</b></p>
+            </div>`
+        ).catch(err => console.error("Background User Email Failed:", err.message));
 
         res.status(201).json({ message: 'Application submitted successfully', result: newApplication });
     } catch (error) {
