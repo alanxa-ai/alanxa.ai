@@ -150,6 +150,28 @@ exports.getAllFreelancerApplications = async (req, res) => {
     }
 };
 
+// Bulk Approve all pending freelancer applications
+exports.approveAllFreelancerApplications = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const result = await FreelancerApplication.updateMany(
+            { status: 'Pending' },
+            {
+                status: 'Approved',
+                reviewedBy: userId,
+                reviewedAt: new Date()
+            }
+        );
+
+        res.status(200).json({
+            message: `Successfully approved ${result.modifiedCount} applications`,
+            count: result.modifiedCount
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 // Update freelancer application status
 exports.updateFreelancerApplicationStatus = async (req, res) => {
     try {

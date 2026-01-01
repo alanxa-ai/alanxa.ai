@@ -271,6 +271,19 @@ const AdminDashboard = () => {
       }
   };
 
+  const handleApproveAll = async () => {
+    if (window.confirm('Are you sure you want to approve ALL pending freelancer applications?')) {
+        try {
+            const response = await api.put(`${API_URL}/freelancer-applications/approve-all`, {}, getAuthHeaders());
+            alert(response.data.message);
+            fetchFreelancerApplications();
+        } catch (error) {
+            console.error('Error approving all:', error);
+            alert('Failed to approve applications');
+        }
+    }
+  };
+
   // Export placeholders if not defined
   // Export to Excel/CSV
   const handleExportClients = () => {
@@ -449,7 +462,7 @@ const AdminDashboard = () => {
             )}
             
             {activeTab === 'clients' && <ClientRequestsManagement requests={clientRequests} onUpdateStatus={handleUpdateRequestStatus} onDelete={handleDeleteClientRequest} onExport={handleExportClients} />}
-            {activeTab === 'freelancers' && <FreelancerApplicationsManagement applications={freelancerApplications} onUpdateStatus={handleUpdateApplicationStatus} onDelete={handleDeleteFreelancerApplication} onExport={handleExportFreelancers} />}
+            {activeTab === 'freelancers' && <FreelancerApplicationsManagement applications={freelancerApplications} onUpdateStatus={handleUpdateApplicationStatus} onDelete={handleDeleteFreelancerApplication} onExport={handleExportFreelancers} onApproveAll={handleApproveAll} />}
         </AnimatePresence>
       </main>
     </div>
@@ -1232,13 +1245,18 @@ const ClientRequestsManagement = ({ requests, onUpdateStatus, onDelete, onExport
     );
 };
 
-const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDelete, onExport }) => {
+const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDelete, onExport, onApproveAll }) => {
     return (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
              <div className="bg-[#0A0F1C] rounded-2xl shadow-sm border border-gray-800 overflow-hidden">
-                 <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-[#0A0F1C]">
+                 <div className="p-6 border-b border-gray-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#0A0F1C]">
                      <h3 className="font-bold text-white text-xl">Freelancer Applications</h3>
-                     <button onClick={onExport} className="text-base font-medium text-green-400 hover:text-green-300 hover:underline flex items-center gap-1"><Download size={18} /> Export Excel</button>
+                     <div className="flex flex-wrap gap-3 w-full md:w-auto">
+                        <button onClick={onApproveAll} className="w-auto justify-center text-sm md:text-base font-bold bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg shadow-green-900/20 transition-all flex items-center gap-2 whitespace-nowrap">
+                             <CheckCircle size={18} /> Approve All
+                        </button>
+                        <button onClick={onExport} className="w-auto justify-center text-sm md:text-base font-medium text-indigo-400 hover:text-indigo-300 hover:underline flex items-center gap-1 whitespace-nowrap"><Download size={18} /> Export Excel</button>
+                     </div>
                  </div>
                  <div className="overflow-x-auto">
                      <table className="w-full">

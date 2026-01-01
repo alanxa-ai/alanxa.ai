@@ -23,6 +23,7 @@ router.delete('/client-requests/:id', adminController.deleteClientRequest);
 
 // ==================== FREELANCER APPLICATIONS ====================
 router.get('/freelancer-applications', adminController.getAllFreelancerApplications);
+router.put('/freelancer-applications/approve-all', adminController.approveAllFreelancerApplications);
 router.put('/freelancer-applications/:id', adminController.updateFreelancerApplicationStatus);
 router.delete('/freelancer-applications/:id', adminController.deleteFreelancerApplication);
 
