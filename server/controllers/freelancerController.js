@@ -28,6 +28,7 @@ exports.createApplication = async (req, res) => {
         await newApplication.save();
 
         // 1. Send Notification to Admin (Non-blocking)
+        /* 
         sendEmail(
             process.env.GMAIL_USER,
             `New Freelancer Application: ${name}`,
@@ -39,6 +40,7 @@ exports.createApplication = async (req, res) => {
                 <p><b>Resume:</b> <a href="${resumeUrl}">${resumeUrl}</a></p>
                 <br/><a href="${CLIENT_URL}/admin">Login to review</a>`
         ).catch(err => console.error("Background Admin Email Failed:", err.message));
+        */
 
         // 2. Send Confirmation to Freelancer (Non-blocking)
         sendEmail(
