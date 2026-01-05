@@ -1,16 +1,15 @@
- name: Deploy to VPS
+name: Deploy to VPS
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: ["main"]
+  workflow_dispatch: {}
 
 jobs:
   deploy:
     name: Deploy Alanxa App
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,23 +24,23 @@ jobs:
           debug: true
           script: |
             set -e
-
+            
             echo "📂 Move to project directory"
             cd /var/www/alanxa.ai
-
+            
             echo "🔄 Pull latest code"
             git reset --hard
             git pull origin main
-
+            
             echo "🚀 Backend setup"
             cd server
             npm install
             pm2 restart alanxa-api || pm2 start index.js --name alanxa-api
-
+            
             echo "🎨 Frontend build"
             cd ../client
             npm install
             npm run build
-
+            
             echo "🔁 Reload nginx"
             systemctl reload nginx
