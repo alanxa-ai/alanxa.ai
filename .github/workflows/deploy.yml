@@ -1,24 +1,46 @@
-- name: Deploy to VPS
-  uses: appleboy/ssh-action@v1.0.3
-  with:
-    host: ${{ secrets.VPS_HOST }}
-    username: ${{ secrets.VPS_USER }}
-    key: ${{ secrets.VPS_SSH_KEY }}
-    key_format: base64
-    port: 22
-    debug: true
-    script: |
-      cd /var/www/alanxa.ai
+name: Deploy to VPS
 
-      git reset --hard
-      git pull origin main
+on:
+  push:
+    branches:
+      - main
 
-      cd server
-      npm install
-      pm2 restart alanxa-api || pm2 start index.js --name alanxa-api
+jobs:
+  deploy:
+    name: Deploy Alanxa App
+    runs-on: ubuntu-latest
 
-      cd ../client
-      npm install
-      npm run build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      systemctl reload nginx
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          debug: true
+          script: |
+            set -e
+
+            echo "📦 Moving to project directory"
+            cd /var/www/alanxa.ai
+
+            echo "🔄 Updating code"
+            git reset --hard
+            git pull origin main
+
+            echo "🚀 Backend deployment"
+            cd server
+            npm install
+            pm2 restart alanxa-api || pm2 start index.js --name alanxa-api
+
+            echo "🎨 Frontend deployment"
+            cd ../client
+            npm install
+            npm run build
+
+            echo "🔁 Reloading Nginx"
+            sudo systemctl reload nginx
