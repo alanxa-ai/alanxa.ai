@@ -23,24 +23,41 @@ jobs:
           port: 22
           debug: true
           script: |
+            # Load environment variables (fix for non-interactive shell)
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            [ -s "$HOME/.profile" ] && source $HOME/.profile
+            [ -s "$HOME/.bashrc" ] && source $HOME/.bashrc
+            
             set -e
-            
+
+            echo "🔍 Debug: Check Node version"
+            node -v
+            npm -v
+
             echo "📂 Move to project directory"
-            cd /var/www/alanxa.ai
-            
+            if [ -d "/var/www/alanxa.ai" ]; then
+              cd /var/www/alanxa.ai
+            else
+              echo "❌ Directory /var/www/alanxa.ai does not exist!"
+              exit 1
+            fi
+
             echo "🔄 Pull latest code"
             git reset --hard
             git pull origin main
-            
+
             echo "🚀 Backend setup"
             cd server
             npm install
-            pm2 restart alanxa-api || pm2 start index.js --name alanxa-api
-            
+            # Use --update-env to ensure PM2 gets new env vars if needed
+            pm2 restart alanxa-api --update-env || pm2 start index.js --name alanxa-api
+
             echo "🎨 Frontend build"
             cd ../client
             npm install
             npm run build
-            
+
             echo "🔁 Reload nginx"
-            systemctl reload nginx
+            # reloading nginx might require sudo, check if user has permissions
+            sudo systemctl reload nginx
