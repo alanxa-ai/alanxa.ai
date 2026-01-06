@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import api from '../utils/api';
 import { Mail, Lock, ArrowRight, Loader2, Sparkles, User, Key, Shield } from 'lucide-react';
 
@@ -12,6 +13,28 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setIsLoading(true);
+      const res = await api.post('/api/auth/google', { 
+        tokenId: credentialResponse.credential 
+      });
+      
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      
+      if (res.data.user.role === 'admin') navigate('/admin');
+      else if (res.data.user.role === 'client') navigate('/client-dashboard');
+      else if (res.data.user.role === 'freelancer') navigate('/freelancer-dashboard');
+      else navigate('/access-restricted');
+      
+    } catch (err) {
+      setError(err.response?.data?.message || 'Google Login Failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -129,6 +152,23 @@ const Login = () => {
                          />
                       </div>
                    </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-4 my-2">
+                    <div className="h-[1px] bg-gray-700 flex-1"></div>
+                    <span className="text-gray-500 text-sm">OR</span>
+                    <div className="h-[1px] bg-gray-700 flex-1"></div>
+                </div>
+
+                <div className="flex justify-center">
+                    <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={() => setError('Google Login Failed')}
+                        theme="filled_black"
+                        shape="circle"
+                        size="large"
+                        width="100%"
+                    />
                 </div>
 
                 {/* Submit Button */}

@@ -8,29 +8,28 @@ const SibApiV3Sdk = require('sib-api-v3-sdk');
  * @param {string} htmlContent - HTML content of the email
  */
 const sendEmail = async (to, subject, htmlContent) => {
-    // Priority 1: Try Gmail SMTP first (User Request)
+    // Priority 1: Try Brevo (Transactional API) first for better deliverability
     try {
-        console.log('Attempting to send email via Gmail SMTP...');
-        await sendViaGmail(to, subject, htmlContent);
-        console.log('✓ Email sent successfully via Gmail SMTP');
+        console.log('Attempting to send email via Brevo...');
+        await sendViaBrevo(to, subject, htmlContent);
+        console.log('✓ Email sent successfully via Brevo');
         return;
-    } catch (gmailError) {
-        console.error('✗ Gmail SMTP failed:', gmailError.message);
-        console.log('Falling back to Brevo...');
+    } catch (brevoError) {
+        console.error('✗ Brevo failed:', brevoError.message);
+        if (brevoError.status === 401 || (brevoError.response && brevoError.response.status === 401)) {
+            console.error("👉 ACTION REQUIRED: Your BREVO_API_KEY is invalid or unauthorized.");
+        }
+        console.log('Falling back to Gmail SMTP...');
 
-        // Priority 2: Fallback to Brevo
+        // Priority 2: Fallback to Gmail SMTP
         try {
-            await sendViaBrevo(to, subject, htmlContent);
-            console.log('✓ Email sent successfully via Brevo (fallback)');
+            await sendViaGmail(to, subject, htmlContent);
+            console.log('✓ Email sent successfully via Gmail SMTP (fallback)');
             return;
-        } catch (brevoError) {
-            console.error('✗ Brevo also failed:', brevoError.message);
-            if (brevoError.status === 401 || (brevoError.response && brevoError.response.status === 401)) {
-                console.error("👉 ACTION REQUIRED: Your BREVO_API_KEY is invalid or unauthorized. Please check server/.env");
-            }
-            // In fire-and-forget mode, we throw so the caller's .catch() can log it, 
-            // but it won't crash the already-sent HTTP response.
-            throw new Error('Email sending failed: Both Gmail and Brevo failed');
+        } catch (gmailError) {
+            console.error('✗ Gmail SMTP also failed:', gmailError.message);
+            // In fire-and-forget mode, we throw so the caller's .catch() can log it
+            throw new Error('Email sending failed: Both Brevo and Gmail failed');
         }
     }
 };
@@ -83,7 +82,8 @@ const sendViaGmail = async (to, subject, htmlContent) => {
         html: htmlContent
     };
 
-    await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Gmail Send Info: ", info.response);
 };
 
 /**
@@ -112,4 +112,4 @@ const sendViaBrevo = async (to, subject, htmlContent) => {
     await apiInstance.sendTransacEmail(sendSmtpEmail);
 };
 
-module.exports = sendEmail;
+module.exports = { sendEmail, sendViaGmail, sendViaBrevo };

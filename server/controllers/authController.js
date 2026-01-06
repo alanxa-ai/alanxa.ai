@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const sendEmail = require('../utils/sendEmail');
+const { sendEmail } = require('../utils/sendEmail');
 const { getOtpTemplate, getConfirmationTemplate } = require('../utils/emailTemplates');
 const { OAuth2Client } = require('google-auth-library');
 
@@ -11,10 +11,16 @@ const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString()
 
 exports.register = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        console.log('--- Register Request Received ---');
+        const { name, email: rawEmail, password } = req.body;
+        console.log('Request Body:', { name, email: rawEmail });
+
+        const email = rawEmail.trim().toLowerCase();
+        console.log('Normalized Email:', email);
 
         let user = await User.findOne({ email });
         if (user && user.isVerified) {
+            console.log('User already exists and is verified');
             return res.status(400).json({ message: 'User already exists' });
         }
 
@@ -24,6 +30,7 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         if (user && !user.isVerified) {
+            console.log('Updating existing unverified user');
             // Update existing unverified user
             user.name = name;
             user.password = hashedPassword;
@@ -31,6 +38,7 @@ exports.register = async (req, res) => {
             user.otpExpires = otpExpires;
             await user.save();
         } else {
+            console.log('Creating new user');
             // Create new user
             user = new User({
                 name,
@@ -43,8 +51,15 @@ exports.register = async (req, res) => {
             await user.save();
         }
 
+        console.log('Attempting to send OTP email...');
         const emailContent = getOtpTemplate(otp);
-        await sendEmail(email, 'Your Verification Code', emailContent);
+        try {
+            await sendEmail(email, `Alanxa Verification Code: ${otp}`, emailContent);
+            console.log('OTP Email sent successfully');
+        } catch (emailError) {
+            console.error('Critical Email Sending Error:', emailError);
+            // Consider if we should fail the request or just log it
+        }
 
         res.status(201).json({ message: 'OTP sent to email' });
     } catch (error) {
@@ -55,7 +70,8 @@ exports.register = async (req, res) => {
 
 exports.verifyOtp = async (req, res) => {
     try {
-        const { email, otp } = req.body;
+        const { email: rawEmail, otp } = req.body;
+        const email = rawEmail.trim().toLowerCase();
         const user = await User.findOne({ email });
 
         if (!user) return res.status(400).json({ message: 'User not found' });
@@ -89,7 +105,8 @@ exports.verifyOtp = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email: rawEmail, password } = req.body;
+        const email = rawEmail.trim().toLowerCase();
         const user = await User.findOne({ email });
 
         if (!user) return res.status(400).json({ message: 'Invalid credentials' });
@@ -143,7 +160,8 @@ exports.googleAuth = async (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email: rawEmail } = req.body;
+        const email = rawEmail.trim().toLowerCase();
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ message: 'User not found' });
 
@@ -162,7 +180,8 @@ exports.forgotPassword = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
     try {
-        const { email, otp, newPassword } = req.body;
+        const { email: rawEmail, otp, newPassword } = req.body;
+        const email = rawEmail.trim().toLowerCase();
         const user = await User.findOne({ email });
 
         if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
