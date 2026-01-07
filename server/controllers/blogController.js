@@ -1,6 +1,6 @@
 const Blog = require('../models/Blog');
 const Subscriber = require('../models/Subscriber');
-const sendEmail = require('../utils/sendEmail');
+const { sendEmail } = require('../utils/sendEmail');
 const mongoose = require('mongoose');
 
 // Helper to create slug

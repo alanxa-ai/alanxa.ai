@@ -1,5 +1,5 @@
 const ClientRequest = require('../models/ClientRequest');
-const sendEmail = require('../utils/sendEmail');
+const { sendEmail } = require('../utils/sendEmail');
 
 exports.createRequest = async (req, res) => {
   try {

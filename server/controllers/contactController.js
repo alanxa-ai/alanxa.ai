@@ -1,4 +1,4 @@
-const sendEmail = require('../utils/sendEmail');
+const { sendEmail } = require('../utils/sendEmail');
 const { getContactFormAdminTemplate } = require('../utils/emailTemplates');
 
 exports.submitContactForm = async (req, res) => {

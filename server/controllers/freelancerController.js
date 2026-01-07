@@ -1,5 +1,5 @@
 const FreelancerApplication = require('../models/FreelancerApplication');
-const sendEmail = require('../utils/sendEmail');
+const { sendEmail } = require('../utils/sendEmail');
 const { SERVER_URL, CLIENT_URL } = require('../config/constants'); // Centralized Config
 
 // Create new application
