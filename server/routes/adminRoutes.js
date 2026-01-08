@@ -43,4 +43,16 @@ router.get('/projects', adminController.getAllProjects);
 router.put('/projects/:id', adminController.updateProject);
 router.delete('/projects/:id', adminController.deleteProject);
 
+// ==================== FORM TEMPLATES ====================
+router.get('/form-templates', adminController.getAllFormTemplates);
+router.get('/form-templates/:id', adminController.getFormTemplate);
+router.post('/form-templates', adminController.createFormTemplate);
+router.put('/form-templates/:id', adminController.updateFormTemplate);
+router.delete('/form-templates/:id', adminController.deleteFormTemplate);
+
+// ==================== DYNAMIC APPLICATIONS ====================
+router.get('/dynamic-applications', adminController.getAllDynamicApplications);
+router.put('/dynamic-applications/:id', adminController.updateDynamicApplicationStatus);
+router.delete('/dynamic-applications/:id', adminController.deleteDynamicApplication);
+
 module.exports = router;

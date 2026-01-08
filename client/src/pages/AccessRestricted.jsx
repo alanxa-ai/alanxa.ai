@@ -43,7 +43,7 @@ const AccessRestricted = () => {
             {/* Explanation */}
             <div className="space-y-4 text-left bg-black/40 p-6 rounded-xl border border-gray-800/50 w-full">
                 <p className="text-white text-base leading-relaxed">
-                    Alanxa is an enterprise-grade AI training platform protected by strict security protocols. Access is currently limited to authorized personnel only.
+                    Alanxa is an enterprise-grade AI training platform protected by strict security protocols. Access is currently limited to authorized Professional only.
                 </p>
                 
                 {/* Access List */}

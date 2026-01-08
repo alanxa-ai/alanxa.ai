@@ -73,4 +73,35 @@ router.delete('/:id', protect, adminOnly, async (req, res) => {
     }
 });
 
+// @desc    Get form template for a specific job
+// @route   GET /api/jobs/:id/form
+// @access  Public
+router.get('/:id/form', async (req, res) => {
+    try {
+        const job = await Job.findById(req.params.id).populate('formTemplate');
+        if (!job) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+
+        // If job has no form template, return a default structure
+        if (!job.formTemplate) {
+            return res.json({
+                jobId: job._id,
+                jobTitle: job.title,
+                formTemplate: null,
+                message: 'No custom form template for this job. Use default form.'
+            });
+        }
+
+        res.json({
+            jobId: job._id,
+            jobTitle: job.title,
+            formTemplate: job.formTemplate
+        });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;
+

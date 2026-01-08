@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
-      maxPoolSize: 50, // Optimize for 100-200 concurrent users
-      wtimeoutMS: 2500,
+      maxPoolSize: 100, // Optimize for high concurrent users
+      wtimeoutMS: 5000,
       useNewUrlParser: true
     });
     console.log('MongoDB Connected');

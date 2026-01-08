@@ -17,13 +17,15 @@ app.set("trust proxy", 1);
 const allowedOrigins = [
     "https://alanxa.ai",
     "https://www.alanxa.ai",
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://127.0.0.1:5173"
 ];
+
 
 /* ================================
    Middleware
 ================================ */
-app.use(express.json());
+app.use(express.json({ strict: false }));
 
 app.use(
     cors({
@@ -31,13 +33,21 @@ app.use(
             // allow server-to-server / curl / postman
             if (!origin) return callback(null, true);
 
+            console.log("Incoming Origin:", origin); // Debug CORS
+
+            // TEMPORARY: Allow all origins to debug 500 error masked as CORS
+            return callback(null, true);
+
+            /*
             if (allowedOrigins.includes(origin)) {
                 callback(null, true);
             } else {
                 // Silently reject unknown origins instead of throwing error
                 callback(null, false);
             }
+            */
         },
+
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
@@ -70,13 +80,14 @@ app.use("/api/freelancers", require("./routes/freelancerRoutes"));
 app.use("/api/freelancer", require("./routes/freelancerDashboardRoutes"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
 app.use("/api/contact", require("./routes/contactRoutes"));
+app.use("/api/applications", require("./routes/applicationRoutes"));
 
 /* ================================
    Error Handler
 ================================ */
 app.use((err, req, res, next) => {
-    console.error("API Error:", err.message);
-    res.status(500).json({ message: "Server error" });
+    console.error("API Error Stack:", err.stack); // Log full stack
+    res.status(500).json({ message: "Server error", error: err.message });
 });
 
 /* ================================

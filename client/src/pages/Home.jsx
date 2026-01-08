@@ -22,7 +22,7 @@ const Home = () => {
   const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
 
   // Specific text references for Portfolio
-  const portfolioText = "Our team members have experience working with companies such as RWS, Outlier, Turing, Uber AI, Soul AI, Telus, LXT.";
+  const portfolioText = "Our contributors have experience working with companies such as RWS, Outlier, Turing, Uber AI, Soul AI, Telus, LXT.";
 
   const capabilities = [
     {
@@ -246,7 +246,7 @@ const Home = () => {
       <section className="py-20 bg-black overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-                <span className="text-indigo-400 font-bold tracking-wider uppercase text-sm mb-2 block">Our Capabilities</span>
+                <span className="text-indigo-400 font-bold tracking-wider uppercase text-sm mb-2 block">Our Services</span>
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Multi-Modal Data Solutions</h2>
                 <p className="text-base text-white max-w-2xl mx-auto">
                     We handle every data type with domain-specific expertise.

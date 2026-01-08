@@ -3,6 +3,8 @@ const ClientRequest = require('../models/ClientRequest');
 const FreelancerApplication = require('../models/FreelancerApplication');
 const User = require('../models/User');
 const Subscriber = require('../models/Subscriber');
+const FormTemplate = require('../models/FormTemplate');
+const DynamicApplication = require('../models/DynamicApplication');
 const { sendEmail } = require('../utils/sendEmail');
 const { getNewsletterTemplate, getCredentialsTemplate } = require('../utils/emailTemplates');
 const bcrypt = require('bcryptjs');
@@ -289,11 +291,13 @@ exports.exportFreelancerApplications = async (req, res) => {
             .populate('reviewedBy', 'name')
             .sort({ createdAt: -1 });
 
-        // CSV format
-        const csvHeader = 'ID,Full Name,Email,Phone,Country,Expertise,Languages,Experience,Resume,Status,Notes,Created At,Reviewed By\n';
-        const csvRows = applications.map(a =>
-            `"${a._id}","${a.fullName || a.name}","${a.email}","${a.phone || ''}","${a.country || ''}","${a.expertise || ''}","${a.languages || ''}","${a.experience || ''}","${a.resume || ''}","${a.status}","${a.notes || ''}","${a.createdAt}","${a.reviewedBy?.name || 'Not Reviewed'}"`
-        ).join('\n');
+        // CSV format with all fields
+        const csvHeader = 'ID,Full Name,Email,Phone,Country,Country (Other),Device,Languages,Experience,Availability,Position,Skills/Interests,Other Skill,Resume,Status,Notes,Created At,Reviewed By\n';
+        const csvRows = applications.map(a => {
+            const interests = Array.isArray(a.interests) ? a.interests.join('; ') : (a.interests || '');
+            const country = a.countryOther && a.country === 'Other' ? a.countryOther : (a.country || '');
+            return `"${a._id}","${a.fullName || a.name}","${a.email}","${a.phone || ''}","${a.country || ''}","${a.countryOther || ''}","${a.device || ''}","${a.languages || ''}","${a.experience || ''}","${a.availability || ''}","${a.position || ''}","${interests}","${a.otherSkill || ''}","${a.resume || ''}","${a.status}","${a.notes || ''}","${a.createdAt}","${a.reviewedBy?.name || 'Not Reviewed'}"`;
+        }).join('\n');
 
         const csv = csvHeader + csvRows;
 
@@ -311,7 +315,18 @@ exports.exportFreelancerApplications = async (req, res) => {
 // Create a new User (Client/Freelancer) by Admin
 exports.createUser = async (req, res) => {
     try {
+        console.log("createUser called with body:", req.body); // DEBUG
+
+        // Guard against null/undefined body
+        if (!req.body || typeof req.body !== 'object') {
+            return res.status(400).json({ message: 'Invalid request body' });
+        }
+
         const { name, email, role } = req.body;
+
+        if (!name || !email || !role) {
+            return res.status(400).json({ message: 'Name, email, and role are required' });
+        }
 
         // Check if user exists
         let user = await User.findOne({ email });
@@ -335,9 +350,18 @@ exports.createUser = async (req, res) => {
         const emailSubject = `Welcome to Alanxa - Your ${role} Account`;
         const emailBody = getCredentialsTemplate(name, email, tempPassword, role);
 
-        await sendEmail(email, emailSubject, emailBody);
-
-        res.status(201).json({ message: `User created and email sent to ${email}`, user });
+        try {
+            await sendEmail(email, emailSubject, emailBody);
+            res.status(201).json({ message: `User created and email sent to ${email}`, user });
+        } catch (emailError) {
+            console.error("User created, but failed to send welcome email:", emailError.message);
+            res.status(201).json({
+                message: `User created successfully, but welcome email failed to send.`,
+                warning: `Email delivery failed: ${emailError.message}`,
+                tempPassword, // Return temp password to admin so they can share it manually
+                user
+            });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error creating user', error: error.message });
@@ -451,5 +475,123 @@ exports.deleteUser = async (req, res) => {
         res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error deleting user', error: error.message });
+    }
+};
+
+// ==================== FORM TEMPLATES MANAGEMENT ====================
+
+// Get all form templates
+exports.getAllFormTemplates = async (req, res) => {
+    try {
+        const templates = await FormTemplate.find().sort({ createdAt: -1 });
+        res.status(200).json(templates);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Get single form template
+exports.getFormTemplate = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const template = await FormTemplate.findById(id);
+        if (!template) return res.status(404).json({ message: 'Template not found' });
+        res.status(200).json(template);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Create form template
+exports.createFormTemplate = async (req, res) => {
+    try {
+        const { name, description, fields, isDefault } = req.body;
+
+        const template = new FormTemplate({
+            name,
+            description,
+            fields,
+            isDefault
+        });
+
+        await template.save();
+        res.status(201).json({ message: 'Form template created successfully', template });
+    } catch (error) {
+        res.status(500).json({ message: 'Error creating template', error: error.message });
+    }
+};
+
+// Update form template
+exports.updateFormTemplate = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = req.body;
+
+        const template = await FormTemplate.findByIdAndUpdate(id, updates, { new: true });
+        if (!template) return res.status(404).json({ message: 'Template not found' });
+
+        res.status(200).json({ message: 'Template updated successfully', template });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating template', error: error.message });
+    }
+};
+
+// Delete form template
+exports.deleteFormTemplate = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const template = await FormTemplate.findByIdAndDelete(id);
+        if (!template) return res.status(404).json({ message: 'Template not found' });
+
+        res.status(200).json({ message: 'Template deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting template', error: error.message });
+    }
+};
+
+// ==================== DYNAMIC APPLICATIONS MANAGEMENT ====================
+
+// Get all dynamic applications
+exports.getAllDynamicApplications = async (req, res) => {
+    try {
+        const applications = await DynamicApplication.find()
+            .populate('jobId', 'title category')
+            .populate('formTemplateId', 'name')
+            .sort({ createdAt: -1 });
+        res.status(200).json(applications);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Update dynamic application status
+exports.updateDynamicApplicationStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const application = await DynamicApplication.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
+
+        if (!application) return res.status(404).json({ message: 'Application not found' });
+        res.status(200).json({ message: 'Status updated', application });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Delete dynamic application
+exports.deleteDynamicApplication = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const application = await DynamicApplication.findByIdAndDelete(id);
+        if (!application) return res.status(404).json({ message: 'Application not found' });
+
+        res.status(200).json({ message: 'Application deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };

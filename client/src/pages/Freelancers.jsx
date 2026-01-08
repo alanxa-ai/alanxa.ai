@@ -8,18 +8,12 @@ import {
 import api from '../utils/api';
 import { toast } from 'react-hot-toast';
 import SEO from '../components/SEO';
+import DynamicFormRenderer from '../components/DynamicFormRenderer';
 
 const Freelancers = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    languages: '',
-    experience: '',
-    resume: '',
-    interests: [],
-    availability: ''
-  });
+  // Dynamic form data - initialized based on template
+  const [formData, setFormData] = useState({});
+  const [dynamicFormData, setDynamicFormData] = useState({});
 
   const [loading, setLoading] = useState(false);
   const [resumeFile, setResumeFile] = useState(null);
@@ -28,6 +22,8 @@ const Freelancers = () => {
   const [viewingJob, setViewingJob] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
   const [openFaq, setOpenFaq] = useState(null);
+  const [formTemplate, setFormTemplate] = useState(null);
+  const [formLoading, setFormLoading] = useState(false);
 
   // Dynamic Category Extraction
   const categories = React.useMemo(() => {
@@ -63,23 +59,61 @@ const Freelancers = () => {
     fetchJobs();
   }, []);
 
+  // Fetch form template when job is selected
   useEffect(() => {
-     if (selectedJob) {
+     if (selectedJob && selectedJob._id) {
+        const fetchFormTemplate = async () => {
+            setFormLoading(true);
+            try {
+                const res = await api.get(`/api/jobs/${selectedJob._id}/form`);
+                if (res.data.formTemplate) {
+                    setFormTemplate(res.data.formTemplate);
+                    // Initialize dynamic form data with empty values
+                    const initialData = {};
+                    res.data.formTemplate.fields?.forEach(field => {
+                        if (field.type === 'checkbox-group') {
+                            initialData[field.fieldId] = [];
+                        } else {
+                            initialData[field.fieldId] = '';
+                        }
+                    });
+                    setDynamicFormData(initialData);
+                } else {
+                    setFormTemplate(null);
+                    // Use default form data
+                    setFormData({
+                        name: '', email: '', phone: '', languages: '',
+                        experience: '', interests: [], availability: ''
+                    });
+                }
+            } catch (e) {
+                console.error('Error fetching form template', e);
+                setFormTemplate(null);
+            } finally {
+                setFormLoading(false);
+            }
+        };
+        fetchFormTemplate();
+        
         setTimeout(() => {
            const formElement = document.getElementById('apply-form');
            if (formElement) {
                formElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
            }
         }, 400);
+     } else {
+        setFormTemplate(null);
+        setDynamicFormData({});
      }
   }, [selectedJob]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === 'checkbox') {
+      const currentInterests = formData.interests || [];
       const updatedInterests = checked 
-        ? [...formData.interests, value]
-        : formData.interests.filter(i => i !== value);
+        ? [...currentInterests, value]
+        : currentInterests.filter(i => i !== value);
       setFormData({ ...formData, interests: updatedInterests });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -94,31 +128,46 @@ const Freelancers = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!resumeFile) {
-      toast.error('Please upload resume.');
-      return;
-    }
-
+    
     setLoading(true);
     try {
       const data = new FormData();
-      Object.keys(formData).forEach(key => {
-        if (key === 'interests') data.append(key, JSON.stringify(formData[key]));
-        else if (key !== 'resume') data.append(key, formData[key]);
-      });
-      data.append('resume', resumeFile);
-      if (selectedJob) data.append('position', selectedJob.title);
+      
+      if (formTemplate) {
+        // Dynamic form submission
+        data.append('jobId', selectedJob._id);
+        data.append('formTemplateId', formTemplate._id);
+        data.append('formData', JSON.stringify(dynamicFormData));
+        if (resumeFile) data.append('resume', resumeFile);
+        
+        await api.post('/api/applications', data, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+      } else {
+        // Legacy form submission
+        if (!resumeFile) {
+          toast.error('Please upload resume.');
+          setLoading(false);
+          return;
+        }
+        Object.keys(formData).forEach(key => {
+          if (key === 'interests') data.append(key, JSON.stringify(formData[key] || []));
+          else if (key !== 'resume') data.append(key, formData[key]);
+        });
+        data.append('resume', resumeFile);
+        if (selectedJob) data.append('position', selectedJob.title);
 
-      await api.post('/api/freelancers', data, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-      });
+        await api.post('/api/freelancers', data, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+      }
 
       toast.success('Application submitted!');
-      setFormData({
-        name: '', email: '', phone: '', languages: '',
-        experience: '', resume: '', interests: [], availability: ''
-      });
+      setFormData({});
+      setDynamicFormData({});
       setResumeFile(null);
+      setSelectedJob(null);
+      setFormTemplate(null);
     } catch (error) {
       console.error(error);
       toast.error('Failed. Check connection.');
@@ -439,49 +488,96 @@ const Freelancers = () => {
                         
                         <div className="p-8 md:p-12">
                              <form onSubmit={handleSubmit} className="space-y-6">
+                                 {formLoading ? (
+                                     <div className="text-center py-12 text-white">
+                                         <div className="animate-pulse">Loading form...</div>
+                                     </div>
+                                 ) : formTemplate ? (
+                                     /* Dynamic Form */
+                                     <>
+                                         <DynamicFormRenderer 
+                                             fields={formTemplate.fields || []}
+                                             formData={dynamicFormData}
+                                             setFormData={setDynamicFormData}
+                                             resumeFile={resumeFile}
+                                             setResumeFile={setResumeFile}
+                                         />
+                                         <button type="submit" disabled={loading} className="w-full py-3 bg-[#6366F1] hover:bg-[#4F46E5] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                                            {loading ? 'Sending Application...' : <><Send className="w-4 h-4" /> Submit Application</>}
+                                         </button>
+                                     </>
+                                 ) : (
+                                     /* Legacy Default Form */
+                                     <>
                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <div className="space-y-2">
                                        <label className="text-xs font-bold text-white uppercase tracking-wider">Full Name</label>
-                                       <input type="text" name="name" required value={formData.name} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="Jane Doe" />
+                                       <input type="text" name="name" required value={formData.name || ''} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="Jane Doe" />
                                     </div>
                                     <div className="space-y-2">
                                        <label className="text-xs font-bold text-white uppercase tracking-wider">Email</label>
-                                       <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="jane@example.com" />
+                                       <input type="email" name="email" required value={formData.email || ''} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="jane@example.com" />
                                     </div>
                                  </div>
 
                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <div className="space-y-2">
                                        <label className="text-xs font-bold text-white uppercase tracking-wider">Language</label>
-                                       <input type="text" name="languages" required value={formData.languages} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="e.g. Spanish" />
+                                       <input type="text" name="languages" required value={formData.languages || ''} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="e.g. Spanish" />
                                     </div>
                                     <div className="space-y-2">
                                        <label className="text-xs font-bold text-white uppercase tracking-wider">Phone</label>
-                                       <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="+1..." />
+                                       <input type="tel" name="phone" required value={formData.phone || ''} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="+1..." />
                                     </div>
                                  </div>
 
                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <div className="space-y-2">
                                        <label className="text-xs font-bold text-white uppercase tracking-wider">Experience</label>
-                                       <input type="text" name="experience" value={formData.experience} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="e.g. 2 years" />
+                                       <input type="text" name="experience" value={formData.experience || ''} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="e.g. 2 years" />
                                     </div>
                                     <div className="space-y-2">
                                        <label className="text-xs font-bold text-white uppercase tracking-wider">Availability</label>
-                                       <input type="text" name="availability" value={formData.availability} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="e.g. 20 hrs/wk" />
+                                       <input type="text" name="availability" value={formData.availability || ''} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder-gray-600" placeholder="e.g. 20 hrs/wk" />
+                                    </div>
+                                 </div>
+
+                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                                    <div className="space-y-2">
+                                       <label className="text-xs font-bold text-white uppercase tracking-wider">Location / Region</label>
+                                       <select name="country" value={formData.country || ''} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
+                                          <option value="">Select Country...</option>
+                                          {['United States', 'India', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Spain', 'Italy', 'Brazil', 'Mexico', 'Japan', 'China', 'South Korea', 'Philippines', 'Pakistan', 'Bangladesh', 'Indonesia', 'Nigeria', 'Egypt', 'South Africa', 'Kenya', 'UAE', 'Saudi Arabia', 'Russia', 'Ukraine', 'Poland', 'Netherlands', 'Other'].map(c => (
+                                             <option key={c} value={c}>{c}</option>
+                                          ))}
+                                       </select>
+                                       {formData.country === 'Other' && (
+                                          <input type="text" name="countryOther" value={formData.countryOther || ''} onChange={handleChange} className="w-full mt-2 px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 outline-none transition-all placeholder-gray-600" placeholder="Enter your country" />
+                                       )}
+                                    </div>
+                                    <div className="space-y-2">
+                                       <label className="text-xs font-bold text-white uppercase tracking-wider">Device</label>
+                                       <select name="device" value={formData.device || ''} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
+                                          <option value="">Select Device...</option>
+                                          <option value="Android">Android</option>
+                                          <option value="iOS">iOS</option>
+                                          <option value="Both">Both (Android & iOS)</option>
+                                          <option value="Laptop/PC">Laptop/PC</option>
+                                          <option value="Other">Other</option>
+                                       </select>
                                     </div>
                                  </div>
 
                                  <div className="space-y-3">
                                     <label className="text-xs font-bold text-white uppercase tracking-wider">Skills</label>
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                       {['Annotation', 'Transcription', 'Translation', 'Coding', 'Content', 'Review'].map((skill) => (
-                                          <label key={skill} className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-all ${formData.interests.includes(skill) ? 'bg-indigo-900/20 text-indigo-400 border-indigo-500' : 'bg-black border-gray-700 hover:bg-[#1E293B] text-white'}`}>
+                                       {['Annotation', 'Transcription', 'Translation', 'Coding', 'Content', 'Review', 'Other'].map((skill) => (
+                                          <label key={skill} className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-all ${(formData.interests || []).includes(skill) ? 'bg-indigo-900/20 text-indigo-400 border-indigo-500' : 'bg-black border-gray-700 hover:bg-[#1E293B] text-white'}`}>
                                              <input 
                                                 type="checkbox" 
                                                 name="interests" 
                                                 value={skill} 
-                                                checked={formData.interests.includes(skill)} 
+                                                checked={(formData.interests || []).includes(skill)} 
                                                 onChange={handleChange}
                                                 className="accent-indigo-600 w-4 h-4 cursor-pointer bg-black" 
                                              />
@@ -489,6 +585,9 @@ const Freelancers = () => {
                                           </label>
                                        ))}
                                     </div>
+                                    {(formData.interests || []).includes('Other') && (
+                                       <input type="text" name="otherSkill" value={formData.otherSkill || ''} onChange={handleChange} className="w-full mt-2 px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 outline-none transition-all placeholder-gray-600" placeholder="Enter your skill (e.g. Data Entry, Research)" />
+                                    )}
                                  </div>
 
                                  <div className="space-y-3">
@@ -524,8 +623,10 @@ const Freelancers = () => {
                                  </div>
 
                                  <button type="submit" disabled={loading} className="w-full py-3 bg-[#6366F1] hover:bg-[#4F46E5] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
-                                    {loading ? 'Sending Application...' : <>Submit Application <Send className="w-4 h-4" /></>}
+                                    {loading ? 'Sending Application...' : <><Send className="w-4 h-4" /> Submit Application</>}
                                  </button>
+                                     </>
+                                 )}
                              </form>
                         </div>
                     </div>

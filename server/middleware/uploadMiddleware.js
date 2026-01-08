@@ -23,7 +23,8 @@ const storage = multer.diskStorage({
 // File filter
 const fileFilter = (req, file, cb) => {
     // Debugging: exact file details
-    console.log(`[Upload Debug] Processing file: ${file.originalname} | Mime: ${file.mimetype}`);
+    // Debugging: exact file details
+    // console.log(`[Upload Debug] Processing file: ${file.originalname} | Mime: ${file.mimetype}`);
 
     // Handle potential encoding issues in originalname
     const originalName = file.originalname || '';

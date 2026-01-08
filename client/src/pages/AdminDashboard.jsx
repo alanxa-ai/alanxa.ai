@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import * as XLSX from 'xlsx';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -11,6 +11,7 @@ import CloudinaryImageUpload from '../components/CloudinaryImageUpload';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import toast from 'react-hot-toast';
+import FormTemplatesManager from '../components/FormTemplatesManager';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -37,8 +38,7 @@ const AdminDashboard = () => {
     const token = localStorage.getItem('token');
     return {
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`
       }
     };
   };
@@ -93,8 +93,59 @@ const AdminDashboard = () => {
 
   const fetchFreelancerApplications = async () => {
     try {
-      const response = await api.get('/api/freelancers', getAuthHeaders());
-      setFreelancerApplications(response.data);
+      // Fetch legacy applications
+      const legacyResponse = await api.get('/api/freelancers', getAuthHeaders());
+      const legacyApps = (legacyResponse.data || []).map(app => ({
+        ...app,
+        source: 'legacy'
+      }));
+      
+      // Fetch dynamic applications
+      let dynamicApps = [];
+      try {
+        const dynamicResponse = await api.get(`${API_URL}/dynamic-applications`, getAuthHeaders());
+        dynamicApps = (dynamicResponse.data || []).map(app => {
+          // Extract name and email from formData for display
+          const formData = app.formData || {};
+          // Find name/email fields (common field IDs)
+          const name = formData.name || formData.fullName || formData.full_name || 
+                       Object.values(formData).find(v => typeof v === 'string' && v.includes('@') === false && v.length > 2 && v.length < 50) || 
+                       'Dynamic Applicant';
+          const email = formData.email || formData.emailAddress || 
+                        Object.values(formData).find(v => typeof v === 'string' && v.includes('@')) || '';
+          const phone = formData.phone || formData.phoneNumber || formData.contact || '';
+          const interests = formData.skills || formData.interests || [];
+          
+          return {
+            ...app,
+            _id: app._id,
+            name: name,
+            email: email,
+            phone: phone,
+            languages: formData.language || formData.languages || '',
+            interests: Array.isArray(interests) ? interests : [],
+            experience: formData.experience || '',
+            availability: formData.availability || '',
+            resume: app.resumeUrl,
+            position: app.jobTitle || 'Dynamic Form',
+            status: app.status || 'Pending',
+            createdAt: app.createdAt,
+            source: 'dynamic',
+            templateId: app.formTemplateId?._id || app.formTemplateId || null,
+            templateName: app.formTemplateId?.name || 'Unknown Template',
+            formData: formData  // Keep original formData for detailed view
+          };
+        });
+      } catch (e) {
+        console.log('No dynamic applications or endpoint not available');
+      }
+      
+      // Merge and sort by date (newest first)
+      const allApps = [...legacyApps, ...dynamicApps].sort((a, b) => 
+        new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      
+      setFreelancerApplications(allApps);
     } catch (error) {
       console.error('Error fetching freelancer applications:', error);
     }
@@ -227,9 +278,13 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleUpdateApplicationStatus = async (id, status) => {
+  const handleUpdateApplicationStatus = async (id, status, source) => {
     try {
-      await api.put(`${API_URL}/freelancer-applications/${id}`, { status }, getAuthHeaders());
+      if (source === 'dynamic') {
+        await api.put(`${API_URL}/dynamic-applications/${id}`, { status }, getAuthHeaders());
+      } else {
+        await api.put(`${API_URL}/freelancer-applications/${id}`, { status }, getAuthHeaders());
+      }
       fetchFreelancerApplications();
     } catch (error) {
       console.error('Error updating status:', error);
@@ -249,10 +304,14 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDeleteFreelancerApplication = async (id) => {
+  const handleDeleteFreelancerApplication = async (id, source) => {
     if (window.confirm('Delete this application?')) {
       try {
-        await api.delete(`${API_URL}/freelancer-applications/${id}`, getAuthHeaders());
+        if (source === 'dynamic') {
+          await api.delete(`${API_URL}/dynamic-applications/${id}`, getAuthHeaders());
+        } else {
+          await api.delete(`${API_URL}/freelancer-applications/${id}`, getAuthHeaders());
+        }
         fetchFreelancerApplications();
       } catch (error) {
         alert('Error deleting application');
@@ -332,7 +391,8 @@ const AdminDashboard = () => {
     { id: 'clients', label: 'Client Requests', icon: Briefcase },
     { id: 'freelancers', label: 'Applications', icon: Users },
     { id: 'users', label: 'User Management', icon: Shield },
-    { id: 'projects', label: 'Projects (God Mode)', icon: Layers }
+    { id: 'projects', label: 'Projects (God Mode)', icon: Layers },
+    { id: 'form-templates', label: 'Form Templates', icon: FileText }
   ];
   
   // Need to import Layers from lucide-react (add to imports in next step or assuming available)
@@ -435,6 +495,10 @@ const AdminDashboard = () => {
                 />
             )}
 
+            {activeTab === 'form-templates' && (
+                <FormTemplatesManager />
+            )}
+
             {activeTab === 'blogs' && (
                     <BlogsManagement
                     blogs={blogs}
@@ -501,78 +565,122 @@ const StatCard = ({ icon: Icon, label, value, color, bg }) => (
 
 const UsersManagement = ({ users, showForm, setShowForm, onCreateUser }) => {
     const [formData, setFormData] = useState({ name: '', email: '', role: 'client' });
-    const [editingUser, setEditingUser] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [editingId, setEditingId] = useState(null);
+    const [editRole, setEditRole] = useState('client');
+    const [selectedUsers, setSelectedUsers] = useState(new Set());
+    
     const API_URL = '/api/admin';
 
     const getAuthHeaders = () => ({
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     });
 
+    // Filter users
+    const filteredUsers = users.filter(user => 
+        user.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Create User Handle
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (editingUser) {
-            try {
-                await api.put(`${API_URL}/users/${editingUser._id}`, formData, getAuthHeaders());
-                alert('User updated successfully');
-                onCreateUser(null); // Refetch helper or pass a refresh function
-                setEditingUser(null);
-                setShowForm(false);
-            } catch (error) {
-                alert('Error updating user');
-            }
-        } else {
-            onCreateUser(formData);
-        }
+        onCreateUser(formData); // Parent handles creation
         setFormData({ name: '', email: '', role: 'client' });
     };
-    
-    // Helper to refresh users by calling parent's onCreateUser with null (trick to trigger refetch if parent logic allows, else we need a prop)
-    // Actually, onCreateUser in parent refetches. We can create a dedicated 'refetch' prop or reuse onCreateUser logic if modified.
-    // Let's modify handleDelete to assume parent will refetch if we call a callback.
-    // Ideally, pass onUpdateUser and onDeleteUser from parent. 
-    // For now, I will implement local axios calls and then use onCreateUser purely for creation-trigger-refetch, or reload page?
-    // Better: Allow parent to handle crud completely. But to save steps, I'll do direct axios here and assume 'onCreateUser' can be used to just refetch if passed a special flag, OR I will duplicate fetch logic? 
-    // Let's stick to modifying the parent in the next step to pass these handlers? 
-    // No, I can't modify parent easily in this chunk without big context. 
-    // I will use direct Axios calls here and reload the page or use a prop if available. 
-    // Parent 'onCreateUser' calls fetchUsers(). I can pass a dummy to it? No.
-    // I will assume I can pass a 'refresh' callback. I'll add 'onRefresh' to props in the replacement.
 
+    // Inline Edit Handlers
+    const startEdit = (user) => {
+        setEditingId(user._id);
+        setEditRole(user.role);
+    };
+
+    const cancelEdit = () => {
+        setEditingId(null);
+        setEditRole('client');
+    };
+
+    const handleExport = () => {
+        const usersToExport = selectedUsers.size > 0 
+            ? filteredUsers.filter(u => selectedUsers.has(u._id))
+            : filteredUsers;
+            
+        const data = usersToExport.map(u => ({
+            Name: u.name,
+            Email: u.email,
+            Role: u.role,
+            Joined: new Date(u.createdAt || Date.now()).toLocaleDateString()
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Users");
+        XLSX.writeFile(wb, "Users_List.xlsx");
+    };
+
+    const saveRole = async (userId) => {
+        try {
+            await api.put(`${API_URL}/users/${userId}`, { role: editRole }, getAuthHeaders());
+            toast.success('User role updated');
+            setEditingId(null);
+            setTimeout(() => window.location.reload(), 500); // Reload to refresh
+        } catch (error) {
+            toast.error('Error updating role');
+        }
+    };
+
+    // Delete Handlers
     const handleDelete = async (id) => {
         if(window.confirm('Delete this user?')) {
             try {
                 await api.delete(`${API_URL}/users/${id}`, getAuthHeaders());
-                // Trigger refresh - simpler to just reload or if we had the fetch function
-                // I will add onRefresh prop in the parent usage
-                if (onCreateUser && typeof onCreateUser === 'function') {
-                    // This is hacky: calling onCreateUser with null might just crash or do nothing? 
-                    // Let's check handleCreateUser in parent: uses passed data.
-                    // I will strictly rely on a new prop 'onRefresh' which I will add to the parent call in the next step.
-                } 
-                window.location.reload(); // Fallback for now to ensure consistency without big refactor
+                toast.success('User deleted');
+                window.location.reload();
             } catch (error) {
-                alert('Error deleting user');
+                toast.error('Error deleting user');
             }
         }
     };
 
-    useEffect(() => {
-        if (!showForm && !editingUser) {
-            setFormData({ name: '', email: '', role: 'client' });
+    const handleBulkDelete = async () => {
+        if (!selectedUsers.size) return;
+        if (window.confirm(`Delete ${selectedUsers.size} users?`)) {
+            try {
+                // Delete users sequentially (simple implementation)
+                for (const id of selectedUsers) {
+                    await api.delete(`${API_URL}/users/${id}`, getAuthHeaders());
+                }
+                toast.success('Users deleted successfully');
+                setSelectedUsers(new Set());
+                window.location.reload();
+            } catch (error) {
+                toast.error('Error deleting some users');
+            }
         }
-    }, [showForm, editingUser]);
+    };
 
-    const startEdit = (user) => {
-        setEditingUser(user);
-        setFormData({ name: user.name, email: user.email, role: user.role });
-        setShowForm(true);
+    // Selection Handlers
+    const toggleSelect = (id) => {
+        const newSelected = new Set(selectedUsers);
+        if (newSelected.has(id)) newSelected.delete(id);
+        else newSelected.add(id);
+        setSelectedUsers(newSelected);
+    };
+
+    const toggleSelectAll = () => {
+        if (selectedUsers.size === filteredUsers.length) {
+            setSelectedUsers(new Set());
+        } else {
+            setSelectedUsers(new Set(filteredUsers.map(u => u._id)));
+        }
     };
 
     return (
         <div className="space-y-6">
+            {/* Create User Form (Always valid to have) */}
             {showForm && (
                 <div className="bg-[#0A0F1C] p-6 rounded-2xl shadow-lg border border-gray-800">
-                    <h3 className="text-lg font-bold mb-4 text-white">{editingUser ? 'Update User' : 'Create New Account'}</h3>
+                    <h3 className="text-lg font-bold mb-4 text-white">Create New Account</h3>
                     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                         <div>
                             <label className="block text-base font-medium mb-1 text-white">Name</label>
@@ -580,7 +688,7 @@ const UsersManagement = ({ users, showForm, setShowForm, onCreateUser }) => {
                         </div>
                         <div>
                             <label className="block text-base font-medium mb-1 text-white">Email</label>
-                            <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg text-base" type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required disabled={!!editingUser} />
+                            <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg text-base" type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required />
                         </div>
                         <div>
                             <label className="block text-base font-medium mb-1 text-white">Role</label>
@@ -590,30 +698,99 @@ const UsersManagement = ({ users, showForm, setShowForm, onCreateUser }) => {
                                 <option value="admin">Admin</option>
                             </select>
                         </div>
-                        <button type="submit" className="bg-indigo-600 text-white p-2 rounded-lg font-bold hover:bg-indigo-700 text-base">{editingUser ? 'Update User' : 'Create & Send Email'}</button>
+                        <button type="submit" className="bg-indigo-600 text-white p-2 rounded-lg font-bold hover:bg-indigo-700 text-base">Create & Send Email</button>
                     </form>
                 </div>
             )}
             
             <div className="bg-[#0A0F1C] rounded-2xl border border-gray-800 overflow-hidden">
-                <div className="flex justify-between p-6 border-b border-gray-800">
-                   <h3 className="font-bold text-white">System Users</h3>
-                   <button onClick={() => { setEditingUser(null); setFormData({name: '', email: '', role: 'client'}); setShowForm(!showForm); }} className="text-indigo-400 font-bold flex items-center gap-2"><Plus size={18}/> New User</button>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-6 border-b border-gray-800 gap-4">
+                   <div className="flex items-center gap-4 w-full md:w-auto">
+                       <h3 className="font-bold text-white whitespace-nowrap">System Users</h3>
+                       <div className="relative w-full md:w-64">
+                           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
+                           <input 
+                               type="text" 
+                               placeholder="Search users..." 
+                               value={searchTerm}
+                               onChange={(e) => setSearchTerm(e.target.value)}
+                               className="w-full bg-[#1E293B] text-white pl-9 pr-4 py-2 rounded-lg text-sm border border-transparent focus:border-indigo-500 outline-none"
+                           />
+                       </div>
+                   </div>
+                   
+                   <div className="flex items-center gap-3">
+                       <button onClick={handleBulkDelete} className="bg-red-900/20 text-red-400 px-3 py-2 rounded-lg text-sm font-bold hover:bg-red-900/40 transition flex items-center gap-2">
+                               <Trash2 size={16} /> Delete Selected ({selectedUsers.size})
+                           </button>
+                       <button onClick={handleExport} className="text-indigo-400 font-bold flex items-center gap-2 hover:bg-indigo-900/20 px-3 py-2 rounded-lg transition"><Download size={18}/> Export Excel</button>
+                       <button onClick={() => setShowForm(!showForm)} className="text-indigo-400 font-bold flex items-center gap-2 hover:bg-indigo-900/20 px-3 py-2 rounded-lg transition"><Plus size={18}/> New User</button>
+                   </div>
                 </div>
+                
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-[#1E293B] border-b border-gray-700 text-white">
-                            <tr><th className="p-4 text-base font-bold">Name</th><th className="p-4 text-base font-bold">Email</th><th className="p-4 text-base font-bold">Role</th><th className="p-4 text-base font-bold">Actions</th></tr>
+                            <tr>
+                                <th className="p-4 w-10">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={filteredUsers.length > 0 && selectedUsers.size === filteredUsers.length}
+                                        onChange={toggleSelectAll}
+                                        className="rounded border-gray-600 bg-black text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                    />
+                                </th>
+                                <th className="p-4 text-base font-bold">Name</th>
+                                <th className="p-4 text-base font-bold">Email</th>
+                                <th className="p-4 text-base font-bold">Role</th>
+                                <th className="p-4 text-base font-bold">Actions</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {users.map(u => (
-                            <tr key={u._id} className="border-b border-gray-800 hover:bg-[#1E293B] transition-colors">
+                        {filteredUsers.map(u => (
+                            <tr key={u._id} className={`border-b border-gray-800 hover:bg-[#1E293B] transition-colors ${selectedUsers.has(u._id) ? 'bg-indigo-900/10' : ''}`}>
+                                <td className="p-4">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={selectedUsers.has(u._id)}
+                                        onChange={() => toggleSelect(u._id)}
+                                        className="rounded border-gray-600 bg-black text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                    />
+                                </td>
                                 <td className="p-4 font-bold text-white text-base">{u.name}</td>
                                 <td className="p-4 text-base text-white">{u.email}</td>
-                                <td className="p-4"><span className="px-2 py-1 rounded-full bg-gray-800 text-xs uppercase font-bold text-white">{u.role}</span></td>
+                                <td className="p-4">
+                                    {editingId === u._id ? (
+                                        <select 
+                                            value={editRole} 
+                                            onChange={(e) => setEditRole(e.target.value)}
+                                            className="bg-black text-white text-sm px-2 py-1 rounded border border-gray-700 outline-none"
+                                        >
+                                            <option value="client">Client</option>
+                                            <option value="freelancer">Freelancer</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="none">None</option>
+                                        </select>
+                                    ) : (
+                                        <span className={`px-2 py-1 rounded-full text-xs uppercase font-bold text-white ${
+                                            u.role === 'admin' ? 'bg-purple-900/50 text-purple-300' :
+                                            u.role === 'freelancer' ? 'bg-blue-900/50 text-blue-300' :
+                                            'bg-gray-800'
+                                        }`}>{u.role}</span>
+                                    )}
+                                </td>
                                 <td className="p-4 flex gap-2">
-                                    <button onClick={() => startEdit(u)} className="p-1 text-white hover:text-indigo-400"><Edit2 size={16}/></button>
-                                    <button onClick={() => handleDelete(u._id)} className="p-1 text-white hover:text-red-500"><Trash2 size={16}/></button>
+                                    {editingId === u._id ? (
+                                        <>
+                                            <button onClick={() => saveRole(u._id)} className="p-1 text-green-400 hover:text-green-300" title="Save"><Save size={18}/></button>
+                                            <button onClick={cancelEdit} className="p-1 text-gray-400 hover:text-white" title="Cancel"><X size={18}/></button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <button onClick={() => startEdit(u)} className="p-1 text-white hover:text-indigo-400" title="Edit Role"><Edit2 size={16}/></button>
+                                            <button onClick={() => handleDelete(u._id)} className="p-1 text-white hover:text-red-500" title="Delete"><Trash2 size={16}/></button>
+                                        </>
+                                    )}
                                 </td>
                             </tr>
                         ))}
@@ -692,6 +869,24 @@ const ProjectsManagement = ({ projects, users, showForm, setShowForm, onCreatePr
         setShowForm(true);
     };
 
+    const handleExport = () => {
+        const data = projects.map(p => ({
+            Title: p.title,
+            Client: p.client?.name || 'Unknown',
+            Freelancers: p.freelancers?.map(f => f.name).join(', ') || 'Unassigned',
+            Status: p.status,
+            Progress: `${p.completedItems || 0} / ${p.totalItems || '-'} ${p.unit || ''}`,
+            Deadline: new Date(p.deadline).toLocaleDateString(),
+            Category: p.category,
+            ServiceType: p.serviceType
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Projects");
+        XLSX.writeFile(wb, "Projects_List.xlsx");
+    };
+
     return (
         <div className="space-y-6">
             {showForm && (
@@ -761,7 +956,10 @@ const ProjectsManagement = ({ projects, users, showForm, setShowForm, onCreatePr
                  {/* Project List */}
                  <div className="flex justify-between items-center mb-2">
                     <h3 className="font-bold text-white">Active Projects</h3>
-                    <button onClick={() => { setShowForm(!showForm); setEditingProject(null); setFormData({ title: '', description: '', client: '', freelancers: [], deadline: '', category: '', serviceType: '' }); }} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-indigo-700">+ New Project</button>
+                    <div className="flex gap-2">
+                        <button onClick={handleExport} className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-green-700 flex items-center gap-1"><Download size={16}/> Export</button>
+                        <button onClick={() => { setShowForm(!showForm); setEditingProject(null); setFormData({ title: '', description: '', client: '', freelancers: [], deadline: '', category: '', serviceType: '' }); }} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-indigo-700">+ New Project</button>
+                    </div>
                  </div>
                  
                  {projects.map(p => (
@@ -844,7 +1042,26 @@ const ProjectsManagement = ({ projects, users, showForm, setShowForm, onCreatePr
 };
 
 const JobsManagement = ({ jobs, showForm, setShowForm, editingJob, setEditingJob, onCreateJob, onUpdateJob, onDeleteJob }) => {
-    const [formData, setFormData] = useState({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '' });
+    const [formData, setFormData] = useState({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '', formTemplate: '' });
+    const [formTemplates, setFormTemplates] = useState([]);
+
+    const API_URL = '/api/admin';
+    const getAuthHeaders = () => ({
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+
+    // Fetch form templates on mount
+    useEffect(() => {
+        const fetchTemplates = async () => {
+            try {
+                const res = await api.get(`${API_URL}/form-templates`, getAuthHeaders());
+                setFormTemplates(res.data);
+            } catch (error) {
+                console.error('Error fetching templates:', error);
+            }
+        };
+        fetchTemplates();
+    }, []);
 
     useEffect(() => {
         if (editingJob) {
@@ -855,7 +1072,8 @@ const JobsManagement = ({ jobs, showForm, setShowForm, editingJob, setEditingJob
                 type: editingJob.type || 'Freelance',
                 salary: editingJob.salary || '',
                 description: editingJob.description || '',
-                skills: editingJob.skills ? (Array.isArray(editingJob.skills) ? editingJob.skills.join(', ') : editingJob.skills) : ''
+                skills: editingJob.skills ? (Array.isArray(editingJob.skills) ? editingJob.skills.join(', ') : editingJob.skills) : '',
+                formTemplate: editingJob.formTemplate || ''
             });
             setShowForm(true);
         }
@@ -863,7 +1081,7 @@ const JobsManagement = ({ jobs, showForm, setShowForm, editingJob, setEditingJob
 
     useEffect(() => {
         if (!showForm && !editingJob) {
-            setFormData({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '' });
+            setFormData({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '', formTemplate: '' });
         }
     }, [showForm, editingJob]);
 
@@ -871,14 +1089,32 @@ const JobsManagement = ({ jobs, showForm, setShowForm, editingJob, setEditingJob
         e.preventDefault();
         const data = {
             ...formData,
-            skills: formData.skills.split(',').map(s => s.trim()).filter(Boolean)
+            skills: formData.skills.split(',').map(s => s.trim()).filter(Boolean),
+            formTemplate: formData.formTemplate || null
         };
         if (editingJob) {
             await onUpdateJob(editingJob._id, data);
         } else {
             await onCreateJob(data);
         }
-        setFormData({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '' });
+        setFormData({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '', formTemplate: '' });
+    };
+
+    const handleExport = () => {
+        const data = jobs.map(job => ({
+            Title: job.title,
+            Category: job.category,
+            Type: job.type,
+            Location: job.location,
+            Salary: job.salary,
+            Skills: Array.isArray(job.skills) ? job.skills.join(', ') : job.skills,
+            PostedAt: new Date(job.createdAt || Date.now()).toLocaleDateString()
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Jobs");
+        XLSX.writeFile(wb, "Jobs_List.xlsx");
     };
 
     return (
@@ -887,7 +1123,7 @@ const JobsManagement = ({ jobs, showForm, setShowForm, editingJob, setEditingJob
                 <div className="bg-[#0A0F1C] p-6 rounded-2xl shadow-lg border border-gray-800">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="text-lg font-bold text-white">{editingJob ? 'Edit Job' : 'Post New Job'}</h3>
-                        <button onClick={() => { setShowForm(false); setEditingJob(null); setFormData({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '' }); }}><X size={20} className="text-white hover:text-white"/></button>
+                        <button onClick={() => { setShowForm(false); setEditingJob(null); setFormData({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '', formTemplate: '' }); }}><X size={20} className="text-white hover:text-white"/></button>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
@@ -920,9 +1156,24 @@ const JobsManagement = ({ jobs, showForm, setShowForm, editingJob, setEditingJob
                             </div>
                         </div>
                         
-                        <div>
-                             <label className="block text-sm font-bold text-white uppercase mb-1">Skills (comma separated)</label>
-                             <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg placeholder-gray-500 text-base" value={formData.skills} onChange={e => setFormData({...formData, skills: e.target.value})} placeholder="Python, Annotation, Native Speaker"/>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                 <label className="block text-sm font-bold text-white uppercase mb-1">Skills (comma separated)</label>
+                                 <input className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg placeholder-gray-500 text-base" value={formData.skills} onChange={e => setFormData({...formData, skills: e.target.value})} placeholder="Python, Annotation, Native Speaker"/>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-white uppercase mb-1">Application Form</label>
+                                <select 
+                                    className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg text-base"
+                                    value={formData.formTemplate} 
+                                    onChange={e => setFormData({...formData, formTemplate: e.target.value})}
+                                >
+                                    <option value="">Default Form (Static)</option>
+                                    {formTemplates.map(tmpl => (
+                                        <option key={tmpl._id} value={tmpl._id}>{tmpl.name} ({tmpl.fields?.length || 0} fields)</option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
 
                         <div>
@@ -938,7 +1189,10 @@ const JobsManagement = ({ jobs, showForm, setShowForm, editingJob, setEditingJob
             <div className="bg-[#0A0F1C] rounded-2xl border border-gray-800 overflow-hidden">
                 <div className="flex justify-between p-6 border-b border-gray-800">
                    <h3 className="font-bold text-white">Active Listings</h3>
-                   <button onClick={() => { setShowForm(!showForm); setEditingJob(null); setFormData({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '' }); }} className="text-indigo-400 font-bold flex items-center gap-2 hover:text-indigo-300"><Plus size={18}/> Post Job</button>
+                   <div className="flex gap-2">
+                       <button onClick={handleExport} className="text-green-400 font-bold flex items-center gap-2 hover:text-green-300 mr-4"><Download size={18}/> Export Excel</button>
+                       <button onClick={() => { setShowForm(!showForm); setEditingJob(null); setFormData({ title: '', category: '', location: 'Remote', type: 'Freelance', salary: '', description: '', skills: '', formTemplate: '' }); }} className="text-indigo-400 font-bold flex items-center gap-2 hover:text-indigo-300"><Plus size={18}/> Post Job</button>
+                   </div>
                 </div>
                 <div className="flex flex-col">
                     {jobs.map(job => (
@@ -1189,7 +1443,7 @@ const ClientRequestsManagement = ({ requests, onUpdateStatus, onDelete, onExport
              <div className="bg-[#0A0F1C] rounded-2xl shadow-sm border border-gray-800 overflow-hidden">
                  <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-[#0A0F1C]">
                      <h3 className="font-bold text-white text-xl">Recent Requests</h3>
-                     <button onClick={onExport} className="text-base font-medium text-sky-400 hover:text-sky-300 hover:underline flex items-center gap-1"><Download size={18} /> Export CSV</button>
+                     <button onClick={onExport} className="text-base font-medium text-sky-400 hover:text-sky-300 hover:underline flex items-center gap-1"><Download size={18} /> Export Excel</button>
                  </div>
                  <div className="overflow-x-auto">
                      <table className="w-full">
@@ -1246,16 +1500,317 @@ const ClientRequestsManagement = ({ requests, onUpdateStatus, onDelete, onExport
 };
 
 const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDelete, onExport, onApproveAll }) => {
+    const [statusFilter, setStatusFilter] = useState('All');
+    const [sourceFilter, setSourceFilter] = useState('All'); // All, legacy, dynamic
+    const [templateFilter, setTemplateFilter] = useState('All'); // Filter by specific template ID
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [selectedApp, setSelectedApp] = useState(null); // For viewing details
+
+    // Get unique templates from applications
+    const uniqueTemplates = useMemo(() => {
+        const templates = new Map();
+        applications.forEach(app => {
+            if (app.source === 'dynamic' && app.templateId) {
+                templates.set(app.templateId, app.templateName);
+            }
+        });
+        return Array.from(templates.entries()).map(([id, name]) => ({ id, name }));
+    }, [applications]);
+
+    // Filter applications based on current filters
+    const filteredApplications = applications.filter(app => {
+        // Source filter
+        if (sourceFilter !== 'All' && app.source !== sourceFilter) {
+            return false;
+        }
+
+        // Template filter (only if source is dynamic or All)
+        if (templateFilter !== 'All' && app.templateId !== templateFilter) {
+            return false;
+        }
+        
+        // Status filter
+        if (statusFilter !== 'All' && (app.status || 'Pending') !== statusFilter) {
+            return false;
+        }
+        
+        // Date filter
+        const appDate = new Date(app.createdAt);
+        if (startDate && appDate < new Date(startDate)) {
+            return false;
+        }
+        if (endDate) {
+            const end = new Date(endDate);
+            end.setHours(23, 59, 59, 999); // Include the entire end date
+            if (appDate > end) {
+                return false;
+            }
+        }
+        
+        return true;
+    });
+
+    // Quick date presets
+    const setDatePreset = (days) => {
+        const end = new Date();
+        const start = new Date();
+        start.setDate(start.getDate() - days);
+        setStartDate(start.toISOString().split('T')[0]);
+        setEndDate(end.toISOString().split('T')[0]);
+    };
+
+    const clearFilters = () => {
+        setStatusFilter('All');
+        setSourceFilter('All');
+        setTemplateFilter('All');
+        setStartDate('');
+        setEndDate('');
+    };
+
+    // Export filtered data with dynamic form fields
+    const handleFilteredExport = () => {
+        const wb = XLSX.utils.book_new();
+        const timestamp = new Date().toISOString().split('T')[0];
+
+        // Helper to remove empty columns
+        const removeEmptyColumns = (dataset) => {
+            if (!dataset || dataset.length === 0) return [];
+            
+            const keys = Object.keys(dataset[0]);
+            const nonEmptyKeys = keys.filter(key => 
+                dataset.some(row => row[key] !== '' && row[key] !== null && row[key] !== undefined)
+            );
+            
+            return dataset.map(row => {
+                const newRow = {};
+                nonEmptyKeys.forEach(key => newRow[key] = row[key]);
+                return newRow;
+            });
+        };
+
+        // 1. Group Applications by Template/Source
+        const groups = {};
+
+        filteredApplications.forEach(app => {
+            let groupKey = 'legacy';
+            let groupName = 'Static Forms';
+
+            if (app.source === 'dynamic') {
+                groupKey = app.templateId || 'unknown_dynamic';
+                groupName = app.templateName || 'Dynamic Forms';
+            }
+
+            if (!groups[groupKey]) {
+                groups[groupKey] = {
+                    name: groupName,
+                    apps: []
+                };
+            }
+            groups[groupKey].apps.push(app);
+        });
+
+        // 2. Process each group as a separate sheet
+        Object.values(groups).forEach(group => {
+            let data;
+            
+            // Sanitize Sheet Name (Excel max 31 chars, no invalid chars)
+            let sheetName = group.name.replace(/[:\/\\?*\[\]]/g, ' ').substring(0, 31).trim();
+            // Ensure unique sheet names if duplicates after truncation
+            let uniqueSheetName = sheetName;
+            let counter = 1;
+            while (wb.SheetNames.includes(uniqueSheetName)) {
+                uniqueSheetName = `${sheetName.substring(0, 28)}(${counter})`;
+                counter++;
+            }
+            
+            if (group.name === 'Static Forms') {
+                // Static/Legacy Mapping
+                data = group.apps.map(app => ({
+                    Name: app.name,
+                    Email: app.email,
+                    Phone: app.phone,
+                    Languages: app.languages,
+                    Skills: Array.isArray(app.interests) ? app.interests.join(', ') : (app.interests || ''),
+                    OtherSkill: app.otherSkill || '',
+                    Experience: app.experience,
+                    Availability: app.availability,
+                    Position: app.position || '',
+                    Country: app.country || '',
+                    OtherRegion: app.countryOther || '',
+                    Device: app.device || '',
+                    Status: app.status || 'Pending',
+                    AppliedAt: new Date(app.createdAt).toLocaleDateString(),
+                    Resume: app.resume
+                }));
+            } else {
+                // Dynamic Form Mapping
+                data = group.apps.map(app => {
+                    const row = {
+                        Status: app.status || 'Pending',
+                        AppliedAt: new Date(app.createdAt).toLocaleDateString(),
+                        Resume: app.resume || app.resumeUrl || ''
+                    };
+                    
+                    // Add formData with cleaned keys
+                    if (app.formData && typeof app.formData === 'object') {
+                        Object.entries(app.formData).forEach(([key, value]) => {
+                            // Clean key: remove timestamp suffixes
+                            let cleanKey = key.replace(/_\d+$/, '').replace(/_/g, ' ');
+                            // Capitalize
+                            cleanKey = cleanKey.charAt(0).toUpperCase() + cleanKey.slice(1);
+                            
+                            let formattedValue = '';
+                            if (Array.isArray(value)) {
+                                formattedValue = value.join(', ');
+                            } else if (typeof value === 'object' && value !== null) {
+                                formattedValue = JSON.stringify(value);
+                            } else {
+                                formattedValue = value || '';
+                            }
+                            row[cleanKey] = formattedValue;
+                        });
+                    }
+                    return row;
+                });
+                
+                // Remove empty columns for dynamic sheets
+                data = removeEmptyColumns(data);
+            }
+
+            if (data.length > 0) {
+                const ws = XLSX.utils.json_to_sheet(data);
+                XLSX.utils.book_append_sheet(wb, ws, uniqueSheetName);
+            }
+        });
+
+        if (wb.SheetNames.length === 0) {
+            toast.error('No data to export');
+            return;
+        }
+
+        // 3. Generate Filename
+        let filename = "Applications";
+        if (templateFilter !== 'All') {
+            const templateName = uniqueTemplates.find(t => t.id === templateFilter)?.name || 'Template';
+            filename = templateName.replace(/[^a-z0-9]/gi, '_') + "_Applications";
+        } else if (sourceFilter === 'legacy') {
+            filename = "Static_Applications";
+        } else if (sourceFilter === 'dynamic') {
+            filename = "All_Dynamic_Applications";
+        }
+        
+        if (statusFilter !== 'All') filename += `_${statusFilter}`;
+        filename += `_${timestamp}.xlsx`;
+        
+        XLSX.writeFile(wb, filename);
+    };
+
     return (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
              <div className="bg-[#0A0F1C] rounded-2xl shadow-sm border border-gray-800 overflow-hidden">
-                 <div className="p-6 border-b border-gray-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#0A0F1C]">
-                     <h3 className="font-bold text-white text-xl">Freelancer Applications</h3>
-                     <div className="flex flex-wrap gap-3 w-full md:w-auto">
-                        <button onClick={onApproveAll} className="w-auto justify-center text-sm md:text-base font-bold bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg shadow-green-900/20 transition-all flex items-center gap-2 whitespace-nowrap">
-                             <CheckCircle size={18} /> Approve All
-                        </button>
-                        <button onClick={onExport} className="w-auto justify-center text-sm md:text-base font-medium text-indigo-400 hover:text-indigo-300 hover:underline flex items-center gap-1 whitespace-nowrap"><Download size={18} /> Export Excel</button>
+                 <div className="p-6 border-b border-gray-800 flex flex-col gap-4 bg-[#0A0F1C]">
+                     {/* Header Row */}
+                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                         <h3 className="font-bold text-white text-xl">Freelancer Applications</h3>
+                         <div className="flex flex-wrap gap-3 w-full md:w-auto">
+                            <button onClick={onApproveAll} className="w-auto justify-center text-sm md:text-base font-bold bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg shadow-green-900/20 transition-all flex items-center gap-2 whitespace-nowrap">
+                                 <CheckCircle size={18} /> Approve All
+                            </button>
+                            <button onClick={handleFilteredExport} className="w-auto justify-center text-sm md:text-base font-medium text-indigo-400 hover:text-indigo-300 hover:underline flex items-center gap-1 whitespace-nowrap"><Download size={18} /> Export Excel</button>
+                         </div>
+                     </div>
+                     
+                     {/* Filter Row */}
+                     <div className="bg-[#1E293B] p-4 rounded-xl flex flex-col gap-4">
+                         
+                         <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                            <span className="text-white text-sm font-bold uppercase shrink-0">Filters:</span>
+                            
+                            <div className="flex flex-col sm:flex-row gap-3 flex-1">
+                                {/* Source Filter */}
+                                <select 
+                                    value={sourceFilter} 
+                                    onChange={(e) => setSourceFilter(e.target.value)}
+                                    className="bg-black text-white text-sm px-3 py-2 rounded-lg border border-gray-700 outline-none cursor-pointer w-full sm:w-auto min-w-[120px]"
+                                >
+                                    <option value="All">All Types</option>
+                                    <option value="legacy">Static Forms</option>
+                                    <option value="dynamic">Dynamic Forms</option>
+                                </select>
+                                
+                                {/* Template Filter - Only show if dynamic/all and we have templates */}
+                                {sourceFilter !== 'legacy' && uniqueTemplates.length > 0 && (
+                                    <select 
+                                        value={templateFilter} 
+                                        onChange={(e) => setTemplateFilter(e.target.value)}
+                                        className="bg-black text-white text-sm px-3 py-2 rounded-lg border border-gray-700 outline-none cursor-pointer w-full sm:w-auto min-w-[150px]"
+                                    >
+                                        <option value="All">All Templates</option>
+                                        {uniqueTemplates.map(t => (
+                                            <option key={t.id} value={t.id}>{t.name}</option>
+                                        ))}
+                                    </select>
+                                )}
+                                
+                                {/* Status Filter */}
+                                <select 
+                                    value={statusFilter} 
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="bg-black text-white text-sm px-3 py-2 rounded-lg border border-gray-700 outline-none cursor-pointer w-full sm:w-auto min-w-[120px]"
+                                >
+                                    <option value="All">All Status</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Reviewing">Reviewing</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Rejected">Rejected</option>
+                                </select>
+                                
+                                {/* Date Range */}
+                                <div className="flex items-center gap-2 w-full sm:w-auto bg-black border border-gray-700 rounded-lg px-2 py-1.5">
+                                    <input 
+                                        type="date" 
+                                        value={startDate}
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                        onClick={(e) => e.target.showPicker()}
+                                        className="bg-transparent text-white text-sm outline-none cursor-pointer w-full"
+                                        placeholder="Start"
+                                    />
+                                    <span className="text-gray-500 text-xs">to</span>
+                                    <input 
+                                        type="date" 
+                                        value={endDate}
+                                        onChange={(e) => setEndDate(e.target.value)}
+                                        onClick={(e) => e.target.showPicker()}
+                                        className="bg-transparent text-white text-sm outline-none cursor-pointer w-full"
+                                        placeholder="End"
+                                    />
+                                </div>
+                            </div>
+
+                             {/* Clear Filters */}
+                             {(statusFilter !== 'All' || startDate || endDate) && (
+                                 <button onClick={clearFilters} className="self-start lg:self-center text-xs px-3 py-2 bg-red-900/20 hover:bg-red-900/40 text-red-400 rounded-lg transition flex items-center gap-1">
+                                     <X size={14} /> Clear
+                                 </button>
+                             )}
+                         </div>
+
+                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-t border-gray-700 pt-3">
+                             {/* Quick Presets */}
+                             <div className="flex flex-wrap gap-2">
+                                 <span className="text-gray-400 text-xs font-medium uppercase mr-1 py-1">Quick:</span>
+                                 <button onClick={() => setDatePreset(0)} className="text-xs px-2.5 py-1 bg-gray-800 hover:bg-gray-700 text-white rounded-md transition">Today</button>
+                                 <button onClick={() => setDatePreset(1)} className="text-xs px-2.5 py-1 bg-gray-800 hover:bg-gray-700 text-white rounded-md transition">Last 2 Days</button>
+                                 <button onClick={() => setDatePreset(7)} className="text-xs px-2.5 py-1 bg-gray-800 hover:bg-gray-700 text-white rounded-md transition">Last 7 Days</button>
+                                 <button onClick={() => setDatePreset(30)} className="text-xs px-2.5 py-1 bg-gray-800 hover:bg-gray-700 text-white rounded-md transition">Last 30 Days</button>
+                             </div>
+                             
+                             {/* Results Count */}
+                             <span className="text-gray-400 text-sm font-medium whitespace-nowrap">
+                                 Showing <span className="text-white">{filteredApplications.length}</span> of {applications.length}
+                             </span>
+                         </div>
                      </div>
                  </div>
                  <div className="overflow-x-auto">
@@ -1271,7 +1826,7 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
                              </tr>
                          </thead>
                          <tbody className="divide-y divide-gray-800">
-                             {applications.map(app => (
+                             {filteredApplications.map(app => (
                                  <tr key={app._id} className="hover:bg-[#1E293B] transition-colors">
                                      <td className="p-4">
                                          <div className="font-bold text-white text-base">{app.name}</div>
@@ -1300,7 +1855,7 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
                                      <td className="p-4">
                                         <select 
                                             value={app.status || 'Pending'} 
-                                            onChange={(e) => onUpdateStatus(app._id, e.target.value)}
+                                            onChange={(e) => onUpdateStatus(app._id, e.target.value, app.source)}
                                             className={`text-sm font-bold px-2 py-1 rounded-full border-none outline-none cursor-pointer ${
                                                 app.status === 'Pending' ? 'bg-yellow-900/20 text-yellow-400' : 
                                                 app.status === 'Approved' ? 'bg-green-900/20 text-green-400' : 
@@ -1314,7 +1869,10 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
                                         </select>
                                      </td>
                                      <td className="p-4">
-                                        <button onClick={() => onDelete(app._id)} className="p-2 text-white hover:text-red-500 rounded-full hover:bg-red-900/20 transition"><Trash2 size={18} /></button>
+                                        <div className="flex items-center gap-2">
+                                            <button onClick={() => setSelectedApp(app)} className="p-2 text-indigo-400 hover:text-indigo-300 rounded-full hover:bg-indigo-900/20 transition" title="View Details"><Eye size={18} /></button>
+                                            <button onClick={() => onDelete(app._id, app.source)} className="p-2 text-white hover:text-red-500 rounded-full hover:bg-red-900/20 transition"><Trash2 size={18} /></button>
+                                        </div>
                                      </td>
                                  </tr>
                              ))}
@@ -1322,6 +1880,113 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
                      </table>
                  </div>
              </div>
+
+            {/* Application Details Modal */}
+            {selectedApp && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setSelectedApp(null)}>
+                    <div className="bg-[#0A0F1C] rounded-2xl border border-gray-800 max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-center p-6 border-b border-gray-800 sticky top-0 bg-[#0A0F1C]">
+                            <div>
+                                <h3 className="text-xl font-bold text-white">{selectedApp.name}</h3>
+                                <span className={`text-xs px-2 py-1 rounded-full ${selectedApp.source === 'dynamic' ? 'bg-purple-900/20 text-purple-400' : 'bg-gray-800 text-gray-400'}`}>
+                                    {selectedApp.source === 'dynamic' ? 'Dynamic Form' : 'Legacy Form'}
+                                </span>
+                            </div>
+                            <button onClick={() => setSelectedApp(null)} className="p-2 hover:bg-gray-800 rounded-lg"><X size={20} className="text-white"/></button>
+                        </div>
+                        <div className="p-6 space-y-4">
+                            {/* Basic Info */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="bg-[#1E293B] p-4 rounded-xl">
+                                    <span className="text-xs text-gray-400 uppercase">Email</span>
+                                    <p className="text-white font-medium">{selectedApp.email}</p>
+                                </div>
+                                <div className="bg-[#1E293B] p-4 rounded-xl">
+                                    <span className="text-xs text-gray-400 uppercase">Phone</span>
+                                    <p className="text-white font-medium">{selectedApp.phone || 'N/A'}</p>
+                                </div>
+                                {selectedApp.languages && (
+                                    <div className="bg-[#1E293B] p-4 rounded-xl">
+                                        <span className="text-xs text-gray-400 uppercase">Languages</span>
+                                        <p className="text-white font-medium">{selectedApp.languages}</p>
+                                    </div>
+                                )}
+                                {selectedApp.position && (
+                                    <div className="bg-[#1E293B] p-4 rounded-xl">
+                                        <span className="text-xs text-gray-400 uppercase">Position</span>
+                                        <p className="text-white font-medium">{selectedApp.position}</p>
+                                    </div>
+                                )}
+                                {selectedApp.country && (
+                                    <div className="bg-[#1E293B] p-4 rounded-xl">
+                                        <span className="text-xs text-gray-400 uppercase">Country</span>
+                                        <p className="text-white font-medium">{selectedApp.country} {selectedApp.countryOther && selectedApp.country === 'Other' ? `(${selectedApp.countryOther})` : ''}</p>
+                                    </div>
+                                )}
+                                {selectedApp.device && (
+                                    <div className="bg-[#1E293B] p-4 rounded-xl">
+                                        <span className="text-xs text-gray-400 uppercase">Device</span>
+                                        <p className="text-white font-medium">{selectedApp.device}</p>
+                                    </div>
+                                )}
+                                {selectedApp.experience && (
+                                    <div className="bg-[#1E293B] p-4 rounded-xl">
+                                        <span className="text-xs text-gray-400 uppercase">Experience</span>
+                                        <p className="text-white font-medium">{selectedApp.experience}</p>
+                                    </div>
+                                )}
+                                {selectedApp.availability && (
+                                    <div className="bg-[#1E293B] p-4 rounded-xl">
+                                        <span className="text-xs text-gray-400 uppercase">Availability</span>
+                                        <p className="text-white font-medium">{selectedApp.availability}</p>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            {/* Skills */}
+                            {selectedApp.interests && selectedApp.interests.length > 0 && (
+                                <div className="bg-[#1E293B] p-4 rounded-xl">
+                                    <span className="text-xs text-gray-400 uppercase block mb-2">Skills/Interests</span>
+                                    <div className="flex flex-wrap gap-2">
+                                        {selectedApp.interests.map((skill, i) => (
+                                            <span key={i} className="px-3 py-1 bg-indigo-900/30 text-indigo-400 rounded-full text-sm">{skill}</span>
+                                        ))}
+                                    </div>
+                                    {selectedApp.otherSkill && <p className="text-white mt-2 text-sm">Other: {selectedApp.otherSkill}</p>}
+                                </div>
+                            )}
+
+                            {/* Dynamic Form Data */}
+                            {selectedApp.formData && Object.keys(selectedApp.formData).length > 0 && (
+                                <div className="mt-4">
+                                    <h4 className="text-white font-bold mb-3 flex items-center gap-2"><Layers size={18} className="text-purple-400"/> Dynamic Form Data</h4>
+                                    <div className="grid grid-cols-1 gap-3">
+                                        {Object.entries(selectedApp.formData).map(([key, value]) => (
+                                            <div key={key} className="bg-[#1E293B] p-4 rounded-xl">
+                                                <span className="text-xs text-purple-400 uppercase">{key.replace(/_/g, ' ')}</span>
+                                                <p className="text-white font-medium">
+                                                    {Array.isArray(value) ? value.join(', ') : (typeof value === 'object' ? JSON.stringify(value) : (value || 'N/A'))}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Resume Link */}
+                            {selectedApp.resume && (
+                                <div className="pt-4 border-t border-gray-800">
+                                    <a href={selectedApp.resume} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-medium transition">
+                                        <FileText size={18}/> View Resume
+                                    </a>
+                                </div>
+                            )}
+                            
+                            <div className="text-sm text-gray-500 pt-2">Applied: {new Date(selectedApp.createdAt).toLocaleString()}</div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </motion.div>
     );
 };

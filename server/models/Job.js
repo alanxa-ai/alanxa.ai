@@ -10,6 +10,7 @@ const jobSchema = new mongoose.Schema({
     salary: { type: String }, // e.g., "$20/hr" or "Competitive"
     skills: [String], // Array of skill strings
     requirements: [String], // Array of requirement strings
+    formTemplate: { type: mongoose.Schema.Types.ObjectId, ref: 'FormTemplate' }, // Link to dynamic form
     active: { type: Boolean, default: true },
     createdAt: { type: Date, default: Date.now }
 });
