@@ -5,7 +5,7 @@ const { SERVER_URL, CLIENT_URL } = require('../config/constants'); // Centralize
 // Create new application
 exports.createApplication = async (req, res) => {
     try {
-        const { name, email, phone, languages, experience, interests, availability } = req.body;
+        const { name, email, phone, languages, experience, interests, availability, country, countryOther, device, otherSkill, position } = req.body;
 
         let resumeUrl = '';
         if (req.file) {
@@ -22,7 +22,12 @@ exports.createApplication = async (req, res) => {
             experience,
             resume: resumeUrl,
             interests: JSON.parse(interests || '[]'), // Multer sends arrays/objects as strings
-            availability
+            availability,
+            country,
+            countryOther,
+            device,
+            otherSkill,
+            position
         });
 
         await newApplication.save();
