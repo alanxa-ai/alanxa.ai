@@ -595,3 +595,56 @@ exports.deleteDynamicApplication = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+// ==================== BULK ACTIONS ====================
+
+// Bulk Update User Roles
+exports.bulkUpdateUserRole = async (req, res) => {
+    try {
+        const { userIds, newRole } = req.body;
+
+        if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
+            return res.status(400).json({ message: 'No users selected' });
+        }
+        if (!newRole) {
+            return res.status(400).json({ message: 'New role is required' });
+        }
+
+        // Prevent bulk updating to 'admin' without extra check if needed, but for now we follow request
+        const result = await User.updateMany(
+            { _id: { $in: userIds } },
+            { $set: { role: newRole } }
+        );
+
+        res.status(200).json({
+            message: `Successfully updated ${result.modifiedCount} users to ${newRole}`,
+            result
+        });
+    } catch (error) {
+        console.error('Bulk User Update Error:', error);
+        res.status(500).json({ message: 'Server error during bulk update', error: error.message });
+    }
+};
+
+// Delete All Freelancer Applications
+exports.deleteAllFreelancerApplications = async (req, res) => {
+    try {
+        // Delete legacy
+        const legacyResult = await FreelancerApplication.deleteMany({});
+
+        // Delete dynamic
+        const dynamicResult = await DynamicApplication.deleteMany({});
+
+        res.status(200).json({
+            message: 'All applications deleted successfully',
+            deletedCount: {
+                legacy: legacyResult.deletedCount,
+                dynamic: dynamicResult.deletedCount,
+                total: legacyResult.deletedCount + dynamicResult.deletedCount
+            }
+        });
+    } catch (error) {
+        console.error('Delete All Applications Error:', error);
+        res.status(500).json({ message: 'Server error during delete all', error: error.message });
+    }
+};

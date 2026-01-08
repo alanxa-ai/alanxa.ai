@@ -24,6 +24,7 @@ router.delete('/client-requests/:id', adminController.deleteClientRequest);
 // ==================== FREELANCER APPLICATIONS ====================
 router.get('/freelancer-applications', adminController.getAllFreelancerApplications);
 router.put('/freelancer-applications/approve-all', adminController.approveAllFreelancerApplications);
+router.delete('/freelancer-applications/all', adminController.deleteAllFreelancerApplications); // Delete All
 router.put('/freelancer-applications/:id', adminController.updateFreelancerApplicationStatus);
 router.delete('/freelancer-applications/:id', adminController.deleteFreelancerApplication);
 
@@ -34,6 +35,7 @@ router.get('/export/freelancer-applications', adminController.exportFreelancerAp
 // ==================== GOD MODE (USER MANAGEMENT) ====================
 router.post('/users', adminController.createUser);
 router.get('/users', adminController.getAllUsers);
+router.put('/users/bulk-role', adminController.bulkUpdateUserRole); // Bulk Role Update
 router.put('/users/:id', adminController.updateUser);
 router.delete('/users/:id', adminController.deleteUser);
 

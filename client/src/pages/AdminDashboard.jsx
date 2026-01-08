@@ -659,6 +659,23 @@ const UsersManagement = ({ users, showForm, setShowForm, onCreateUser }) => {
         }
     };
 
+    const handleBulkRoleChange = async (newRole) => {
+        if (!selectedUsers.size) return;
+        if (window.confirm(`Change role of ${selectedUsers.size} users to ${newRole}?`)) {
+            try {
+                await api.put(`${API_URL}/users/bulk-role`, { 
+                    userIds: Array.from(selectedUsers),
+                    newRole 
+                }, getAuthHeaders());
+                toast.success('Roles updated successfully');
+                setSelectedUsers(new Set());
+                window.location.reload();
+            } catch (error) {
+                toast.error('Error updating roles');
+            }
+        }
+    };
+
     // Selection Handlers
     const toggleSelect = (id) => {
         const newSelected = new Set(selectedUsers);
@@ -720,9 +737,24 @@ const UsersManagement = ({ users, showForm, setShowForm, onCreateUser }) => {
                    </div>
                    
                    <div className="flex items-center gap-3">
-                       <button onClick={handleBulkDelete} className="bg-red-900/20 text-red-400 px-3 py-2 rounded-lg text-sm font-bold hover:bg-red-900/40 transition flex items-center gap-2">
-                               <Trash2 size={16} /> Delete Selected ({selectedUsers.size})
-                           </button>
+                       {selectedUsers.size > 0 && (
+                           <>
+                               <select 
+                                   onChange={(e) => handleBulkRoleChange(e.target.value)}
+                                   className="bg-black text-white text-sm px-3 py-2 rounded-lg border border-gray-700 hover:border-gray-500 font-bold outline-none"
+                                   defaultValue=""
+                               >
+                                   <option value="" disabled>Change Role</option>
+                                   <option value="client">Client</option>
+                                   <option value="freelancer">Freelancer</option>
+                                   <option value="admin">Admin</option>
+                               </select>
+
+                               <button onClick={handleBulkDelete} className="bg-red-900/20 text-red-400 px-3 py-2 rounded-lg text-sm font-bold hover:bg-red-900/40 transition flex items-center gap-2">
+                                   <Trash2 size={16} /> Delete Selected ({selectedUsers.size})
+                               </button>
+                           </>
+                       )}
                        <button onClick={handleExport} className="text-indigo-400 font-bold flex items-center gap-2 hover:bg-indigo-900/20 px-3 py-2 rounded-lg transition"><Download size={18}/> Export Excel</button>
                        <button onClick={() => setShowForm(!showForm)} className="text-indigo-400 font-bold flex items-center gap-2 hover:bg-indigo-900/20 px-3 py-2 rounded-lg transition"><Plus size={18}/> New User</button>
                    </div>
@@ -1506,6 +1538,10 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [selectedApp, setSelectedApp] = useState(null); // For viewing details
+    const API_URL = '/api/admin';
+    const getAuthHeaders = () => ({
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
 
     // Get unique templates from applications
     const uniqueTemplates = useMemo(() => {
@@ -1714,6 +1750,20 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                          <h3 className="font-bold text-white text-xl">Freelancer Applications</h3>
                          <div className="flex flex-wrap gap-3 w-full md:w-auto">
+                            <button onClick={async () => {
+                                if (window.confirm('CRITICAL WARNING: Are you sure you want to DELETE ALL applications? This action CANNOT be undone and will wipe all legacy and dynamic form submissions.')) {
+                                    try {
+                                        await api.delete(`${API_URL}/freelancer-applications/all`, getAuthHeaders());
+                                        toast.success('All applications deleted successfully');
+                                        setTimeout(() => window.location.reload(), 1000);
+                                    } catch (error) {
+                                        toast.error('Error deleting applications');
+                                        console.error(error);
+                                    }
+                                }
+                            }} className="w-auto justify-center text-sm md:text-base font-bold bg-red-900/20 hover:bg-red-900/40 text-red-500 border border-red-900/30 px-4 py-2 rounded-lg shadow-lg hover:shadow-red-900/10 transition-all flex items-center gap-2 whitespace-nowrap">
+                                 <Trash2 size={18} /> Delete All
+                            </button>
                             <button onClick={onApproveAll} className="w-auto justify-center text-sm md:text-base font-bold bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg shadow-green-900/20 transition-all flex items-center gap-2 whitespace-nowrap">
                                  <CheckCircle size={18} /> Approve All
                             </button>
