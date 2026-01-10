@@ -364,7 +364,7 @@ const Home = () => {
                                       </div>
                                   ))}
                               </div>
-                              <span className="font-bold text-white text-[10px] md:text-base">+1.5k Experts</span>
+                              <span className="font-bold text-white text-[10px] md:text-base">+50k Experts</span>
                           </div>
                           <p className="text-[8px] md:text-sm text-white leading-tight">
                               Top-tier linguists and domain experts ready to deploy.
