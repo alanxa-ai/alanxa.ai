@@ -12,6 +12,17 @@ const crypto = require('crypto');
 const Project = require('../models/Project');
 const { CLIENT_URL } = require('../config/constants');
 
+
+// Helper to create slug
+const createSlug = (text) => {
+    return text.toString().toLowerCase()
+        .replace(/\s+/g, '-')           // Replace spaces with -
+        .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+        .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+        .replace(/^-+/, '')             // Trim - from start
+        .replace(/-+$/, '');            // Trim - from end
+};
+
 // ==================== BLOG MANAGEMENT ====================
 
 // Get all blogs (admin view)
@@ -27,7 +38,21 @@ exports.getAllBlogs = async (req, res) => {
 // Create new blog
 exports.createBlog = async (req, res) => {
     try {
-        const blogData = req.body;
+        let blogData = req.body;
+
+        // Auto-generate slug if not provided
+        if (!blogData.slug || blogData.slug.trim() === '') {
+            blogData.slug = createSlug(blogData.title);
+        } else {
+            blogData.slug = createSlug(blogData.slug);
+        }
+
+        // Check for duplicate slug
+        const existingBlog = await Blog.findOne({ slug: blogData.slug });
+        if (existingBlog) {
+            blogData.slug = `${blogData.slug}-${Date.now()}`; // Ensure uniqueness
+        }
+
         const blog = new Blog(blogData);
         await blog.save();
 
@@ -61,6 +86,9 @@ exports.createBlog = async (req, res) => {
 
         res.status(201).json({ message: 'Blog created successfully', blog });
     } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).json({ message: 'Slug must be unique based on title' });
+        }
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };

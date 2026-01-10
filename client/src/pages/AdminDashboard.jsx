@@ -207,10 +207,14 @@ const AdminDashboard = () => {
     try {
       await api.post(`${API_URL}/blogs`, blogData, getAuthHeaders());
       fetchBlogs();
+      // Form closing handled by caller or state update, but here we keep generic flow
       setShowBlogForm(false);
       setEditingBlog(null);
+      toast.success('Blog post created successfully');
     } catch (error) {
       console.error('Error creating blog:', error);
+      toast.error(error.response?.data?.message || 'Error creating blog');
+      throw error; // Propagate error
     }
   };
 
@@ -220,8 +224,11 @@ const AdminDashboard = () => {
       fetchBlogs();
       setShowBlogForm(false);
       setEditingBlog(null);
+      toast.success('Blog post updated successfully');
     } catch (error) {
       console.error('Error updating blog:', error);
+       toast.error(error.response?.data?.message || 'Error updating blog');
+      throw error; // Propagate error
     }
   };
 
@@ -1290,12 +1297,17 @@ const BlogsManagement = ({ blogs, showForm, setShowForm, editingBlog, setEditing
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editingBlog) { 
-        await onUpdateBlog(editingBlog._id, formData); 
-    } else { 
-        await onCreateBlog(formData); 
+    try {
+        if (editingBlog) { 
+            await onUpdateBlog(editingBlog._id, formData); 
+        } else { 
+            await onCreateBlog(formData); 
+        }
+        resetForm();
+    } catch (error) {
+        // Error already handled/toasted in parent, just don't reset form
+        console.log("Keep form open due to error");
     }
-    resetForm();
   };
 
   const resetForm = () => {
