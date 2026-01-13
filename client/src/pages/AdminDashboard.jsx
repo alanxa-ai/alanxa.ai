@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, FileText, Briefcase, TrendingUp, Search, Download, 
   Edit2, Trash2, Eye, CheckCircle, XCircle, Clock, Plus,
-  Filter, ChevronDown, Upload, Save, LayoutDashboard, LogOut, Menu, X, ArrowRight, Layers, Shield, Megaphone, Home
+  Filter, ChevronDown, Upload, Save, LayoutDashboard, LogOut, Menu, X, ArrowRight, Layers, Shield, Megaphone, Home, Bell, Send
 } from 'lucide-react';
 import api from '../utils/api';
+import { useNavigate } from 'react-router-dom';
 import CloudinaryImageUpload from '../components/CloudinaryImageUpload';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
@@ -14,6 +15,7 @@ import toast from 'react-hot-toast';
 import FormTemplatesManager from '../components/FormTemplatesManager';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState(null);
   const [blogs, setBlogs] = useState([]);
@@ -21,6 +23,7 @@ const AdminDashboard = () => {
   const [freelancerApplications, setFreelancerApplications] = useState([]);
   const [users, setUsers] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
   
   const [showBlogForm, setShowBlogForm] = useState(false);
   const [editingBlog, setEditingBlog] = useState(null);
@@ -43,6 +46,22 @@ const AdminDashboard = () => {
     };
   };
 
+  // Session validation - check token and admin role
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    
+    if (user.role !== 'admin') {
+      navigate('/freelancer-dashboard');
+      return;
+    }
+  }, [navigate]);
+
   useEffect(() => {
     fetchDashboardStats();
     if (activeTab === 'blogs') fetchBlogs();
@@ -51,6 +70,7 @@ const AdminDashboard = () => {
     if (activeTab === 'freelancers') fetchFreelancerApplications();
     if (activeTab === 'users' || activeTab === 'projects') fetchUsers(); // Need users for project creation
     if (activeTab === 'projects') fetchProjects();
+    if (activeTab === 'announcements') { fetchAnnouncements(); fetchProjects(); }
   }, [activeTab]);
 
   // Cleanup forms on tab change
@@ -175,6 +195,38 @@ const AdminDashboard = () => {
       setJobs(response.data);
     } catch (error) {
       console.error('Error fetching jobs:', error);
+    }
+  };
+
+  const fetchAnnouncements = async () => {
+    try {
+      const response = await api.get('/api/admin/announcements', getAuthHeaders());
+      setAnnouncements(response.data);
+    } catch (error) {
+      console.error('Error fetching announcements:', error);
+    }
+  };
+
+  const handleCreateAnnouncement = async (announcementData) => {
+    try {
+      await api.post('/api/admin/announcements', announcementData, getAuthHeaders());
+      toast.success('Announcement sent successfully!');
+      fetchAnnouncements();
+    } catch (error) {
+      console.error('Error creating announcement:', error);
+      toast.error(error.response?.data?.message || 'Error sending announcement');
+    }
+  };
+
+  const handleDeleteAnnouncement = async (id) => {
+    if (window.confirm('Delete this announcement?')) {
+      try {
+        await api.delete(`/api/admin/announcements/${id}`, getAuthHeaders());
+        toast.success('Announcement deleted');
+        fetchAnnouncements();
+      } catch (error) {
+        toast.error('Error deleting announcement');
+      }
     }
   };
 
@@ -399,7 +451,8 @@ const AdminDashboard = () => {
     { id: 'freelancers', label: 'Applications', icon: Users },
     { id: 'users', label: 'User Management', icon: Shield },
     { id: 'projects', label: 'Projects (God Mode)', icon: Layers },
-    { id: 'form-templates', label: 'Form Templates', icon: FileText }
+    { id: 'form-templates', label: 'Form Templates', icon: FileText },
+    { id: 'announcements', label: 'Announcements', icon: Bell }
   ];
   
   // Need to import Layers from lucide-react (add to imports in next step or assuming available)
@@ -534,6 +587,7 @@ const AdminDashboard = () => {
             
             {activeTab === 'clients' && <ClientRequestsManagement requests={clientRequests} onUpdateStatus={handleUpdateRequestStatus} onDelete={handleDeleteClientRequest} onExport={handleExportClients} />}
             {activeTab === 'freelancers' && <FreelancerApplicationsManagement applications={freelancerApplications} onUpdateStatus={handleUpdateApplicationStatus} onDelete={handleDeleteFreelancerApplication} onExport={handleExportFreelancers} onApproveAll={handleApproveAll} />}
+            {activeTab === 'announcements' && <AnnouncementsPanel announcements={announcements} projects={projects} onCreateAnnouncement={handleCreateAnnouncement} onDeleteAnnouncement={handleDeleteAnnouncement} />}
         </AnimatePresence>
       </main>
     </div>
@@ -805,17 +859,18 @@ const UsersManagement = ({ users, showForm, setShowForm, onCreateUser }) => {
                                             onChange={(e) => setEditRole(e.target.value)}
                                             className="bg-black text-white text-sm px-2 py-1 rounded border border-gray-700 outline-none"
                                         >
-                                            <option value="client">Client</option>
                                             <option value="freelancer">Freelancer</option>
+                                            <option value="client">Client</option>
                                             <option value="admin">Admin</option>
                                             <option value="none">None</option>
                                         </select>
                                     ) : (
-                                        <span className={`px-2 py-1 rounded-full text-xs uppercase font-bold text-white ${
+                                        <span className={`px-2 py-1 rounded-full text-xs uppercase font-bold ${ 
                                             u.role === 'admin' ? 'bg-purple-900/50 text-purple-300' :
                                             u.role === 'freelancer' ? 'bg-blue-900/50 text-blue-300' :
-                                            'bg-gray-800'
-                                        }`}>{u.role}</span>
+                                            u.role === 'client' ? 'bg-green-900/50 text-green-300' :
+                                            'bg-gray-800 text-gray-300'
+                                        }`}>{u.role?.toUpperCase() || 'NONE'}</span>
                                     )}
                                 </td>
                                 <td className="p-4 flex gap-2">
@@ -1637,10 +1692,68 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
             });
         };
 
-        // 1. Group Applications by Template/Source
+        // Helper to get full URL
+        const getFullUrl = (url) => {
+            if (!url) return '';
+            if (url.startsWith('http')) return url;
+            return `${window.location.origin.replace(':5173', ':5000')}${url}`;
+        };
+
+        // Use all applications when no filters are applied
+        const isDefaultFilters = statusFilter === 'All' && sourceFilter === 'All' && templateFilter === 'All' && !startDate && !endDate;
+        const dataToExport = isDefaultFilters ? applications : filteredApplications;
+
+        // If no filters, create a single "All Applications" sheet first
+        if (isDefaultFilters && dataToExport.length > 0) {
+            const allData = dataToExport.map(app => {
+                const baseRow = {
+                    Type: app.source === 'dynamic' ? 'Dynamic' : 'Static',
+                    Name: app.name || app.formData?.name || app.formData?.full_name || '',
+                    Email: app.email || app.formData?.email || '',
+                    Phone: app.phone || app.formData?.phone || '',
+                    Languages: app.languages || app.formData?.languages || app.formData?.language || '',
+                    Skills: Array.isArray(app.interests) ? app.interests.join(', ') : (app.interests || ''),
+                    Experience: app.experience || app.formData?.experience || '',
+                    Availability: app.availability || app.formData?.availability || '',
+                    Position: app.position || app.templateName || '',
+                    Country: app.country || app.formData?.country || '',
+                    Device: app.device || app.formData?.device || '',
+                    Status: app.status || 'Pending',
+                    AppliedAt: new Date(app.createdAt).toLocaleDateString(),
+                    Resume: getFullUrl(app.resume || app.resumeUrl || '')
+                };
+
+                // For dynamic forms, add extra formData fields
+                if (app.source === 'dynamic' && app.formData) {
+                    Object.entries(app.formData).forEach(([key, value]) => {
+                        let cleanKey = key.replace(/_\d+$/, '').replace(/_/g, ' ');
+                        cleanKey = cleanKey.charAt(0).toUpperCase() + cleanKey.slice(1);
+                        // Skip if already mapped
+                        if (!baseRow[cleanKey]) {
+                            if (Array.isArray(value)) {
+                                baseRow[cleanKey] = value.join(', ');
+                            } else if (typeof value === 'object' && value !== null) {
+                                baseRow[cleanKey] = JSON.stringify(value);
+                            } else {
+                                baseRow[cleanKey] = value || '';
+                            }
+                        }
+                    });
+                }
+                return baseRow;
+            });
+
+            const cleanedData = removeEmptyColumns(allData);
+            if (cleanedData.length > 0) {
+                const ws = XLSX.utils.json_to_sheet(cleanedData);
+                XLSX.utils.book_append_sheet(wb, ws, 'All Applications');
+            }
+        }
+
+        // 1. Group Applications by Template/Source (for separate sheets)
         const groups = {};
 
-        filteredApplications.forEach(app => {
+        dataToExport.forEach(app => {
             let groupKey = 'legacy';
             let groupName = 'Static Forms';
 
@@ -1689,15 +1802,22 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
                     Device: app.device || '',
                     Status: app.status || 'Pending',
                     AppliedAt: new Date(app.createdAt).toLocaleDateString(),
-                    Resume: app.resume
+                    Resume: app.resume ? (app.resume.startsWith('http') ? app.resume : `${window.location.origin.replace(':5173', ':5000')}${app.resume}`) : ''
                 }));
             } else {
                 // Dynamic Form Mapping
+                const getFullUrl = (url) => {
+                    if (!url) return '';
+                    if (url.startsWith('http')) return url;
+                    return `${window.location.origin.replace(':5173', ':5000')}${url}`;
+                };
+                
                 data = group.apps.map(app => {
+                    const resumeUrl = app.resume || app.resumeUrl || '';
                     const row = {
                         Status: app.status || 'Pending',
                         AppliedAt: new Date(app.createdAt).toLocaleDateString(),
-                        Resume: app.resume || app.resumeUrl || ''
+                        Resume: getFullUrl(resumeUrl)
                     };
                     
                     // Add formData with cleaned keys
@@ -2049,6 +2169,186 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
                     </div>
                 </div>
             )}
+        </motion.div>
+    );
+};
+
+// ==================== ANNOUNCEMENTS PANEL ====================
+const AnnouncementsPanel = ({ announcements, projects, onCreateAnnouncement, onDeleteAnnouncement }) => {
+    const [showForm, setShowForm] = useState(false);
+    const [formData, setFormData] = useState({
+        title: '',
+        message: '',
+        targetType: 'all',
+        projectId: ''
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!formData.title.trim() || !formData.message.trim()) {
+            toast.error('Title and message are required');
+            return;
+        }
+        onCreateAnnouncement(formData);
+        setFormData({ title: '', message: '', targetType: 'all', projectId: '' });
+        setShowForm(false);
+    };
+
+    return (
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-6">
+            {/* Create Announcement Form */}
+            {showForm && (
+                <div className="bg-[#0A0F1C] p-6 rounded-2xl border border-gray-800 shadow-lg">
+                    <div className="flex justify-between items-center mb-6">
+                        <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                            <Send size={20} className="text-indigo-400" />
+                            New Announcement
+                        </h3>
+                        <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-white">
+                            <X size={20} />
+                        </button>
+                    </div>
+                    
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">Title</label>
+                            <input
+                                type="text"
+                                value={formData.title}
+                                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                                className="w-full p-3 bg-black border border-gray-700 rounded-xl text-white focus:border-indigo-500 focus:outline-none"
+                                placeholder="Announcement title..."
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">Message</label>
+                            <textarea
+                                value={formData.message}
+                                onChange={(e) => setFormData({...formData, message: e.target.value})}
+                                rows={4}
+                                className="w-full p-3 bg-black border border-gray-700 rounded-xl text-white focus:border-indigo-500 focus:outline-none resize-none"
+                                placeholder="Write your announcement message..."
+                                required
+                            />
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-400 mb-2">Target Audience</label>
+                                <select
+                                    value={formData.targetType}
+                                    onChange={(e) => setFormData({...formData, targetType: e.target.value, projectId: ''})}
+                                    className="w-full p-3 bg-black border border-gray-700 rounded-xl text-white focus:border-indigo-500 focus:outline-none"
+                                >
+                                    <option value="all">All Freelancers</option>
+                                    <option value="project">Project Freelancers</option>
+                                </select>
+                            </div>
+                            
+                            {formData.targetType === 'project' && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-400 mb-2">Select Project</label>
+                                    <select
+                                        value={formData.projectId}
+                                        onChange={(e) => setFormData({...formData, projectId: e.target.value})}
+                                        className="w-full p-3 bg-black border border-gray-700 rounded-xl text-white focus:border-indigo-500 focus:outline-none"
+                                        required
+                                    >
+                                        <option value="">Select a project...</option>
+                                        {projects.map(p => (
+                                            <option key={p._id} value={p._id}>{p.title}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+                        </div>
+                        
+                        <div className="flex justify-end gap-3 pt-4">
+                            <button
+                                type="button"
+                                onClick={() => setShowForm(false)}
+                                className="px-6 py-2 border border-gray-700 text-gray-400 rounded-xl hover:bg-gray-800 transition"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className="px-6 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition flex items-center gap-2 font-medium"
+                            >
+                                <Send size={18} /> Send Announcement
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
+            
+            {/* Announcements List */}
+            <div className="bg-[#0A0F1C] rounded-2xl border border-gray-800 overflow-hidden">
+                <div className="flex justify-between items-center p-6 border-b border-gray-800">
+                    <div>
+                        <h3 className="text-xl font-bold text-white">Sent Announcements</h3>
+                        <p className="text-gray-400 text-sm mt-1">{announcements.length} announcements sent</p>
+                    </div>
+                    <button
+                        onClick={() => setShowForm(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition font-medium"
+                    >
+                        <Plus size={18} /> New Announcement
+                    </button>
+                </div>
+                
+                <div className="divide-y divide-gray-800">
+                    {announcements.length === 0 ? (
+                        <div className="p-12 text-center">
+                            <Bell size={48} className="mx-auto text-gray-600 mb-4" />
+                            <h4 className="text-white font-medium mb-2">No Announcements Yet</h4>
+                            <p className="text-gray-500 text-sm">Create your first announcement to notify freelancers</p>
+                        </div>
+                    ) : (
+                        announcements.map(announcement => (
+                            <div key={announcement._id} className="p-6 hover:bg-[#1E293B]/50 transition">
+                                <div className="flex justify-between items-start gap-4">
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <h4 className="text-white font-bold text-lg">{announcement.title}</h4>
+                                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                                announcement.targetType === 'all' 
+                                                    ? 'bg-blue-900/30 text-blue-400'
+                                                    : 'bg-purple-900/30 text-purple-400'
+                                            }`}>
+                                                {announcement.targetType === 'all' ? 'All Freelancers' : announcement.project?.title || 'Project'}
+                                            </span>
+                                        </div>
+                                        <p className="text-gray-300 mb-3 whitespace-pre-wrap">{announcement.message}</p>
+                                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                                            <span className="flex items-center gap-1">
+                                                <Users size={14} />
+                                                {announcement.totalRecipients} recipients
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <Eye size={14} />
+                                                {announcement.readCount} read
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <Clock size={14} />
+                                                {new Date(announcement.createdAt).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => onDeleteAnnouncement(announcement._id)}
+                                        className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-900/20 rounded-lg transition"
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+            </div>
         </motion.div>
     );
 };

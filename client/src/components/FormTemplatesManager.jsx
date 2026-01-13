@@ -7,6 +7,7 @@ const FIELD_TYPES = [
     { value: 'text', label: 'Text Input' },
     { value: 'email', label: 'Email' },
     { value: 'phone', label: 'Phone Number' },
+    { value: 'url', label: 'URL / Link' },
     { value: 'textarea', label: 'Text Area' },
     { value: 'select', label: 'Dropdown Select' },
     { value: 'checkbox-group', label: 'Checkbox Group' },

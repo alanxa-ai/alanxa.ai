@@ -81,6 +81,7 @@ app.use("/api/freelancer", require("./routes/freelancerDashboardRoutes"));
 app.use("/api/jobs", require("./routes/jobRoutes"));
 app.use("/api/contact", require("./routes/contactRoutes"));
 app.use("/api/applications", require("./routes/applicationRoutes"));
+app.use("/api", require("./routes/notificationRoutes"));
 
 /* ================================
    Error Handler

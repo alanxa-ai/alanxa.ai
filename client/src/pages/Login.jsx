@@ -24,10 +24,10 @@ const Login = () => {
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
       
+      // Redirect based on role - freelancer dashboard is default
       if (res.data.user.role === 'admin') navigate('/admin');
       else if (res.data.user.role === 'client') navigate('/client-dashboard');
-      else if (res.data.user.role === 'freelancer') navigate('/freelancer-dashboard');
-      else navigate('/access-restricted');
+      else navigate('/freelancer-dashboard'); // Default for all other users
       
     } catch (err) {
       setError(err.response?.data?.message || 'Google Login Failed');
@@ -54,10 +54,8 @@ const Login = () => {
         navigate('/admin');
       } else if (res.data.user.role === 'client') {
         navigate('/client-dashboard');
-      } else if (res.data.user.role === 'freelancer') {
-        navigate('/freelancer-dashboard');
       } else {
-        navigate('/access-restricted');
+        navigate('/freelancer-dashboard'); // Default for all other users
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid credentials');

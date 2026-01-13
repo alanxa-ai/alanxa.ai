@@ -1,14 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { LayoutDashboard, FileText, Settings, LogOut, Clock, CheckCircle, Upload, Menu, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 
 const ClientDashboard = () => {
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('projects');
     const [projects, setProjects] = useState([]);
     const [stats, setStats] = useState({ active: 0, completed: 0, totalSpent: 0 });
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+
+    // Session validation - check token and client role
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const userData = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+        
+        if (userData.role !== 'client' && userData.role !== 'admin') {
+            navigate('/freelancer-dashboard');
+            return;
+        }
+    }, [navigate]);
 
     useEffect(() => {
         fetchProjects();

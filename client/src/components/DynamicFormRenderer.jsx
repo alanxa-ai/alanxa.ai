@@ -45,14 +45,15 @@ const DynamicFormRenderer = ({
             case 'text':
             case 'email':
             case 'phone':
+            case 'url':
                 return (
                     <input 
-                        type={field.type === 'phone' ? 'tel' : field.type}
+                        type={field.type === 'phone' ? 'tel' : field.type === 'url' ? 'url' : field.type}
                         name={field.fieldId}
                         value={formData[field.fieldId] || ''}
                         onChange={(e) => handleChange(field.fieldId, e.target.value)}
                         className={baseInputClasses}
-                        placeholder={field.placeholder || ''}
+                        placeholder={field.placeholder || (field.type === 'url' ? 'https://example.com' : '')}
                         required={field.required}
                     />
                 );
