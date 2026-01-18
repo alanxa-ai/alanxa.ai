@@ -129,14 +129,71 @@ const Navbar = () => {
                 </div>
               ))}
               
-              <div className="pl-6 border-l border-gray-700 mx-2">
-                <Link to="/login" className={`px-6 py-2 rounded-full font-bold text-xs transition-all hover:scale-105 shadow-lg shadow-indigo-500/20 ${
-                    showDarkNav 
-                      ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
-                      : 'bg-indigo-600/90 backdrop-blur-sm text-white hover:bg-indigo-600'
-                }`}>
-                  Login
-                </Link>
+              <div className="pl-6 border-l border-gray-700 mx-2 relative">
+                {localStorage.getItem('token') ? (() => {
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    const role = user.role || 'freelancer';
+                    const dashboardPath = role === 'admin' ? '/admin' : role === 'client' ? '/client-dashboard' : '/freelancer-dashboard';
+                    const dashboardLabel = role === 'admin' ? 'Admin Dashboard' : role === 'client' ? 'Client Dashboard' : 'Dashboard';
+                    
+                    return (
+                        <div 
+                            className="relative"
+                            onMouseEnter={() => setActiveDropdown('user')}
+                            onMouseLeave={() => setActiveDropdown(null)}
+                        >
+                            <button className={`px-4 py-2 rounded-full font-bold text-xs transition-all hover:scale-105 flex items-center gap-2 ${
+                                showDarkNav 
+                                ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
+                                : 'bg-indigo-600/90 backdrop-blur-sm text-white hover:bg-indigo-600'
+                            }`}>
+                                {user.name?.split(' ')[0] || 'Account'}
+                                <ChevronDown className={`w-3 h-3 transition-transform ${activeDropdown === 'user' ? 'rotate-180' : ''}`} />
+                            </button>
+                            
+                            <AnimatePresence>
+                                {activeDropdown === 'user' && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 10 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="absolute top-full right-0 mt-2 w-48 bg-gray-900 rounded-xl shadow-xl border border-gray-800 overflow-hidden py-2 ring-1 ring-white/5"
+                                    >
+                                        <div className="px-4 py-2 border-b border-gray-800">
+                                            <p className="text-white font-bold text-sm truncate">{user.name}</p>
+                                            <p className="text-gray-400 text-xs truncate">{user.email}</p>
+                                        </div>
+                                        <Link
+                                            to={dashboardPath}
+                                            className="block px-4 py-2.5 text-sm text-white hover:bg-white/5 hover:text-indigo-400 font-medium transition-colors"
+                                        >
+                                            {dashboardLabel}
+                                        </Link>
+                                        <button
+                                            onClick={() => {
+                                                localStorage.removeItem('token');
+                                                localStorage.removeItem('user');
+                                                window.location.href = '/login';
+                                            }}
+                                            className="block w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-white/5 hover:text-red-300 font-medium transition-colors"
+                                        >
+                                            Logout
+                                        </button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    );
+                })() : (
+                    <Link to="/login" className={`px-6 py-2 rounded-full font-bold text-xs transition-all hover:scale-105 shadow-lg shadow-indigo-500/20 ${
+                        showDarkNav 
+                        ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
+                        : 'bg-indigo-600/90 backdrop-blur-sm text-white hover:bg-indigo-600'
+                    }`}>
+                        Login
+                    </Link>
+                )}
               </div>
             </div>
 
@@ -242,13 +299,46 @@ const Navbar = () => {
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-gray-800">
-                  <Link 
-                    to="/login"
-                    className="block w-full py-3 rounded-lg bg-indigo-600 text-white font-bold text-center hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 transition-all"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Login
-                  </Link>
+                  {localStorage.getItem('token') ? (() => {
+                      const user = JSON.parse(localStorage.getItem('user') || '{}');
+                      const role = user.role || 'freelancer';
+                      const dashboardPath = role === 'admin' ? '/admin' : role === 'client' ? '/client-dashboard' : '/freelancer-dashboard';
+                      const dashboardLabel = role === 'admin' ? 'Admin Dashboard' : role === 'client' ? 'Client Dashboard' : 'Dashboard';
+                      
+                      return (
+                          <div className="space-y-3">
+                              <div className="px-4 py-3 bg-white/5 rounded-lg">
+                                  <p className="text-white font-bold text-sm">{user.name}</p>
+                                  <p className="text-gray-400 text-xs">{user.email}</p>
+                              </div>
+                              <Link 
+                                  to={dashboardPath}
+                                  className="block w-full py-3 rounded-lg bg-indigo-600 text-white font-bold text-center hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 transition-all"
+                                  onClick={() => setIsOpen(false)}
+                              >
+                                  {dashboardLabel}
+                              </Link>
+                              <button
+                                  onClick={() => {
+                                      localStorage.removeItem('token');
+                                      localStorage.removeItem('user');
+                                      window.location.href = '/login';
+                                  }}
+                                  className="block w-full py-3 rounded-lg bg-red-600/20 text-red-400 font-bold text-center hover:bg-red-600/30 border border-red-600/30 transition-all"
+                              >
+                                  Logout
+                              </button>
+                          </div>
+                      );
+                  })() : (
+                      <Link 
+                          to="/login"
+                          className="block w-full py-3 rounded-lg bg-indigo-600 text-white font-bold text-center hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 transition-all"
+                          onClick={() => setIsOpen(false)}
+                      >
+                          Login
+                      </Link>
+                  )}
                   <p className="mt-6 text-center text-xs text-gray-600">
                     &copy; {new Date().getFullYear()} Alanxa AI Inc.
                   </p>

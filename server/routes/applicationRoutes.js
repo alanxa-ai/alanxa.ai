@@ -38,10 +38,12 @@ const upload = multer({
     }
 });
 
+const { protect } = require('../middleware/authMiddleware');
+
 // @desc    Submit a dynamic application
 // @route   POST /api/applications
-// @access  Public
-router.post('/', upload.single('resume'), async (req, res) => {
+// @access  Private
+router.post('/', protect, upload.single('resume'), async (req, res) => {
     try {
         const { jobId, formTemplateId, formData } = req.body;
 

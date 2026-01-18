@@ -13,6 +13,7 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import toast from 'react-hot-toast';
 import FormTemplatesManager from '../components/FormTemplatesManager';
+import AssessmentManager from '../components/AssessmentManager';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -432,6 +433,9 @@ const AdminDashboard = () => {
       Skills: Array.isArray(app.interests) ? app.interests.join(', ') : app.interests,
       Experience: app.experience,
       Availability: app.availability,
+      Country: app.country || '',
+      'Mobile Device': app.mobileDevice || app.device || '',
+      'Desktop Device': app.desktopDevice || '',
       Status: app.status || 'Pending',
       AppliedAt: new Date(app.createdAt).toLocaleDateString(),
       Resume: app.resume
@@ -452,6 +456,7 @@ const AdminDashboard = () => {
     { id: 'users', label: 'User Management', icon: Shield },
     { id: 'projects', label: 'Projects (God Mode)', icon: Layers },
     { id: 'form-templates', label: 'Form Templates', icon: FileText },
+    { id: 'assessments', label: 'Assessments', icon: FileText },
     { id: 'announcements', label: 'Announcements', icon: Bell }
   ];
   
@@ -588,6 +593,7 @@ const AdminDashboard = () => {
             {activeTab === 'clients' && <ClientRequestsManagement requests={clientRequests} onUpdateStatus={handleUpdateRequestStatus} onDelete={handleDeleteClientRequest} onExport={handleExportClients} />}
             {activeTab === 'freelancers' && <FreelancerApplicationsManagement applications={freelancerApplications} onUpdateStatus={handleUpdateApplicationStatus} onDelete={handleDeleteFreelancerApplication} onExport={handleExportFreelancers} onApproveAll={handleApproveAll} />}
             {activeTab === 'announcements' && <AnnouncementsPanel announcements={announcements} projects={projects} onCreateAnnouncement={handleCreateAnnouncement} onDeleteAnnouncement={handleDeleteAnnouncement} />}
+            {activeTab === 'assessments' && <AssessmentManager />}
         </AnimatePresence>
       </main>
     </div>
@@ -1799,7 +1805,8 @@ const FreelancerApplicationsManagement = ({ applications, onUpdateStatus, onDele
                     Position: app.position || '',
                     Country: app.country || '',
                     OtherRegion: app.countryOther || '',
-                    Device: app.device || '',
+                    'Mobile Device': app.mobileDevice || app.device || '',
+                    'Desktop Device': app.desktopDevice || (app.device === 'Laptop/PC' ? 'Windows' : ''),
                     Status: app.status || 'Pending',
                     AppliedAt: new Date(app.createdAt).toLocaleDateString(),
                     Resume: app.resume ? (app.resume.startsWith('http') ? app.resume : `${window.location.origin.replace(':5173', ':5000')}${app.resume}`) : ''

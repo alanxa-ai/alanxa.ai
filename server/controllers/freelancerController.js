@@ -5,7 +5,7 @@ const { SERVER_URL, CLIENT_URL } = require('../config/constants'); // Centralize
 // Create new application
 exports.createApplication = async (req, res) => {
     try {
-        const { name, email, phone, languages, experience, interests, availability, country, countryOther, device, otherSkill, position } = req.body;
+        const { name, email, phone, languages, experience, interests, availability, country, countryOther, device, mobileDevice, desktopDevice, otherSkill, position } = req.body;
 
         let resumeUrl = '';
         if (req.file) {
@@ -26,6 +26,8 @@ exports.createApplication = async (req, res) => {
             country,
             countryOther,
             device,
+            mobileDevice,
+            desktopDevice,
             otherSkill,
             position
         });

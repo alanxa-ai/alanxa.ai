@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Upload, Check, Globe, Clock, DollarSign, User, Mail, 
@@ -11,8 +12,13 @@ import SEO from '../components/SEO';
 import DynamicFormRenderer from '../components/DynamicFormRenderer';
 
 const Freelancers = () => {
+  const navigate = useNavigate();
   // Dynamic form data - initialized based on template
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    name: '', email: '', phone: '', languages: '',
+    experience: '', interests: [], availability: '',
+    country: '', countryOther: '', mobileDevice: '', desktopDevice: '', otherSkill: ''
+  });
   const [dynamicFormData, setDynamicFormData] = useState({});
 
   const [loading, setLoading] = useState(false);
@@ -61,47 +67,61 @@ const Freelancers = () => {
 
   // Fetch form template when job is selected
   useEffect(() => {
-     if (selectedJob && selectedJob._id) {
-        const fetchFormTemplate = async () => {
-            setFormLoading(true);
-            try {
-                const res = await api.get(`/api/jobs/${selectedJob._id}/form`);
-                if (res.data.formTemplate) {
-                    setFormTemplate(res.data.formTemplate);
-                    // Initialize dynamic form data with empty values
-                    const initialData = {};
-                    res.data.formTemplate.fields?.forEach(field => {
-                        if (field.type === 'checkbox-group') {
-                            initialData[field.fieldId] = [];
-                        } else {
-                            initialData[field.fieldId] = '';
-                        }
-                    });
-                    setDynamicFormData(initialData);
-                } else {
+     if (selectedJob) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+           setSelectedJob(null);
+           return;
+        }
+
+        if (selectedJob._id) {
+            const fetchFormTemplate = async () => {
+                setFormLoading(true);
+                try {
+                    const res = await api.get(`/api/jobs/${selectedJob._id}/form`);
+                    if (res.data.formTemplate) {
+                        setFormTemplate(res.data.formTemplate);
+                        // Initialize dynamic form data with empty values
+                        const initialData = {};
+                        res.data.formTemplate.fields?.forEach(field => {
+                            if (field.type === 'checkbox-group') {
+                                initialData[field.fieldId] = [];
+                            } else {
+                                initialData[field.fieldId] = '';
+                            }
+                        });
+                        setDynamicFormData(initialData);
+                    } else {
+                        setFormTemplate(null);
+                        // Use default form data
+                        setFormData({
+                            name: '', email: '', phone: '', languages: '',
+                            experience: '', interests: [], availability: '',
+                            country: '', countryOther: '', mobileDevice: '', desktopDevice: ''
+                        });
+                    }
+                } catch (e) {
+                    console.error('Error fetching form template', e);
                     setFormTemplate(null);
-                    // Use default form data
-                    setFormData({
-                        name: '', email: '', phone: '', languages: '',
-                        experience: '', interests: [], availability: ''
-                    });
+                } finally {
+                    setFormLoading(false);
                 }
-            } catch (e) {
-                console.error('Error fetching form template', e);
-                setFormTemplate(null);
-            } finally {
-                setFormLoading(false);
-            }
-        };
-        fetchFormTemplate();
-        
-        setTimeout(() => {
-           const formElement = document.getElementById('apply-form');
-           if (formElement) {
-               formElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-           }
-        }, 400);
+            };
+            fetchFormTemplate();
+            
+            setTimeout(() => {
+               const formElement = document.getElementById('apply-form');
+               if (formElement) {
+                   formElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+               }
+            }, 400);
+        } else {
+            // Static job (General Application)
+            setFormTemplate(null);
+            setDynamicFormData({});
+        }
      } else {
+        // No job selected
         setFormTemplate(null);
         setDynamicFormData({});
      }
@@ -126,6 +146,16 @@ const Freelancers = () => {
     }
   };
 
+  const handleApplyClick = (jobData) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.error('Please login to apply');
+      navigate('/login');
+      return;
+    }
+    setSelectedJob(jobData);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -140,9 +170,7 @@ const Freelancers = () => {
         data.append('formData', JSON.stringify(dynamicFormData));
         if (resumeFile) data.append('resume', resumeFile);
         
-        await api.post('/api/applications', data, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await api.post('/api/applications', data);
       } else {
         // Legacy form submission
         if (!resumeFile) {
@@ -157,13 +185,15 @@ const Freelancers = () => {
         data.append('resume', resumeFile);
         if (selectedJob) data.append('position', selectedJob.title);
 
-        await api.post('/api/freelancers', data, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await api.post('/api/freelancers', data);
       }
 
       toast.success('Application submitted!');
-      setFormData({});
+      setFormData({
+        name: '', email: '', phone: '', languages: '',
+        experience: '', interests: [], availability: '',
+        country: '', countryOther: '', mobileDevice: '', desktopDevice: '', otherSkill: ''
+      });
       setDynamicFormData({});
       setResumeFile(null);
       setSelectedJob(null);
@@ -221,7 +251,7 @@ const Freelancers = () => {
                     Join an elite community of data experts. Earn competitive rates, work on your schedule, and help shape the future of Generative AI models.
                  </p>
                  <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start w-full sm:w-auto px-4 sm:px-0">
-                    <button onClick={() => setSelectedJob({ title: 'General Application', type: 'Freelance', location: 'Remote' })} className="w-full sm:w-auto px-8 py-3.5 bg-[#6366F1] text-white rounded-full text-sm font-bold hover:bg-[#5558E3] transition-all shadow-[0_0_20px_rgba(99,102,241,0.5)] flex items-center justify-center gap-2 uppercase tracking-wide order-2 sm:order-1">
+                    <button onClick={() => handleApplyClick({ title: 'General Application', type: 'Freelance', location: 'Remote' })} className="w-full sm:w-auto px-8 py-3.5 bg-[#6366F1] text-white rounded-full text-sm font-bold hover:bg-[#5558E3] transition-all shadow-[0_0_20px_rgba(99,102,241,0.5)] flex items-center justify-center gap-2 uppercase tracking-wide order-2 sm:order-1">
                        Start Earning <Sparkles className="w-4 h-4 text-white" />
                     </button>
                     <button onClick={() => document.getElementById('positions').scrollIntoView({ behavior: 'smooth' })} className="w-full sm:w-auto px-8 py-3.5 bg-transparent border border-white/20 text-white rounded-full text-sm font-bold hover:bg-white/5 transition-all uppercase tracking-wide backdrop-blur-sm order-1 sm:order-2">
@@ -331,7 +361,7 @@ const Freelancers = () => {
                             </button>
                             <button 
                                 onClick={() => { 
-                                    setSelectedJob(job); 
+                                    handleApplyClick(job); 
                                 }} 
                                 className="px-3 py-2 bg-[#6366F1] text-white rounded-lg text-xs font-bold hover:bg-[#4F46E5] transition-all uppercase tracking-wide shadow-md hover:shadow-lg"
                             >
@@ -556,14 +586,25 @@ const Freelancers = () => {
                                        )}
                                     </div>
                                     <div className="space-y-2">
-                                       <label className="text-xs font-bold text-white uppercase tracking-wider">Device</label>
-                                       <select name="device" value={formData.device || ''} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
-                                          <option value="">Select Device...</option>
+                                       <label className="text-xs font-bold text-white uppercase tracking-wider">Mobile Device</label>
+                                       <select name="mobileDevice" value={formData.mobileDevice || ''} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
+                                          <option value="">Select Mobile Device...</option>
                                           <option value="Android">Android</option>
                                           <option value="iOS">iOS</option>
-                                          <option value="Both">Both (Android & iOS)</option>
-                                          <option value="Laptop/PC">Laptop/PC</option>
-                                          <option value="Other">Other</option>
+                                          <option value="Both Mobile">Both (Android & iOS)</option>
+                                          <option value="None">None</option>
+                                       </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                       <label className="text-xs font-bold text-white uppercase tracking-wider">Desktop Device</label>
+                                       <select name="desktopDevice" value={formData.desktopDevice || ''} onChange={handleChange} className="w-full px-4 py-3.5 text-sm rounded-xl bg-black border border-gray-700 text-white focus:bg-[#0A0F1C] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
+                                          <option value="">Select Desktop Device...</option>
+                                          <option value="Windows">Windows</option>
+                                          <option value="Mac">Mac</option>
+                                          <option value="Both Desktop">Both (Windows & Mac)</option>
+                                          <option value="Linux">Linux</option>
+                                          <option value="Ryzen">Ryzen</option>
+                                          <option value="None">None</option>
                                        </select>
                                     </div>
                                  </div>
@@ -710,7 +751,7 @@ const Freelancers = () => {
                          </div>
                         <button 
                             onClick={() => {
-                                setSelectedJob(viewingJob);
+                                handleApplyClick(viewingJob);
                                 setViewingJob(null);
                             }}
                             className="w-full md:w-auto px-8 py-3 bg-[#6366F1] text-white font-bold rounded-lg shadow-lg hover:bg-[#4F46E5] transition-all flex items-center justify-center gap-2"

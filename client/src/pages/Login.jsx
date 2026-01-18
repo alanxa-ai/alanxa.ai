@@ -158,14 +158,15 @@ const Login = () => {
                     <div className="h-[1px] bg-gray-700 flex-1"></div>
                 </div>
 
-                <div className="flex justify-center">
+                <div className="flex justify-center w-full">
                     <GoogleLogin
                         onSuccess={handleGoogleSuccess}
                         onError={() => setError('Google Login Failed')}
                         theme="filled_black"
-                        shape="circle"
+                        shape="pill"
                         size="large"
-                        width="100%"
+                        width={300}
+                        text="continue_with"
                     />
                 </div>
 

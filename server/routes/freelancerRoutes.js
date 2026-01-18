@@ -5,7 +5,7 @@ const { protect, adminOnly } = require('../middleware/authMiddleware'); // Fixed
 
 const upload = require('../middleware/uploadMiddleware');
 
-router.post('/', upload.single('resume'), createApplication);
+router.post('/', protect, upload.single('resume'), createApplication);
 router.get('/', protect, adminOnly, getAllApplications); // Protect getting list
 
 module.exports = router;

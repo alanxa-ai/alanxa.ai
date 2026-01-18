@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
     LayoutDashboard, CheckSquare, Settings, LogOut, Clock, Upload, List, 
     CheckCircle, FileText, Menu, X, Bell, User, Briefcase, TrendingUp,
-    Eye, ChevronRight, Calendar, AlertCircle, Send, ExternalLink, Globe, DollarSign
+    Eye, ChevronRight, Calendar, AlertCircle, Send, ExternalLink, Globe, DollarSign, ClipboardCheck, Home
 } from 'lucide-react';
 import api from '../utils/api';
 import { useNavigate, Link } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import DynamicFormRenderer from '../components/DynamicFormRenderer';
+import AssessmentSection from '../components/AssessmentSection';
 
 const FreelancerDashboard = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -21,7 +22,7 @@ const FreelancerDashboard = () => {
     const [appFormData, setAppFormData] = useState({ 
         name: '', email: '', phone: '', languages: '', 
         experience: '', availability: '', country: '', 
-        countryOther: '', device: '', interests: [], otherSkill: '' 
+        countryOther: '', mobileDevice: '', desktopDevice: '', interests: [], otherSkill: '' 
     });
     const [appResumeFile, setAppResumeFile] = useState(null);
     const [appLoading, setAppLoading] = useState(false);
@@ -225,7 +226,7 @@ const FreelancerDashboard = () => {
             setAppFormData({ 
                 name: '', email: '', phone: '', languages: '', 
                 experience: '', availability: '', country: '', 
-                countryOther: '', device: '', interests: [], otherSkill: '' 
+                countryOther: '', mobileDevice: '', desktopDevice: '', interests: [], otherSkill: '' 
             });
             setDynamicFormData({});
             setAppResumeFile(null);
@@ -239,9 +240,12 @@ const FreelancerDashboard = () => {
     };
 
     const navItems = [
+        { id: 'home', label: 'Home', icon: Home, path: '/' },
+        { id: 'careers', label: 'Careers', icon: Briefcase, path: '/freelancers' },
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { id: 'tasks', label: 'My Tasks', icon: List },
         { id: 'notifications', label: 'Notifications', icon: Bell, badge: unreadCount },
+        { id: 'assessments', label: 'Assessments', icon: ClipboardCheck },
         { id: 'apply', label: 'Apply Now', icon: Send },
         { id: 'profile', label: 'Profile', icon: User },
     ];
@@ -310,7 +314,7 @@ const FreelancerDashboard = () => {
     };
 
     return (
-        <div className="flex h-screen bg-black font-sans overflow-hidden text-white">
+        <div className="flex h-screen bg-black font-sans overflow-hidden text-white relative">
             <Toaster position="top-right" />
             
             {/* Mobile Overlay */}
@@ -351,26 +355,37 @@ const FreelancerDashboard = () => {
                 {/* Navigation */}
                 <nav className="p-2 space-y-0.5 mt-2 flex-1 overflow-y-auto">
                     {navItems.map(item => (
-                        <button
-                            key={item.id}
-                            onClick={() => { setActiveTab(item.id); setSidebarOpen(false); }}
-                            className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-200 text-[10px] ${
-                                activeTab === item.id 
-                                    ? 'bg-indigo-600 text-white' 
-                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
-                            }`}
-                        >
-                            <item.icon size={12} />
-                            <span className="font-medium">{item.label}</span>
-                            {item.badge > 0 && (
-                                <span className="ml-auto w-3.5 h-3.5 bg-red-500 text-white text-[8px] rounded-full flex items-center justify-center font-bold">
-                                    {item.badge}
-                                </span>
-                            )}
-                            {activeTab === item.id && (
-                                <ChevronRight size={10} className="ml-auto opacity-60" />
-                            )}
-                        </button>
+                        item.path ? (
+                            <Link
+                                key={item.id}
+                                to={item.path}
+                                className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-200 text-[10px] text-gray-400 hover:bg-white/5 hover:text-white"
+                            >
+                                <item.icon size={12} />
+                                <span className="font-medium">{item.label}</span>
+                            </Link>
+                        ) : (
+                            <button
+                                key={item.id}
+                                onClick={() => { setActiveTab(item.id); setSidebarOpen(false); }}
+                                className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-200 text-[10px] ${
+                                    activeTab === item.id 
+                                        ? 'bg-indigo-600 text-white' 
+                                        : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                }`}
+                            >
+                                <item.icon size={12} />
+                                <span className="font-medium">{item.label}</span>
+                                {item.badge > 0 && (
+                                    <span className="ml-auto w-3.5 h-3.5 bg-red-500 text-white text-[8px] rounded-full flex items-center justify-center font-bold">
+                                        {item.badge}
+                                    </span>
+                                )}
+                                {activeTab === item.id && (
+                                    <ChevronRight size={10} className="ml-auto opacity-60" />
+                                )}
+                            </button>
+                        )
                     ))}
                 </nav>
 
@@ -1065,18 +1080,33 @@ const FreelancerDashboard = () => {
                                             )}
                                         </div>
                                         <div>
-                                            <label className="block text-[9px] font-bold text-gray-400 uppercase mb-1">Device</label>
+                                            <label className="block text-[9px] font-bold text-gray-400 uppercase mb-1">Mobile Device</label>
                                             <select 
-                                                value={appFormData.device}
-                                                onChange={(e) => setAppFormData({...appFormData, device: e.target.value})}
+                                                value={appFormData.mobileDevice || ''}
+                                                onChange={(e) => setAppFormData({...appFormData, mobileDevice: e.target.value})}
                                                 className="w-full p-2 bg-black border border-gray-700 rounded-lg text-white text-[10px] focus:border-indigo-500 focus:outline-none"
                                             >
-                                                <option value="">Select Device...</option>
+                                                <option value="">Select Mobile...</option>
                                                 <option value="Android">Android</option>
                                                 <option value="iOS">iOS</option>
-                                                <option value="Both">Both (Android & iOS)</option>
-                                                <option value="Laptop/PC">Laptop/PC</option>
-                                                <option value="Other">Other</option>
+                                                <option value="Both Mobile">Both (Android & iOS)</option>
+                                                <option value="None">None</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-[9px] font-bold text-gray-400 uppercase mb-1">Desktop Device</label>
+                                            <select 
+                                                value={appFormData.desktopDevice || ''}
+                                                onChange={(e) => setAppFormData({...appFormData, desktopDevice: e.target.value})}
+                                                className="w-full p-2 bg-black border border-gray-700 rounded-lg text-white text-[10px] focus:border-indigo-500 focus:outline-none"
+                                            >
+                                                <option value="">Select Desktop...</option>
+                                                <option value="Windows">Windows</option>
+                                                <option value="Mac">Mac</option>
+                                                <option value="Both Desktop">Both (Windows & Mac)</option>
+                                                <option value="Linux">Linux</option>
+                                                <option value="Ryzen">Ryzen</option>
+                                                <option value="None">None</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1154,6 +1184,17 @@ const FreelancerDashboard = () => {
                                 </form>
                             </motion.div>
                         </div>
+                    )}
+
+                    {/* Assessments Tab */}
+                    {activeTab === 'assessments' && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                        >
+                            <AssessmentSection />
+                        </motion.div>
                     )}
                 </AnimatePresence>
             </main>

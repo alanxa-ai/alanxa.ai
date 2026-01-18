@@ -13,7 +13,9 @@ const FreelancerApplicationSchema = new mongoose.Schema({
     availability: { type: String },
     country: { type: String }, // Location/Region
     countryOther: { type: String }, // If "Other" is selected in country
-    device: { type: String }, // Android, iOS, Both, Laptop/PC
+    device: { type: String }, // Legacy field - Android, iOS, Both, Laptop/PC
+    mobileDevice: { type: String }, // Android, iOS, Both Mobile, None
+    desktopDevice: { type: String }, // Windows, Mac, Both Desktop, Linux, Ryzen, None
     status: { type: String, default: 'Pending' },
     createdAt: { type: Date, default: Date.now }
 });

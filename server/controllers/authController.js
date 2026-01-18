@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { sendEmail } = require('../utils/sendEmail');
+const { sendEmail, sendOtpEmail } = require('../utils/sendEmail');
 const { getOtpTemplate, getConfirmationTemplate } = require('../utils/emailTemplates');
 const { OAuth2Client } = require('google-auth-library');
 
@@ -54,7 +54,7 @@ exports.register = async (req, res) => {
         console.log('Attempting to send OTP email...');
         const emailContent = getOtpTemplate(otp);
         try {
-            await sendEmail(email, `Alanxa Verification Code: ${otp}`, emailContent);
+            await sendOtpEmail(email, `Alanxa Verification Code: ${otp}`, emailContent);
             console.log('OTP Email sent successfully');
         } catch (emailError) {
             console.error('Critical Email Sending Error:', emailError);
@@ -171,7 +171,7 @@ exports.forgotPassword = async (req, res) => {
         await user.save();
 
         const emailContent = getOtpTemplate(otp);
-        await sendEmail(email, 'Password Reset OTP', emailContent);
+        await sendOtpEmail(email, 'Password Reset OTP', emailContent);
         res.status(200).json({ message: 'OTP sent to email' });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });

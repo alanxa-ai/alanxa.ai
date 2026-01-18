@@ -27,7 +27,14 @@ exports.protect = async (req, res, next) => {
 
         next();
     } catch (error) {
-        console.error('Auth middleware error:', error);
+        // Handle specific JWT errors cleanly without stack traces
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'Session expired. Please login again.' });
+        }
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid token. Please login again.' });
+        }
+        console.error('Auth middleware error:', error.message);
         res.status(401).json({ message: 'Not authorized, token failed' });
     }
 };
